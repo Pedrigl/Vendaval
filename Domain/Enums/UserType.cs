@@ -1,4 +1,4 @@
-﻿namespace Vendaval.Server.Domain.Enums
+﻿namespace Vendaval.Domain.Enums
 {
     public enum UserType
     {

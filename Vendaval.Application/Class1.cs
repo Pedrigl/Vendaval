@@ -1,4 +1,4 @@
-﻿namespace Domain
+﻿namespace Vendaval.Application
 {
     public class Class1
     {

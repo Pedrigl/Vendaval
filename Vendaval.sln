@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vendaval.Server", "Vendaval.Server\Vendaval.Server.csproj", "{1BEF8870-FC6E-43A4-83CA-2A49A29B7F31}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vendaval.Api", "Vendaval.Server\Vendaval.Api.csproj", "{1BEF8870-FC6E-43A4-83CA-2A49A29B7F31}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "vendaval.client", "vendaval.client\vendaval.client.esproj", "{17AA0128-4E23-4D59-B579-50311DAA67E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{68055267-6EB0-4BC7-8417-2BEA5AD89F30}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vendaval.Domain", "Domain\Vendaval.Domain.csproj", "{68055267-6EB0-4BC7-8417-2BEA5AD89F30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vendaval.Application", "Vendaval.Application\Vendaval.Application.csproj", "{23176701-0E46-43F8-B0DF-52F792465257}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vendaval.Infrastructure", "Vendaval.Infrastructure\Vendaval.Infrastructure.csproj", "{668982EC-6E2D-4658-85AB-742E51611834}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +33,14 @@ Global
 		{68055267-6EB0-4BC7-8417-2BEA5AD89F30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68055267-6EB0-4BC7-8417-2BEA5AD89F30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68055267-6EB0-4BC7-8417-2BEA5AD89F30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23176701-0E46-43F8-B0DF-52F792465257}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23176701-0E46-43F8-B0DF-52F792465257}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23176701-0E46-43F8-B0DF-52F792465257}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23176701-0E46-43F8-B0DF-52F792465257}.Release|Any CPU.Build.0 = Release|Any CPU
+		{668982EC-6E2D-4658-85AB-742E51611834}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{668982EC-6E2D-4658-85AB-742E51611834}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{668982EC-6E2D-4658-85AB-742E51611834}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{668982EC-6E2D-4658-85AB-742E51611834}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,4 @@
-﻿namespace Vendaval.Server.Domain.Entities
+﻿namespace Vendaval.Domain.Entities
 {
     public class BaseModel
     {

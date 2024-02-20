@@ -1,7 +1,7 @@
-﻿using Vendaval.Server.Domain.Enums;
-using Vendaval.Server.Domain.ValueObjects;
+﻿using Vendaval.Domain.Enums;
+using Vendaval.Domain.ValueObjects;
 
-namespace Vendaval.Server.Domain.Entities
+namespace Vendaval.Domain.Entities
 {
     public class User : BaseModel
     {
