@@ -8,14 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.20" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Vendaval.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\Repositories\RedisRepositories\" />
   </ItemGroup>
 
 </Project>
