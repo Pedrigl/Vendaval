@@ -10,6 +10,7 @@ namespace Vendaval.Infrastructure.Data.Repositories.RedisRepositories.Interfaces
     public interface IRedisRepository
     {
         Task<RedisValue> GetValueAsync(string key);
-        Task<RedisValue> SetValueAsync(string key, string value, TimeSpan? expiration = null);        
+        Task<RedisValue> SetValueAsync(string key, string value, TimeSpan? expiration = null);
+        Task<bool> RemoveValueAsync(string key);
     }
 }

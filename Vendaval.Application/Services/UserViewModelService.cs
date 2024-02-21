@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Vendaval.Application.Services.Interfaces;
 using Vendaval.Application.ValueObjects;
@@ -34,7 +36,7 @@ namespace Vendaval.Application.Services
         public async Task<LoginResult> Login(LoginViewModel loginViewModel)
         {
             var result = new LoginResult();
-
+            
             var user = _userRepository.GetByEmail(loginViewModel.Email);
 
             var checkResult = CheckIfLoginIsSuccesfull(user, loginViewModel);
@@ -46,7 +48,9 @@ namespace Vendaval.Application.Services
 
             result.Token= GenerateToken(user);
 
-            await _redisRepository.SetValueAsync("UserTokenId" + user.Id.ToString(), result.Token);
+            result.TokenExpiration = TimeSpan.FromDays(1);
+
+            await _redisRepository.SetValueAsync("UserLogin" + user.Id.ToString(), JsonConvert.SerializeObject(result));
 
             return result;
         }
@@ -98,8 +102,21 @@ namespace Vendaval.Application.Services
 
         public async Task<LoginResult> Register(UserViewModel user)
         {
-            
             var mappedUser = _mapper.Map<User>(user);
+
+            var passwordCheck = CheckIfPasswordIsValid(mappedUser.Password);
+
+            if(!passwordCheck.Success)
+                return passwordCheck;
+
+            var emailCheck = CheckIfEmailIsValid(mappedUser.Email);
+
+            if(!emailCheck.Success)
+                return emailCheck;
+
+            
+            if (CheckIfUserExists(mappedUser))
+                return new LoginResult { Success = false, Message = "User already exists" };
 
             await _userRepository.AddAsync(mappedUser);
 
@@ -112,6 +129,55 @@ namespace Vendaval.Application.Services
             return result;
         }
         
+        private LoginResult CheckIfEmailIsValid(string email)
+        {
+            var result = new LoginResult();
+
+            if (!email.Contains("@") || !email.Contains(".com"))
+            {
+                result.Success = false;
+                result.Message = "Invalid email";
+                return result;
+            }
+
+            return result;
+        }
+        private LoginResult CheckIfPasswordIsValid(string password)
+        {
+            var result = new LoginResult();
+
+            if (password.Length < 8)
+            {
+                result.Success = false;
+                result.Message = "Password must be at least 8 characters long";
+                return result;
+            }
+
+            var requirements = new List<(Func<char, bool> condition, string message)>
+            {
+                (char.IsUpper, "Password must contain at least one uppercase letter"),
+                (char.IsLower, "Password must contain at least one lowercase letter"),
+                (char.IsDigit, "Password must contain at least one number")
+            };
+
+            foreach (var (condition, message) in requirements)
+            {
+                if (!password.Any(condition))
+                {
+                    result.Success = false;
+                    result.Message = message;
+                    return result;
+                }
+            }
+
+            return result;
+        }
+
+        private bool CheckIfUserExists(User user)
+        {
+            return _userRepository.GetWhere(u => u.Email == user.Email).Any();
+        }
+
         private LoginResult CheckIfRegistrationIsSuccesfull(User user)
         {
             var result = new LoginResult();
@@ -126,6 +192,16 @@ namespace Vendaval.Application.Services
             result.User = _mapper.Map<UserViewModel>(user);
 
             return result;
+        }
+
+        public async Task<bool> Logout(int userId)
+        {
+            var token = await _redisRepository.GetValueAsync("UserTokenId" + userId.ToString());
+
+            if (token.IsNullOrEmpty)
+                return false;
+
+            return await _redisRepository.RemoveValueAsync("UserTokenId" + userId.ToString());
         }
 
     }

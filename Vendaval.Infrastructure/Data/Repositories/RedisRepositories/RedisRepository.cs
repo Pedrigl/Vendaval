@@ -21,5 +21,11 @@ namespace Vendaval.Infrastructure.Data.Repositories.RedisRepositories
             expiration ??= TimeSpan.FromDays(1);
             return await _redisDatabase.StringSetAndGetAsync(key, value, expiration);
         }
+
+        public async Task<bool> RemoveValueAsync(string key)
+        {
+            return await _redisDatabase.KeyDeleteAsync(key);
+        }
+
     }
 }
