@@ -35,7 +35,7 @@ namespace Vendaval.Application.Services
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _redisRepository = redisRepository ?? throw new ArgumentNullException(nameof(redisRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _jwtSecretKey = configuration["Jwt:Key"];
+            _jwtSecretKey = configuration["Jwt:Key"] ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         public async Task<LoginResult> Login(LoginDto login)
