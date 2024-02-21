@@ -25,6 +25,7 @@ namespace Vendaval.Application.Services
         private readonly IRedisRepository _redisRepository;
         private readonly IMapper _mapper;
         private readonly string _jwtSecretKey;
+        //TODO: Add secret key to appsettings.json
 
         public UserViewModelService(IUserRepository userRepository, IRedisRepository redisRepository, IMapper mapper)
         {
@@ -199,7 +200,7 @@ namespace Vendaval.Application.Services
             var token = await _redisRepository.GetValueAsync("UserTokenId" + userId.ToString());
 
             if (token.IsNullOrEmpty)
-                return false;
+                return true;
 
             return await _redisRepository.RemoveValueAsync("UserTokenId" + userId.ToString());
         }
