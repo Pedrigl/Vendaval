@@ -205,5 +205,6 @@ namespace Vendaval.Application.Services
             return await _redisRepository.RemoveValueAsync("UserTokenId" + userId.ToString());
         }
 
+        //TODO: Add update and delete methods
     }
 }
