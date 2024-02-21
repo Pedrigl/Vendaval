@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -32,7 +33,7 @@ namespace Vendaval.Application.Services
         public UserViewModelService(IUserRepository userRepository, IRedisRepository redisRepository, IMapper mapper, IConfiguration configuration)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _redisRepository = redisRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _redisRepository = redisRepository ?? throw new ArgumentNullException(nameof(redisRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _jwtSecretKey = configuration["Jwt:Key"];
         }
@@ -43,7 +44,7 @@ namespace Vendaval.Application.Services
             
             var loginOnCache = await GetLoginFromRedis(login);
 
-            if (loginOnCache != null)
+            if (loginOnCache.Success)
                 return loginOnCache;
 
             var user = _userRepository.GetByEmail(login.Email);
@@ -51,7 +52,7 @@ namespace Vendaval.Application.Services
             var checkResult = CheckIfLoginIsSuccesfull(user, login);
 
             if (!checkResult.Success)
-                return result;
+                return checkResult;
 
             result.User = _mapper.Map<UserViewModel>(user);
 
@@ -71,7 +72,12 @@ namespace Vendaval.Application.Services
             var loginOnCache = await _redisRepository.GetValueAsync(login.Email);
 
             if (loginOnCache.IsNullOrEmpty)
+            {
+                result.Success = false;
+                result.Message = "Invalid login";
                 return result;
+            }
+                
 
             result = JsonConvert.DeserializeObject<LoginResult>(loginOnCache);
 
@@ -248,12 +254,12 @@ namespace Vendaval.Application.Services
             return await _redisRepository.RemoveValueAsync("UserEmail" + email);
         }
 
-        public async Task<LoginResult> UpdateLogin(UserViewModel user)
+        public async Task<LoginResult> PutUser(UserViewModel user)
         {
             var mappedUser = _mapper.Map<User>(user);
             var oldUser = await _userRepository.GetByIdAsync(mappedUser.Id);
 
-            if(oldUser != null)
+            if(oldUser == null)
                 return new LoginResult { Success = false, Message = "User doesn't exist" };
 
             var passwordCheck = CheckIfPasswordIsValid(mappedUser.Password);
@@ -273,6 +279,59 @@ namespace Vendaval.Application.Services
 
             var newUser = await _userRepository.GetByIdAsync(mappedUser.Id);
             return new LoginResult { Success = true, Message = "User updated", User = _mapper.Map<UserViewModel>(newUser) };
+        }
+
+        public async Task<LoginResult> PatchUser(UserViewModel user)
+        {
+            var mappedUser = _mapper.Map<User>(user);
+            var oldUser = await _userRepository.GetByIdAsync(mappedUser.Id);
+
+            if(oldUser == null)
+                return new LoginResult { Success = false, Message = "User doesn't exist" };
+
+            
+
+            if(!mappedUser.Password.IsNullOrEmpty())
+            {
+                var passwordCheck = CheckIfPasswordIsValid(mappedUser.Password);
+
+
+                if (!passwordCheck.Success)
+                    return passwordCheck;
+            }
+
+            if (!mappedUser.Email.IsNullOrEmpty())
+            {
+                var emailCheck = CheckIfEmailIsValid(mappedUser.Email);
+
+                if (!emailCheck.Success)
+                    return emailCheck;
+            }
+            
+            return PatchUser(mappedUser, oldUser);
+        }
+
+        private LoginResult PatchUser(User patchedUser, User oldUser)
+        {
+            if (oldUser == null)
+                return null;
+
+            oldUser.Name = patchedUser.Name ?? oldUser.Name;
+            oldUser.Password = HashPassword(patchedUser.Password) ?? oldUser.Password;
+            oldUser.Email = patchedUser.Email ?? oldUser.Email;
+            oldUser.Address = patchedUser.Address ?? oldUser.Address;
+
+            try
+            {
+                _userRepository.Update(oldUser.Id, oldUser);
+                _userRepository.Save();
+            }
+            catch (Exception ex)
+            {
+                return new LoginResult { Success = false, Message = ex.Message };
+            }
+
+            return new LoginResult { Success = true, Message = "User updated", User = _mapper.Map<UserViewModel>(oldUser) };
         }
 
         public LoginResult DeleteLogin(UserViewModel userViewModel)

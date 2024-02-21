@@ -2,6 +2,7 @@
 using Vendaval.Application.Services;
 using Vendaval.Application.ViewModels;
 using Vendaval.Application.ValueObjects;
+using Vendaval.Application.Services.Interfaces;
 
 namespace Vendaval.Api.Controllers
 {
@@ -9,9 +10,9 @@ namespace Vendaval.Api.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserViewModelService _userViewModelService;
+        private readonly IUserViewModelSerivce _userViewModelService;
 
-        public UserController(UserViewModelService userViewModelService)
+        public UserController(IUserViewModelSerivce userViewModelService)
         {
             _userViewModelService = userViewModelService;
         }
@@ -52,12 +53,30 @@ namespace Vendaval.Api.Controllers
             }
         }
 
-        [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] UserViewModel userViewModel)
+        [HttpPut("put")]
+        public async Task<IActionResult> PutAccount([FromBody] UserViewModel userViewModel)
         {
             try
             {
-                var result = await _userViewModelService.UpdateLogin(userViewModel);
+                var result = await _userViewModelService.PutUser(userViewModel);
+
+                if(!result.Success)
+                    return BadRequest(result);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPatch("patch")]
+        public async Task<IActionResult> PatchAccount([FromBody] UserViewModel userViewModel)
+        {
+            try
+            {
+                var result = await _userViewModelService.PatchUser(userViewModel);
 
                 if(!result.Success)
                     return BadRequest(result);
@@ -71,7 +90,7 @@ namespace Vendaval.Api.Controllers
         }
 
         [HttpDelete("delete")]
-        public IActionResult Delete([FromBody] UserViewModel userViewModel)
+        public IActionResult DeleteAccount([FromBody] UserViewModel userViewModel)
         {
             try
             {

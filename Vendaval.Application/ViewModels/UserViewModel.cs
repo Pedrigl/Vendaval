@@ -15,17 +15,14 @@ namespace Vendaval.Application.ViewModels
 
         public UserType UserType { get; set; }
 
-        [Required(ErrorMessage = "O campo Email é obrigatório")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
+        
+        public string? Password { get; set; }
 
-        [Required(ErrorMessage = "O campo Senha é obrigatório")]
-        public string Password { get; set; }
+        public string? Name { get; set; }
 
-        [Required(ErrorMessage = "O campo Nome é obrigatório")]
-        public string Name { get; set; }
+        public DateTime? BirthDate { get; set; }
 
-        public DateTime BirthDate { get; set; }
-
-        public List<Address>? Addresses { get; set; }
+        public List<Address>? Address { get; set; }
     }
 }

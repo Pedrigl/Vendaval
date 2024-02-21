@@ -11,6 +11,11 @@ namespace Vendaval.Infrastructure.Data.Repositories.RedisRepositories
     public class RedisRepository : IRedisRepository
     {
         private readonly IDatabase _redisDatabase;
+
+        public RedisRepository(IDatabase redisDatabase)
+        {
+            _redisDatabase = redisDatabase;
+        }
         public async Task<RedisValue> GetValueAsync(string key)
         {
             return await _redisDatabase.StringGetAsync(key);

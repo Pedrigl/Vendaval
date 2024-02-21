@@ -12,7 +12,8 @@ namespace Vendaval.Application.Services.Interfaces
     {
         Task<LoginResult> Login(LoginDto login);
         Task<bool> Logout(string email);
-        Task<LoginResult> UpdateLogin(UserViewModel user);
+        Task<LoginResult> PutUser(UserViewModel user);
+        Task<LoginResult> PatchUser(UserViewModel userViewModel);
         LoginResult DeleteLogin(UserViewModel userViewModel);
         Task<LoginResult> Register(UserViewModel user);
     }

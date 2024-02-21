@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using Vendaval.Application.DependencyInjection;
 using Vendaval.Application.Web;
 using Vendaval.Infrastructure.Data.Contexts;
@@ -14,10 +15,7 @@ builder.Services.AddRepositories();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddServices();
 
-builder.Services.AddDbContextPool<VendavalDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("VendavalDb"));
-});
+builder.Services.AddDbContexts(builder.Configuration);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
