@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Vendaval.Application.Services;
 using Vendaval.Application.ViewModels;
+using Vendaval.Application.ValueObjects;
 
 namespace Vendaval.Api.Controllers
 {
@@ -15,16 +16,76 @@ namespace Vendaval.Api.Controllers
             _userViewModelService = userViewModelService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginViewModel userViewModel)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto userViewModel)
         {
-            var user = await _userViewModelService.Login(userViewModel);
-
-            if (userViewModel == null)
+            try
             {
-                return Unauthorized("");
+                var result = await _userViewModelService.Login(userViewModel);
+
+                if(!result.Success)
+                    return BadRequest(result);
+
+                return Ok(result);
             }
-            return Ok(userViewModel);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] UserViewModel userViewModel)
+        {
+            try
+            {
+                var result = await _userViewModelService.Register(userViewModel);
+
+                if(!result.Success)
+                    return BadRequest(result);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("update")]
+        public async Task<IActionResult> Update([FromBody] UserViewModel userViewModel)
+        {
+            try
+            {
+                var result = await _userViewModelService.UpdateLogin(userViewModel);
+
+                if(!result.Success)
+                    return BadRequest(result);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("delete")]
+        public IActionResult Delete([FromBody] UserViewModel userViewModel)
+        {
+            try
+            {
+                var result = _userViewModelService.DeleteLogin(userViewModel);
+
+                if(!result.Success)
+                    return BadRequest(result);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

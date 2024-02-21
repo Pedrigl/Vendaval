@@ -10,7 +10,7 @@ namespace Vendaval.Application.Services.Interfaces
 {
     public interface IUserViewModelSerivce
     {
-        Task<LoginResult> Login(LoginViewModel login);
+        Task<LoginResult> Login(LoginDto login);
         Task<bool> Logout(string email);
         Task<LoginResult> UpdateLogin(UserViewModel user);
         LoginResult DeleteLogin(UserViewModel userViewModel);

@@ -35,7 +35,7 @@ namespace Vendaval.Application.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<LoginResult> Login(LoginViewModel login)
+        public async Task<LoginResult> Login(LoginDto login)
         {
             var result = new LoginResult();
             
@@ -62,7 +62,7 @@ namespace Vendaval.Application.Services
             return result;
         }
 
-        private async Task<LoginResult> GetLoginFromRedis(LoginViewModel login)
+        private async Task<LoginResult> GetLoginFromRedis(LoginDto login)
         {
             var result = new LoginResult();
 
@@ -79,7 +79,7 @@ namespace Vendaval.Application.Services
             return result;
         }
 
-        private LoginResult CheckIfLoginIsSuccesfull(User user, LoginViewModel login)
+        private LoginResult CheckIfLoginIsSuccesfull(User user, LoginDto login)
         {
             var result = new LoginResult();
 
