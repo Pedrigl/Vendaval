@@ -16,7 +16,7 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories
             _context = context;
         }
 
-        public async Task<T> GetById(int id)
+        public async Task<T> GetByIdAsync(int id)
         {
             return await _context.Set<T>().FindAsync(id);
         }
@@ -38,7 +38,7 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories
 
         public void Update(int entityId, T entity)
         {
-            var record = GetById(entityId);
+            var record = _context.Set<T>().Find(entityId);
             _context.Entry(record).CurrentValues.SetValues(entity);
         }
 

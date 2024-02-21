@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -34,13 +35,18 @@ namespace Vendaval.Application.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<LoginResult> Login(LoginViewModel loginViewModel)
+        public async Task<LoginResult> Login(LoginViewModel login)
         {
             var result = new LoginResult();
             
-            var user = _userRepository.GetByEmail(loginViewModel.Email);
+            var loginOnCache = await GetLoginFromRedis(login);
 
-            var checkResult = CheckIfLoginIsSuccesfull(user, loginViewModel);
+            if (loginOnCache != null)
+                return loginOnCache;
+
+            var user = _userRepository.GetByEmail(login.Email);
+
+            var checkResult = CheckIfLoginIsSuccesfull(user, login);
 
             if (!checkResult.Success)
                 return result;
@@ -51,14 +57,33 @@ namespace Vendaval.Application.Services
 
             result.TokenExpiration = TimeSpan.FromDays(1);
 
-            await _redisRepository.SetValueAsync("UserLogin" + user.Id.ToString(), JsonConvert.SerializeObject(result));
+            await _redisRepository.SetValueAsync("UserEmail" + user.Email.ToString(), JsonConvert.SerializeObject(result));
 
             return result;
         }
 
-        private LoginResult CheckIfLoginIsSuccesfull(User user, LoginViewModel loginViewModel)
+        private async Task<LoginResult> GetLoginFromRedis(LoginViewModel login)
         {
             var result = new LoginResult();
+
+            var loginOnCache = await _redisRepository.GetValueAsync(login.Email);
+
+            if (loginOnCache.IsNullOrEmpty)
+                return result;
+
+            result = JsonConvert.DeserializeObject<LoginResult>(loginOnCache);
+
+            if (result.User.Email != login.Email || result.User.Password != login.Password)
+                return new LoginResult { Success = false, Message = "Invalid login" };
+
+            return result;
+        }
+
+        private LoginResult CheckIfLoginIsSuccesfull(User user, LoginViewModel login)
+        {
+            var result = new LoginResult();
+
+            var encryptedPassword = HashPassword(login.Password);
 
             if (user == null)
             {
@@ -67,7 +92,7 @@ namespace Vendaval.Application.Services
                 return result;
             }
 
-            if (user.Password != loginViewModel.Password)
+            if (user.Password != encryptedPassword)
             {
                 result.Success = false;
                 result.Message = "Invalid password";
@@ -75,6 +100,21 @@ namespace Vendaval.Application.Services
             }
 
             return result;
+        }
+
+        private static string HashPassword(string password)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
         }
 
         private string GenerateToken(User user)
@@ -119,6 +159,7 @@ namespace Vendaval.Application.Services
             if (CheckIfUserExists(mappedUser))
                 return new LoginResult { Success = false, Message = "User already exists" };
 
+            mappedUser.Password = HashPassword(mappedUser.Password);
             await _userRepository.AddAsync(mappedUser);
 
             await _userRepository.Save();
@@ -195,16 +236,57 @@ namespace Vendaval.Application.Services
             return result;
         }
 
-        public async Task<bool> Logout(int userId)
+        public async Task<bool> Logout(string email)
         {
-            var token = await _redisRepository.GetValueAsync("UserTokenId" + userId.ToString());
+            var token = await _redisRepository.GetValueAsync("UserEmail" + email);
 
             if (token.IsNullOrEmpty)
                 return true;
 
-            return await _redisRepository.RemoveValueAsync("UserTokenId" + userId.ToString());
+            return await _redisRepository.RemoveValueAsync("UserEmail" + email);
         }
 
-        //TODO: Add update and delete methods
+        public async Task<LoginResult> UpdateLogin(UserViewModel user)
+        {
+            var mappedUser = _mapper.Map<User>(user);
+            var oldUser = await _userRepository.GetByIdAsync(mappedUser.Id);
+
+            if(oldUser != null)
+                return new LoginResult { Success = false, Message = "User doesn't exist" };
+
+            var passwordCheck = CheckIfPasswordIsValid(mappedUser.Password);
+
+            if(!passwordCheck.Success)
+                return passwordCheck;
+
+            var emailCheck = CheckIfEmailIsValid(mappedUser.Email);
+
+            if(!emailCheck.Success)
+                return emailCheck;
+
+            mappedUser.Password = HashPassword(mappedUser.Password);
+
+            _userRepository.Update(mappedUser.Id, mappedUser);
+            await _userRepository.Save();
+
+            var newUser = await _userRepository.GetByIdAsync(mappedUser.Id);
+            return new LoginResult { Success = true, Message = "User updated", User = _mapper.Map<UserViewModel>(newUser) };
+        }
+
+        public LoginResult DeleteLogin(UserViewModel userViewModel)
+        {
+            var user = _mapper.Map<User>(userViewModel);
+
+            var result = new LoginResult();
+
+            if (!CheckIfUserExists(user))
+                return new LoginResult { Success = false, Message = "User doesn't exist" };
+
+            _userRepository.Delete(user);
+
+            return new LoginResult { Success = true, Message = "User deleted" };
+        }
+
+
     }
 }
