@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vendaval.Application\Vendaval.Application.csproj" />
+    <ProjectReference Include="..\Vendaval.Infrastructure\Vendaval.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

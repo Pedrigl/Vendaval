@@ -16,5 +16,6 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces
         Task AddAsync(User user);
         void Update(int entityId, User user);
         void Delete(User user);
+        Task<bool> Save();
     }
 }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Vendaval.Application.Services.Interfaces;
 using Vendaval.Application.ValueObjects;
 using Vendaval.Application.ViewModels;
 using Vendaval.Domain.Entities;
@@ -42,6 +43,7 @@ namespace Vendaval.Application.Services
                 return result;
 
             result.User = _mapper.Map<UserViewModel>(user);
+
             result.Token= GenerateToken(user);
 
             await _redisRepository.SetValueAsync("UserTokenId" + user.Id.ToString(), result.Token);
@@ -69,11 +71,19 @@ namespace Vendaval.Application.Services
 
             return result;
         }
+
         private string GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSecretKey);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            SecurityTokenDescriptor tokenDescriptor = GenerateStd(user, key);
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
+
+        private static SecurityTokenDescriptor GenerateStd(User user, byte[] key)
+        {
+            return new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
@@ -84,11 +94,39 @@ namespace Vendaval.Application.Services
                 Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+        }
+
+        public async Task<LoginResult> Register(UserViewModel user)
+        {
+            
+            var mappedUser = _mapper.Map<User>(user);
+
+            await _userRepository.AddAsync(mappedUser);
+
+            await _userRepository.Save();
+            
+            var newUser = _userRepository.GetByEmail(mappedUser.Email);
+
+            var result = CheckIfRegistrationIsSuccesfull(newUser);
+
+            return result;
         }
         
+        private LoginResult CheckIfRegistrationIsSuccesfull(User user)
+        {
+            var result = new LoginResult();
 
+            if (user == null)
+            {
+                result.Success = false;
+                result.Message = "User not found";
+                return result;
+            }
+
+            result.User = _mapper.Map<UserViewModel>(user);
+
+            return result;
+        }
 
     }
 }

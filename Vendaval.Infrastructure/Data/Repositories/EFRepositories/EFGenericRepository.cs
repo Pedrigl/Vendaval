@@ -52,9 +52,9 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories
             _context.Set<T>().RemoveRange(entities);
         }
 
-        public async Task Save()
+        public async Task<bool> Save()
         {
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

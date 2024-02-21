@@ -18,6 +18,7 @@ namespace Vendaval.Infrastructure.Data.Repositories.RedisRepositories
 
         public async Task<RedisValue> SetValueAsync(string key, string value, TimeSpan? expiration = null)
         {
+            expiration ??= TimeSpan.FromDays(1);
             return await _redisDatabase.StringSetAndGetAsync(key, value, expiration);
         }
     }
