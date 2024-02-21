@@ -316,9 +316,9 @@ namespace Vendaval.Application.Services
             if (oldUser == null)
                 return null;
 
-            oldUser.Name = patchedUser.Name ?? oldUser.Name;
-            oldUser.Password = HashPassword(patchedUser.Password) ?? oldUser.Password;
-            oldUser.Email = patchedUser.Email ?? oldUser.Email;
+            oldUser.Name = string.IsNullOrEmpty(patchedUser.Name) ? oldUser.Name : patchedUser.Name;
+            oldUser.Password = string.IsNullOrEmpty(patchedUser.Password) ? oldUser.Password : HashPassword(patchedUser.Password);
+            oldUser.Email = string.IsNullOrEmpty(patchedUser.Email) ? oldUser.Email : patchedUser.Email;
             oldUser.Address = patchedUser.Address ?? oldUser.Address;
 
             try

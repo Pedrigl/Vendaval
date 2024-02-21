@@ -15,13 +15,13 @@ namespace Vendaval.Application.ViewModels
 
         public UserType UserType { get; set; }
 
-        public string? Email { get; set; }
+        public string Email { get; set; }
         
-        public string? Password { get; set; }
+        public string Password { get; set; }
 
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
-        public DateTime? BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
 
         public List<Address>? Address { get; set; }
     }
