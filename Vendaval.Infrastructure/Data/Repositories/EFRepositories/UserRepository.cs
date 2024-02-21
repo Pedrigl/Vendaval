@@ -17,9 +17,9 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories
             _context = context;
         }
 
-        public User GetByEmailAndPassword(string email, string password)
+        public User GetByEmail(string email)
         {
-            return _context.Users.FirstOrDefault(x => x.Email == email && x.Password == password);
+            return _context.Users.FirstOrDefault(x => x.Email == email);
         }
     }
 }

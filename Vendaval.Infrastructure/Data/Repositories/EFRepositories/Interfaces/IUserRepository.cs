@@ -11,7 +11,7 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces
     {
         Task<User> GetById(int id);
         Task<List<User>> GetAll();
-        User GetByEmailAndPassword(string email, string password);
+        User GetByEmail(string email);
         IEnumerable<User> GetWhere(Func<User, bool> predicate);
         Task AddAsync(User user);
         void Update(int entityId, User user);

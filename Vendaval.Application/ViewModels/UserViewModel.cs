@@ -11,21 +11,21 @@ namespace Vendaval.Application.ViewModels
 {
     public class UserViewModel
     {
-        int Id { get; set; }
+        public int Id { get; set; }
 
-        UserType UserType { get; set; }
+        public UserType UserType { get; set; }
 
         [Required(ErrorMessage = "O campo Email é obrigatório")]
-        string Email { get; set; }
+        public string Email { get; set; }
 
         [Required(ErrorMessage = "O campo Senha é obrigatório")]
-        string Password { get; set; }
+        public string Password { get; set; }
 
         [Required(ErrorMessage = "O campo Nome é obrigatório")]
-        string Name { get; set; }
+        public string Name { get; set; }
 
-        DateTime BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
 
-        List<Address>? Addresses { get; set; }
+        public List<Address>? Addresses { get; set; }
     }
 }
