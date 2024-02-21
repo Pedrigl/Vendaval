@@ -25,8 +25,10 @@ namespace Vendaval.Infrastructure.Data.Repositories.RedisRepositories
         {
             expiration ??= TimeSpan.FromDays(1);
 
-            //TODO: FIX THE SYNTAX ERROR THIS THROWS ON RUNTIME
-            return await _redisDatabase.StringSetAndGetAsync(key, value, expiration);
+            
+            await _redisDatabase.StringSetAsync(key, value, expiration);
+
+            return await _redisDatabase.StringGetAsync(key);
         }
 
         public async Task<bool> RemoveValueAsync(string key)
