@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using StackExchange.Redis;
@@ -28,11 +29,12 @@ namespace Vendaval.Application.Services
         private readonly string _jwtSecretKey;
         //TODO: Add secret key to appsettings.json
 
-        public UserViewModelService(IUserRepository userRepository, IRedisRepository redisRepository, IMapper mapper)
+        public UserViewModelService(IUserRepository userRepository, IRedisRepository redisRepository, IMapper mapper, IConfiguration configuration)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _redisRepository = redisRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _jwtSecretKey = configuration["Jwt:Key"];
         }
 
         public async Task<LoginResult> Login(LoginDto login)

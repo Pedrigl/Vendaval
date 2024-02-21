@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Vendaval.Infrastructure.Data.Repositories.EFRepositories;
 using Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces;
+using Vendaval.Infrastructure.Data.Repositories.RedisRepositories;
+using Vendaval.Infrastructure.Data.Repositories.RedisRepositories.Interfaces;
 
 namespace Vendaval.Infrastructure.DependencyInjection
 {
@@ -14,6 +16,7 @@ namespace Vendaval.Infrastructure.DependencyInjection
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRedisRepository,RedisRepository>();
             return services;
         }
     }
