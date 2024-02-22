@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Vendaval.Domain.csproj" />
+    <ProjectReference Include="..\Vendaval.Domain\Vendaval.Domain.csproj" />
   </ItemGroup>
 
 </Project>

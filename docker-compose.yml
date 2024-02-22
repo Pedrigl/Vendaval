@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+    vendaval.api:
+        image: ${DOCKER_REGISTRY-}vendavalapi
+        build:
+            context: .
+            dockerfile: Vendaval.Api/Dockerfile
+        depends_on:
+            - redis
+        environment:
+            Redis__ConnectionString: "redis:6379"
+
+
+    redis: 
+        image: "redis:lastest"
+        container_name: "vendaval-redis"
+        ports:
+        - "6379:6379"

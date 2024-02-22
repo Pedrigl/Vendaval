@@ -10,8 +10,12 @@
     <SpaProxyServerUrl>https://localhost:4200</SpaProxyServerUrl>
     <UserSecretsId>e01a26f0-6ca6-4c05-954a-679f0669cede</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="D:\Users\Pedro\Source\repos\Pedrigl\Vendaval\Vendaval.Api\Dockerfile" Link="Dockerfile" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">

@@ -6,16 +6,18 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
+FROM redis:latest AS redis
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Vendaval.Server/Vendaval.Api.csproj", "Vendaval.Server/"]
+COPY ["Vendaval.Api/Vendaval.Api.csproj", "Vendaval.Api/"]
 COPY ["Vendaval.Application/Vendaval.Application.csproj", "Vendaval.Application/"]
 COPY ["Vendaval.Infrastructure/Vendaval.Infrastructure.csproj", "Vendaval.Infrastructure/"]
 COPY ["Vendaval.Domain/Vendaval.Domain.csproj", "Vendaval.Domain/"]
-RUN dotnet restore "./Vendaval.Server/./Vendaval.Api.csproj"
+RUN dotnet restore "./Vendaval.Api/./Vendaval.Api.csproj"
 COPY . .
-WORKDIR "/src/Vendaval.Server"
+WORKDIR "/src/Vendaval.Api"
 RUN dotnet build "./Vendaval.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
