@@ -3,6 +3,7 @@ using Vendaval.Application.Services;
 using Vendaval.Application.ViewModels;
 using Vendaval.Application.ValueObjects;
 using Vendaval.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Vendaval.Api.Controllers
 {
@@ -53,6 +54,7 @@ namespace Vendaval.Api.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("put")]
         public async Task<IActionResult> PutAccount([FromBody] UserViewModel userViewModel)
         {
@@ -71,6 +73,7 @@ namespace Vendaval.Api.Controllers
             }
         }
 
+        [Authorize]
         [HttpPatch("patch")]
         public async Task<IActionResult> PatchAccount([FromBody] UserViewModel userViewModel)
         {
@@ -89,6 +92,7 @@ namespace Vendaval.Api.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("delete")]
         public IActionResult DeleteAccount([FromBody] UserViewModel userViewModel)
         {
