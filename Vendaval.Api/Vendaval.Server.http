@@ -1,6 +1,6 @@
-@Vendaval.Server_HostAddress = http://localhost:5260
+@Vendaval.Server_HostAddress = http://localhost:5000
 
-GET {{Vendaval.Server_HostAddress}}/weatherforecast/
+POST {{Vendaval.Server_HostAddress}}/User/login
 Accept: application/json
 
 ###
