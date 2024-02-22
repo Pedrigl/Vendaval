@@ -12,7 +12,7 @@ WORKDIR /src
 COPY ["Vendaval.Server/Vendaval.Api.csproj", "Vendaval.Server/"]
 COPY ["Vendaval.Application/Vendaval.Application.csproj", "Vendaval.Application/"]
 COPY ["Vendaval.Infrastructure/Vendaval.Infrastructure.csproj", "Vendaval.Infrastructure/"]
-COPY ["Domain/Vendaval.Domain.csproj", "Domain/"]
+COPY ["Vendaval.Domain/Vendaval.Domain.csproj", "Vendaval.Domain/"]
 RUN dotnet restore "./Vendaval.Server/./Vendaval.Api.csproj"
 COPY . .
 WORKDIR "/src/Vendaval.Server"
