@@ -2,13 +2,13 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 
-ENV DOTNET_URLS=http://+:5000;https://+:5001
+#ENV DOTNET_URLS=http://+:5000;https://+:5001
 WORKDIR /app
 
 USER app
 
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 8000
+EXPOSE 8001
 
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
