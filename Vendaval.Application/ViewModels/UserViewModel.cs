@@ -23,6 +23,8 @@ namespace Vendaval.Application.ViewModels
 
         public DateTime BirthDate { get; set; }
 
+        public string PhoneNumber { get; set; }
+
         public List<Address>? Address { get; set; }
     }
 }

@@ -23,6 +23,8 @@ namespace Vendaval.Infrastructure.Data.EntitiesConfiguraition
             
             builder.Property(x => x.Password).IsRequired().HasMaxLength(100);
 
+            builder.Property(x => x.PhoneNumber).HasMaxLength(20);
+
             builder.OwnsMany(x => x.Address);
 
             builder.Property(x => x.BirthDate).IsRequired();
