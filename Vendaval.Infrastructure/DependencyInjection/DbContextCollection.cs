@@ -15,12 +15,14 @@ namespace Vendaval.Infrastructure.DependencyInjection
     {
         public static IServiceCollection AddDbContexts(this IServiceCollection services, IConfiguration configuration)
         {
+            var connStr = new ConnStr(configuration);
+
             services.AddDbContextPool<VendavalDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("VendavalDb"));
+                options.UseNpgsql(connStr.VendavalDb);
             });
 
-            var redis = ConnectionMultiplexer.Connect(configuration["Redis:Url"]);
+            var redis = ConnectionMultiplexer.Connect(connStr.Redis);
             var redisDb = redis.GetDatabase();
 
             services.AddScoped(s => redisDb);
