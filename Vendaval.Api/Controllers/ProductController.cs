@@ -40,7 +40,7 @@ namespace Vendaval.Api.Controllers
         {
             try
             {
-                var result = await _productViewModelService.GetProducts();
+                var result = await _productViewModelService.GetAllProducts();
 
                 if (!result.Success)
                     return BadRequest(result);

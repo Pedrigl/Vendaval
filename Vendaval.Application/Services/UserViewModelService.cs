@@ -174,11 +174,7 @@ namespace Vendaval.Application.Services
                 return new LoginResult { Success = false, Message = "User already exists" };
 
             mappedUser.Password = HashPassword(mappedUser.Password);
-            await _userRepository.AddAsync(mappedUser);
-
-            await _userRepository.Save();
-            
-            var newUser = _userRepository.GetByEmail(mappedUser.Email);
+            var newUser = await _userRepository.AddAsync(mappedUser);
 
             var result = CheckIfRegistrationIsSuccesfull(newUser);
 

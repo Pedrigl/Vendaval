@@ -69,7 +69,7 @@ namespace Vendaval.Application.Services
             return new MethodResult<ProductViewModel> { Success = true};
         }
 
-        public async Task<MethodResult<List<ProductViewModel>>> GetProducts()
+        public async Task<MethodResult<List<ProductViewModel>>> GetAllProducts()
         {
             try
             {
