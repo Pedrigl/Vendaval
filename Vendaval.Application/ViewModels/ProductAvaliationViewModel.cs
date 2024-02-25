@@ -10,6 +10,7 @@ namespace Vendaval.Application.ViewModels
 {
     public class ProductAvaliationViewModel
     {
+        public int Id { get; set; }
         public int ProductId { get; set; }
         public string CostumerName { get; set; }
         public string Title { get; set; }

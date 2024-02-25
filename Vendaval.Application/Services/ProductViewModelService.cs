@@ -116,6 +116,7 @@ namespace Vendaval.Application.Services
             try
             {
                 _productRepository.Update(product.Id ,product);
+                await _productRepository.Save();
                 var productUpdated = await _productRepository.GetByIdAsync(product.Id);
                 return new MethodResult<ProductViewModel> { Success = true, Message = "Product was updated successfuly", data = _mapper.Map<ProductViewModel>(productUpdated) };
             }
@@ -136,6 +137,7 @@ namespace Vendaval.Application.Services
             try
             {
                 _productRepository.Delete(product);
+                await _productRepository.Save();
                 return new MethodResult<ProductViewModel> { Success = true, Message = "Product was deleted successfuly", data = _mapper.Map<ProductViewModel>(product) };
             }
             catch (Exception ex)
