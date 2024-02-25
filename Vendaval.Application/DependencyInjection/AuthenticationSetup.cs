@@ -23,7 +23,7 @@ namespace Vendaval.Application.DependencyInjection
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuers = configuration.GetSection("Jwt:Issuer").Get<List<string>>(),
+                        ValidIssuers = configuration.GetSection("Jwt:Issuers").Get<List<string>>(),
                         ValidAudiences = configuration.GetSection("Jwt:Audience").Get<List<string>>(),
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
                     };

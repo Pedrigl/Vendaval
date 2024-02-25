@@ -37,8 +37,10 @@ namespace Vendaval.Application.Services
             _redisRepository = redisRepository ?? throw new ArgumentNullException(nameof(redisRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _jwtSecretKey = configuration["Jwt:Key"] ?? throw new ArgumentNullException(nameof(configuration));
-            _validIssuers = configuration.GetSection("Jwt:Issuer").Get<List<string>>();
+            _validIssuers = configuration.GetSection("Jwt:Issuers").Get<List<string>>();
             _validAudiences = configuration.GetSection("Jwt:Audience").Get<List<string>>();
+            Console.WriteLine(_validIssuers.First());
+            Console.WriteLine(_validAudiences.First());
         }
 
         public async Task<LoginResult> Login(LoginDto login)
