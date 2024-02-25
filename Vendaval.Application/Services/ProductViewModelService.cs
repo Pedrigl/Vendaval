@@ -127,6 +127,7 @@ namespace Vendaval.Application.Services
             }
         }
 
+
         public async Task<MethodResult<ProductViewModel>> DeleteProduct(int id)
         {
             var product = await _productRepository.GetByIdAsync(id);
@@ -144,5 +145,6 @@ namespace Vendaval.Application.Services
                 throw new Exception("Error on delete product", ex);
             }
         }
+        
     }
 }
