@@ -78,11 +78,52 @@ namespace Vendaval.Application.Services
                 if (products == null || products.Count == 0)
                     return new MethodResult<List<ProductViewModel>> { Success = false, Message = "No products found" };
 
-                return new MethodResult<List<ProductViewModel>> { Success = true, Message = "Products found", data = _mapper.Map<List<ProductViewModel>>(products) };
+                return new MethodResult<List<ProductViewModel>> { Success = true, Message = $" {products.Count} Products found", data = _mapper.Map<List<ProductViewModel>>(products) };
             }
             catch (Exception ex)
             {
                 throw new Exception("Error on get products", ex);
+            }
+        }
+
+        public async Task<MethodResult<ProductViewModel>> GetProductById(int id)
+        {
+            try
+            {
+                var product = await _productRepository.GetByIdAsync(id);
+
+                if (product == null)
+                    return new MethodResult<ProductViewModel> { Success = false, Message = "Product not found" };
+
+                return new MethodResult<ProductViewModel> { Success = true, Message = "Product found", data = _mapper.Map<ProductViewModel>(product) };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error on get product by id", ex);
+            }
+        }
+
+        public async Task<MethodResult<ProductViewModel>> PutProduct(ProductViewModel productViewModel)
+        {
+            if (await _productRepository.GetByIdAsync(productViewModel.Id) == null)
+                return new MethodResult<ProductViewModel> { Success = false, Message = "Product not found" };
+
+            var productValidation = IsProductValid(productViewModel);
+
+            if (!productValidation.Success)
+                return productValidation;
+
+            var product = _mapper.Map<Product>(productViewModel);
+
+            try
+            {
+                _productRepository.Update(product.Id ,product);
+                var productUpdated = await _productRepository.GetByIdAsync(product.Id);
+                return new MethodResult<ProductViewModel> { Success = true, Message = "Product was updated successfuly", data = _mapper.Map<ProductViewModel>(productUpdated) };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error on update product", ex);
             }
         }
 
