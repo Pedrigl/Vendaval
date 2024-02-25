@@ -21,7 +21,7 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories
             return await _context.Set<T>().FindAsync(id);
         }
 
-        public async Task<List<T>> GetAll()
+        public async Task<List<T>> GetAllAsync()
         {
             return await _context.Set<T>().ToListAsync();
         }

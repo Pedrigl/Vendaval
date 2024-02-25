@@ -7,7 +7,6 @@ namespace Vendaval.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin, Seller")]
     public class ProductController : ControllerBase
     {
         private readonly IProductViewModelService _productViewModelService;
@@ -17,15 +16,42 @@ namespace Vendaval.Api.Controllers
             _productViewModelService = productViewModelService;
         }
 
-        [HttpPost]
+        [Authorize(Roles = "Admin, Seller")]
+        [HttpPost("registerProduct")]
         public async Task<IActionResult> RegisterProduct([FromBody] ProductViewModel productViewModel)
         {
-            var result = await _productViewModelService.RegisterProduct(productViewModel);
+            try
+            {
+                var result = await _productViewModelService.RegisterProduct(productViewModel);
 
-            if (result.Success)
+                if (!result.Success)
+                    return BadRequest(result);
+
                 return Ok(result);
-            else
-                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
+
+        [HttpGet("getProducts")]
+        public async Task<IActionResult> GetProducts()
+        {
+            try
+            {
+                var result = await _productViewModelService.GetProducts();
+
+                if (!result.Success)
+                    return BadRequest(result);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
     }
 }

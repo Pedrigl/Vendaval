@@ -11,5 +11,6 @@ namespace Vendaval.Application.Services.Interfaces
     public interface IProductViewModelService
     {
         Task<MethodResult<ProductViewModel>> RegisterProduct(ProductViewModel productViewModel);
+        Task<MethodResult<List<ProductViewModel>>> GetProducts();
     }
 }

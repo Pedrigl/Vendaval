@@ -10,7 +10,7 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces
     public interface IUserRepository
     {
         Task<User> GetByIdAsync(int id);
-        Task<List<User>> GetAll();
+        Task<List<User>> GetAllAsync();
         User GetByEmail(string email);
         IEnumerable<User> GetWhere(Func<User, bool> predicate);
         Task<User> AddAsync(User user);

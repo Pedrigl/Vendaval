@@ -69,5 +69,22 @@ namespace Vendaval.Application.Services
             return new MethodResult<ProductViewModel> { Success = true};
         }
 
+        public async Task<MethodResult<List<ProductViewModel>>> GetProducts()
+        {
+            try
+            {
+                var products = await _productRepository.GetAllAsync();
+
+                if (products == null || products.Count == 0)
+                    return new MethodResult<List<ProductViewModel>> { Success = false, Message = "No products found" };
+
+                return new MethodResult<List<ProductViewModel>> { Success = true, Message = "Products found", data = _mapper.Map<List<ProductViewModel>>(products) };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error on get products", ex);
+            }
+        }
+
     }
 }

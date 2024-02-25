@@ -10,7 +10,7 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces
     public interface IProductRepository
     {
         Task<Product> GetByIdAsync(int id);
-        Task<List<Product>> GetAll();
+        Task<List<Product>> GetAllAsync();
         IEnumerable<Product> GetWhere(Func<Product, bool> predicate);
         Task<Product> AddAsync(Product entity);
         void Update(int entityId, Product entity);
