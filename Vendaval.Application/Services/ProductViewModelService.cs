@@ -18,12 +18,10 @@ namespace Vendaval.Application.Services
     public class ProductViewModelService : IProductViewModelService
     {
         private readonly IProductRepository _productRepository;
-        private readonly IProductAvaliationRepository _productAvaliationRepository;
         private readonly IMapper _mapper;
-        public ProductViewModelService(IProductRepository productRepository, IProductAvaliationRepository productAvaliationRepository, IMapper mapper) 
+        public ProductViewModelService(IProductRepository productRepository, IMapper mapper) 
         {
             _productRepository = productRepository;
-            _productAvaliationRepository = productAvaliationRepository;
             _mapper = mapper;
         }
 
