@@ -12,7 +12,7 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces
         Task<Product> GetByIdAsync(int id);
         Task<List<Product>> GetAll();
         IEnumerable<Product> GetWhere(Func<Product, bool> predicate);
-        Task AddAsync(Product entity);
+        Task<Product> AddAsync(Product entity);
         void Update(int entityId, Product entity);
         void Delete(Product entity);
         void DeleteRange(IEnumerable<Product> entities);

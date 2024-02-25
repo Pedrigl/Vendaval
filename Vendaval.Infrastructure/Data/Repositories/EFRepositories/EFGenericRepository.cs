@@ -31,9 +31,12 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories
             return _context.Set<T>().Where(predicate);
         }
 
-        public async Task AddAsync(T entity)
+        public async Task<T> AddAsync(T entity)
         {
-            await _context.Set<T>().AddAsync(entity);
+            var entityAdded = await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entityAdded.Entity;
+
         }
 
         public void Update(int entityId, T entity)

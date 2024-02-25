@@ -28,6 +28,8 @@ namespace Vendaval.Application.Services
         private readonly IRedisRepository _redisRepository;
         private readonly IMapper _mapper;
         private readonly string _jwtSecretKey;
+        private readonly List<string> _validIssuers;
+        private readonly List<string> _validAudiences;
 
         public UserViewModelService(IUserRepository userRepository, IRedisRepository redisRepository, IMapper mapper, IConfiguration configuration)
         {
@@ -35,6 +37,8 @@ namespace Vendaval.Application.Services
             _redisRepository = redisRepository ?? throw new ArgumentNullException(nameof(redisRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _jwtSecretKey = configuration["Jwt:Key"] ?? throw new ArgumentNullException(nameof(configuration));
+            _validIssuers = configuration.GetSection("Jwt:Issuer").Get<List<string>>();
+            _validAudiences = configuration.GetSection("Jwt:Audience").Get<List<string>>();
         }
 
         public async Task<LoginResult> Login(LoginDto login)
@@ -133,7 +137,7 @@ namespace Vendaval.Application.Services
             return tokenHandler.WriteToken(token);
         }
 
-        private static SecurityTokenDescriptor GenerateStd(User user, byte[] key)
+        private SecurityTokenDescriptor GenerateStd(User user, byte[] key)
         {
             return new SecurityTokenDescriptor
             {
@@ -142,7 +146,8 @@ namespace Vendaval.Application.Services
                     new Claim(ClaimTypes.Name, user.Id.ToString()),
                     new Claim(ClaimTypes.Role, user.UserType.ToString())
                 }),
-
+                Issuer = _validIssuers.First(),
+                Audience = _validAudiences.First(),
                 Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

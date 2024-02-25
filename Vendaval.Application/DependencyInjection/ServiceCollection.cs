@@ -14,6 +14,7 @@ namespace Vendaval.Application.DependencyInjection
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IUserViewModelSerivce, UserViewModelService>();
+            services.AddScoped<IProductViewModelService, ProductViewModelService>();
             return services;
         }
     }

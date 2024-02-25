@@ -13,7 +13,7 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces
         Task<List<User>> GetAll();
         User GetByEmail(string email);
         IEnumerable<User> GetWhere(Func<User, bool> predicate);
-        Task AddAsync(User user);
+        Task<User> AddAsync(User user);
         void Update(int entityId, User user);
         void Delete(User user);
         Task<bool> Save();

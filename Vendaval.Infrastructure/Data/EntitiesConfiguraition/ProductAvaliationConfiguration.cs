@@ -17,7 +17,7 @@ namespace Vendaval.Infrastructure.Data.EntitiesConfiguraition
 
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
-            builder.Property(x => x.CreatedAt).ValueGeneratedOnAdd().HasDefaultValueSql("GETDATE()");
+            builder.Property(x => x.CreatedAt).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
 
             builder.Property(x => x.ProductId).IsRequired();
 
