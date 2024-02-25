@@ -127,5 +127,22 @@ namespace Vendaval.Application.Services
             }
         }
 
+        public async Task<MethodResult<ProductViewModel>> DeleteProduct(int id)
+        {
+            var product = await _productRepository.GetByIdAsync(id);
+
+            if (product == null)
+                return new MethodResult<ProductViewModel> { Success = false, Message = "Product not found" };
+
+            try
+            {
+                _productRepository.Delete(product);
+                return new MethodResult<ProductViewModel> { Success = true, Message = "Product was deleted successfuly", data = _mapper.Map<ProductViewModel>(product) };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error on delete product", ex);
+            }
+        }
     }
 }

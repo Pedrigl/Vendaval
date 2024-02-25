@@ -59,7 +59,7 @@ namespace Vendaval.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Vendaval.Domain.Entities.ProductAvaliation", b =>
@@ -98,7 +98,7 @@ namespace Vendaval.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductAvaliations");
+                    b.ToTable("ProductAvaliations", (string)null);
                 });
 
             modelBuilder.Entity("Vendaval.Domain.Entities.User", b =>
@@ -137,12 +137,12 @@ namespace Vendaval.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Vendaval.Domain.Entities.User", b =>
                 {
-                    b.OwnsMany("Vendaval.Domain.ValueObjects.Address", "Address", b1 =>
+                    b.OwnsMany("Vendaval.Domain.Entities.User.Address#Vendaval.Domain.ValueObjects.Address", "Address", b1 =>
                         {
                             b1.Property<int>("UserId")
                                 .HasColumnType("integer");
@@ -182,7 +182,7 @@ namespace Vendaval.Infrastructure.Data.Migrations
 
                             b1.HasKey("UserId", "Id");
 
-                            b1.ToTable("Address");
+                            b1.ToTable("Address", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");

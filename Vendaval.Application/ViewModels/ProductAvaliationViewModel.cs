@@ -6,17 +6,16 @@ using System.Threading.Tasks;
 using Vendaval.Domain.Enums;
 using Vendaval.Domain.ValueObjects;
 
-namespace Vendaval.Domain.Entities
+namespace Vendaval.Application.ViewModels
 {
-    public class ProductAvaliation : BaseModel
+    public class ProductAvaliationViewModel
     {
         public int ProductId { get; set; }
         public string CostumerName { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public List<AvaliationMedia>? ImageOrVideoUrl { get; set; }
         public ProductAvaliationStars Stars { get; set; }
-        public List<AvaliationMedia>? Media { get; set; }
         public DateTime CreatedAt { get; set; }
-
     }
 }

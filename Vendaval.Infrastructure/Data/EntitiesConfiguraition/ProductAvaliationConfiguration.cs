@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,8 @@ namespace Vendaval.Infrastructure.Data.EntitiesConfiguraition
             builder.Property(x => x.Title).IsRequired().HasMaxLength(100);
 
             builder.Property(x => x.Description).IsRequired().HasMaxLength(500);
+
+            builder.OwnsMany(x => x.Media);
 
             builder.Property(x => x.Stars).IsRequired();
         }
