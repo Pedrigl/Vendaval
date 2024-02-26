@@ -41,7 +41,7 @@ export class AuthorizedHttpClient {
         if(error.status == 401)
           localStorage.removeItem("token");
 
-        return throwError(() => error);
+        return throwError(() => "Your session expired, you can only be logged in for one day, please login again");
       }));
   }
 
@@ -57,7 +57,7 @@ export class AuthorizedHttpClient {
         if (error.status == 401)
           localStorage.removeItem("token");
 
-        return throwError(() => error);
+        return throwError(() => "Your session expired, you can only be logged in for one day, please login again");
       }));
   }
 
@@ -73,7 +73,7 @@ export class AuthorizedHttpClient {
         if (error.status == 401)
           localStorage.removeItem("token");
 
-        return throwError(() => error);
+        return throwError(() => "Your session expired, you can only be logged in for one day, please login again");
       }));
   }
 
@@ -89,7 +89,7 @@ export class AuthorizedHttpClient {
         if (error.status == 401)
           localStorage.removeItem("token");
 
-        return throwError(() => error);
+        return throwError(() => "Your session expired, you can only be logged in for one day, please login again");
       }));
   }
 
@@ -105,7 +105,7 @@ export class AuthorizedHttpClient {
         if (error.status == 401)
           localStorage.removeItem("token");
 
-        return throwError(() => error);
+        return throwError(() => "Your session expired, you can only be logged in for one day, please login again");
       }));
   }
   
