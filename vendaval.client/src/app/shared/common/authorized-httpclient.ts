@@ -19,7 +19,7 @@ export class AuthorizedHttpClient {
 
     return httpHeaders;
   }
-
+  //TODO: delete token if authorization fails
   getAuthToken(): string {
     let token = localStorage.getItem("token");
     if (!token)
