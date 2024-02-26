@@ -1,1 +1,54 @@
-<p>login works!</p>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" [(ngModel)]="login.email" class="form-control" id="loginemail" name="email" aria-describedby="emailHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" [(ngModel)]="login.password" class="form-control" id="loginpassword" name="password">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-light w-100">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" [(ngModel)]="user.name" class="form-control" id="name" name="name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="phonenumber" class="form-label">Phone Number</label>
+                            <input type="text" [(ngModel)]="user.phoneNumber" class="form-control" id="phonenumber" name="phonenumber">
+                        </div>
+                        <div class="mb-3">
+                            <label for="birthDate" class="form-label">Birth Date</label>
+                            <input type="date" [(ngModel)]="user.birthDate" class="form-control" id="birthDate" name="birthDate">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" [(ngModel)]="user.email" class="form-control" id="registeremail" name="email" aria-describedby="emailHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="registerpassword">
+                        </div>
+                        <button type="submit" class="btn btn-light w-100">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

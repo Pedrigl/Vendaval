@@ -43,11 +43,11 @@
                     </a>
                     <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="user">
                         <ng-container *ngIf="isLoggedIn; else loggedOut">
-                            <a class="dropdown-item" href="login">Profile</a>
+                            <a class="dropdown-item" href="#">Profile</a>
                             <a class="dropdown-item" href="#">Logout</a>
                         </ng-container>
                         <ng-template #loggedOut>
-                            <a class="dropdown-item" href="#">Login</a>
+                            <a class="dropdown-item" href="login">Login</a>
                             <a class="dropdown-item" href="#">Register</a>
                         </ng-template>
                     </div>
