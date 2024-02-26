@@ -36,7 +36,7 @@ var app = builder.Build();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
-
+app.UseCors();
 app.UseSwagger();
 app.UseSwaggerUI();
 
