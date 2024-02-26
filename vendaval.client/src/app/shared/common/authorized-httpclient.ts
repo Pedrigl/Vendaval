@@ -1,6 +1,7 @@
 import { KeyValue } from "@angular/common";
-import { HttpClient, HttpHandler, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHandler, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { catchError, throwError } from "rxjs";
 
 @Injectable({
   providedIn: "root"
@@ -19,7 +20,7 @@ export class AuthorizedHttpClient {
 
     return httpHeaders;
   }
-  //TODO: delete token if authorization fails
+  
   getAuthToken(): string {
     let token = localStorage.getItem("token");
     if (!token)
@@ -35,7 +36,13 @@ export class AuthorizedHttpClient {
       headers = [];
 
     headers.push({ key: "Authorization", value: `Bearer ${token}` });
-    return this.client.get(url, { headers: this.addHeaders(headers) });
+    return this.client.get(url, { headers: this.addHeaders(headers) }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if(error.status == 401)
+          localStorage.removeItem("token");
+
+        return throwError(() => error);
+      }));
   }
 
   post(url: string, body: any, headers?: KeyValue<string, string>[]) {
@@ -45,7 +52,13 @@ export class AuthorizedHttpClient {
       headers = [];
 
     headers.push({ key: "Authorization", value: `Bearer ${token}` });
-    return this.client.post(url, body, { headers: this.addHeaders(headers) });
+    return this.client.post(url, body, { headers: this.addHeaders(headers) }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status == 401)
+          localStorage.removeItem("token");
+
+        return throwError(() => error);
+      }));
   }
 
   put(url: string, body: any, headers?: KeyValue<string, string>[]) {
@@ -55,7 +68,13 @@ export class AuthorizedHttpClient {
       headers = [];
 
     headers.push({ key: "Authorization", value: `Bearer ${token}` });
-    return this.client.put(url, body, { headers: this.addHeaders(headers) });
+    return this.client.put(url, body, { headers: this.addHeaders(headers) }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status == 401)
+          localStorage.removeItem("token");
+
+        return throwError(() => error);
+      }));
   }
 
   patch(url: string, body: any, headers?: KeyValue<string, string>[]) {
@@ -65,7 +84,13 @@ export class AuthorizedHttpClient {
       headers = [];
 
     headers.push({ key: "Authorization", value: `Bearer ${token}` });
-    return this.client.patch(url, body, { headers: this.addHeaders(headers) });
+    return this.client.patch(url, body, { headers: this.addHeaders(headers) }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status == 401)
+          localStorage.removeItem("token");
+
+        return throwError(() => error);
+      }));
   }
 
   delete(url: string, headers?: KeyValue<string, string>[]) {
@@ -75,7 +100,13 @@ export class AuthorizedHttpClient {
       headers = [];
 
     headers.push({ key: "Authorization", value: `Bearer ${token}` });
-    return this.client.delete(url, { headers: this.addHeaders(headers) });
+    return this.client.delete(url, { headers: this.addHeaders(headers) }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status == 401)
+          localStorage.removeItem("token");
+
+        return throwError(() => error);
+      }));
   }
   
 }
