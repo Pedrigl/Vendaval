@@ -344,18 +344,23 @@ namespace Vendaval.Application.Services
                 oldUser.Address.AddRange(patchedUser.Address);
         }
 
-        public LoginResult DeleteLogin(UserViewModel userViewModel)
+        public async Task<LoginResult> DeleteLogin(int id)
         {
-            var user = _mapper.Map<User>(userViewModel);
+            var user = await _userRepository.GetByIdAsync(id);
+            
+            if (user == null)
+                return new LoginResult { Success = false, Message = "User not found" };
 
-            var result = new LoginResult();
-
-            if (!CheckIfUserExists(user))
-                return new LoginResult { Success = false, Message = "User doesn't exist" };
-
-            _userRepository.Delete(user);
-
-            return new LoginResult { Success = true, Message = "User deleted" };
+            try
+            {
+                _userRepository.Delete(user);
+                await _userRepository.Save();
+                return new LoginResult { Success = true, Message = "User deleted" };
+            }
+            catch (Exception ex)
+            {
+                return new LoginResult { Success = false, Message = ex.Message };
+            }
         }
 
 
