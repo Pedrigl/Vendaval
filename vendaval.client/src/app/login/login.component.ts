@@ -7,6 +7,7 @@ import { UserType } from './user-type';
 import { LoginService } from './login.service';
 import { lastValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from '../shared/common/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class LoginComponent implements OnInit{
 
-  constructor(private router: Router, private loginService: LoginService) { }
+  constructor(private router: Router, private loginService: LoginService, private authService: AuthService) { }
 
   keepUserLoggedIn: boolean = false;
 
@@ -83,6 +84,7 @@ export class LoginComponent implements OnInit{
     sessionStorage.setItem('token', loginRes.token);
     sessionStorage.setItem('user', JSON.stringify(loginRes.user));
 
+    this.authService.login();
     this.router.navigate(['/home']);
   };
 
@@ -116,13 +118,6 @@ export class LoginComponent implements OnInit{
 
   };
 
-  public async logoutAsync() {
-    localStorage.removeItem('login');
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    sessionStorage.removeItem('token');
-  };
-
   public async checkIfUserIsLoggedInAsync() {
     const login = localStorage.getItem('login');
     const user = localStorage.getItem('user');
@@ -132,6 +127,7 @@ export class LoginComponent implements OnInit{
       this.login = JSON.parse(login);
       this.user = JSON.parse(user);
       this.keepUserLoggedIn = true;
+      this.authService.login();
       this.router.navigate(['/home']);
       return;
     }
@@ -140,6 +136,7 @@ export class LoginComponent implements OnInit{
     const sessionUser = sessionStorage.getItem('user');
 
     if (sessionToken && sessionUser) {
+      this.authService.login();
       this.router.navigate(['/home']);
       return;
     }

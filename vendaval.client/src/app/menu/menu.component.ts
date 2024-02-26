@@ -1,11 +1,41 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { User } from '../login/user';
+import { UserType } from '../login/user-type';
+import { AuthService } from '../shared/common/auth.service';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
-export class MenuComponent {
+export class MenuComponent implements OnInit{
+
+  constructor(private authService: AuthService) { }
+
   navBarCollapsed: boolean = true;
   isLoggedIn: boolean = false;
+  user: User = {
+    id: 0,
+    userType: UserType.Costumer,
+    email: '',
+    password: '',
+    name: '',
+    birthDate: new Date(),
+    phoneNumber: '',
+    address: []
+  }
+
+  ngOnInit() {
+    this.authService.isLoggedIn.subscribe(loggedIn => this.isLoggedIn = loggedIn);
+  }
+
+  public logout() {
+    localStorage.removeItem('login');
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+    this.isLoggedIn = false;
+
+  };
+
 }
