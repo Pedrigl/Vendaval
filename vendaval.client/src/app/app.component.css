@@ -20,3 +20,22 @@ th, td {
 table {
     margin: 0 auto;
 }
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    text-align: center;
+}
+
+.footer-btn-start {
+  background-color: #d3d3d3; /* Você pode ajustar essa cor conforme necessário */
+  color: #000;
+}
+
+.footer-btn-start:hover {
+  background-color: #c0c0c0; /* Você pode ajustar essa cor conforme necessário */
+  color: #000;
+}

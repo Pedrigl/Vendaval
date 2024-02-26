@@ -25,5 +25,4 @@ export class LoginComponent {
     phoneNumber: '',
     address: []
   };
-
 }

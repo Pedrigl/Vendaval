@@ -15,4 +15,5 @@ export class AppComponent implements OnInit {
   }
 
   title = 'Vendaval';
+  date = new Date();
 }
