@@ -32,7 +32,7 @@ namespace Vendaval.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError,ex.Message);
             }
         }
 
@@ -50,7 +50,7 @@ namespace Vendaval.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError,ex.Message);
             }
         }
 
@@ -69,7 +69,7 @@ namespace Vendaval.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -88,7 +88,7 @@ namespace Vendaval.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError,ex.Message);
             }
         }
 
@@ -107,7 +107,7 @@ namespace Vendaval.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
     }
