@@ -37,10 +37,8 @@ namespace Vendaval.Application.Services
             _redisRepository = redisRepository ?? throw new ArgumentNullException(nameof(redisRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _jwtSecretKey = configuration["Jwt:Key"] ?? throw new ArgumentNullException(nameof(configuration));
-            _validIssuers = configuration.GetSection("Jwt:Issuers").Get<List<string>>();
-            _validAudiences = configuration.GetSection("Jwt:Audience").Get<List<string>>();
-            Console.WriteLine(_validIssuers.First());
-            Console.WriteLine(_validAudiences.First());
+            _validIssuers = configuration.GetSection("Jwt:Issuers").Get<List<string>>() ?? throw new ArgumentNullException(nameof(configuration));
+            _validAudiences = configuration.GetSection("Jwt:Audience").Get<List<string>>() ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         public async Task<LoginResult> Login(LoginDto login)
@@ -340,7 +338,7 @@ namespace Vendaval.Application.Services
             oldUser.Email = string.IsNullOrEmpty(patchedUser.Email) ? oldUser.Email : patchedUser.Email;
             oldUser.PhoneNumber = string.IsNullOrEmpty(patchedUser.PhoneNumber) ? oldUser.PhoneNumber : patchedUser.PhoneNumber;
 
-            if(oldUser.Address != null && oldUser.Address.Count > 0)
+            if(oldUser.Address != null && oldUser.Address.Count > 0 && patchedUser.Address != null && patchedUser.Address.Count >0)
                 oldUser.Address.AddRange(patchedUser.Address);
         }
 
