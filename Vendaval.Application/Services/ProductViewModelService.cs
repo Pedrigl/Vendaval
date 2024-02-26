@@ -101,7 +101,7 @@ namespace Vendaval.Application.Services
             }
         }
 
-        public async Task<MethodResult<ProductViewModel>> PutProduct(ProductViewModel productViewModel)
+        public async Task<MethodResult<ProductViewModel>> UpdateProduct(ProductViewModel productViewModel)
         {
             if (await _productRepository.GetByIdAsync(productViewModel.Id) == null)
                 return new MethodResult<ProductViewModel> { Success = false, Message = "Product not found" };
