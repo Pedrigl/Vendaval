@@ -1,15 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Login, LoginResponse } from './login';
 import { User } from './user';
 import { UserType } from './user-type';
+import { LoginService } from './login.service';
+import { lastValueFrom } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
+
+  constructor(private router: Router, private loginService: LoginService) { }
+
+  keepUserLoggedIn: boolean = false;
+
+  hasLoginError: boolean = false;
+  loginError: string = '';
+
+  hasRegisterError: boolean = false;
+  registerError: string = '';
+
   login: Login = {
     email: '',
     password: ''
@@ -25,4 +40,108 @@ export class LoginComponent {
     phoneNumber: '',
     address: []
   };
+
+  async ngOnInit() {
+    await this.checkIfUserIsLoggedInAsync();
+  }
+
+  public async loginAsync() {
+
+    var loginRes: LoginResponse;
+
+    try {
+      const loginReq = await this.loginService.login(this.login);
+      loginRes = await lastValueFrom(loginReq);
+    }
+
+    catch (error: any) {
+      this.hasLoginError = true;
+
+      if (error instanceof HttpErrorResponse) {
+        this.loginError = error.error;
+      }
+      else {
+        this.loginError = error;
+      }
+
+      return
+    }
+
+    if(!loginRes.success) {
+      this.hasLoginError = true;
+      this.loginError = loginRes.message;
+      return;
+    }
+
+    if (this.keepUserLoggedIn) {
+      localStorage.setItem('login', JSON.stringify(this.login));
+      localStorage.setItem('user', JSON.stringify(loginRes.user));
+      localStorage.setItem('token', loginRes.token);
+    }
+
+    sessionStorage.setItem('token', loginRes.token);
+    sessionStorage.setItem('user', JSON.stringify(loginRes.user));
+
+    this.router.navigate(['/home']);
+  };
+
+  public async registerAsync() {
+    var loginRes: LoginResponse;
+
+    try {
+      const loginReq = await this.loginService.register(this.user);
+      loginRes = await lastValueFrom(loginReq);
+    }
+
+    catch (error: any) {
+      this.hasRegisterError = true;
+
+      if (error instanceof HttpErrorResponse) {
+        this.registerError = error.error;
+      }
+      else {
+        this.registerError = error;
+      }
+
+      return
+    }
+
+    if(!loginRes.success) {
+      this.hasRegisterError = true;
+      this.registerError = loginRes.message;
+      return;
+    }
+
+  };
+
+  public async logoutAsync() {
+    localStorage.removeItem('login');
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+  };
+
+  public async checkIfUserIsLoggedInAsync() {
+    const login = localStorage.getItem('login');
+    const user = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+
+    if (login && user && token) {
+      this.login = JSON.parse(login);
+      this.user = JSON.parse(user);
+      this.keepUserLoggedIn = true;
+      this.router.navigate(['/home']);
+      return;
+    }
+
+    const sessionToken = sessionStorage.getItem('token');
+    const sessionUser = sessionStorage.getItem('user');
+
+    if (sessionToken && sessionUser) {
+      this.router.navigate(['/home']);
+      return;
+    }
+    
+  };
+  
 }

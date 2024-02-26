@@ -3,7 +3,7 @@
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-body">
-                    <form>
+                    <form name="loginForm" (ngSubmit)="loginAsync()">
                         <span class="text-muted fs-4 d-block mb-3">Login</span>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email address</label>
@@ -14,18 +14,19 @@
                             <input type="password" [(ngModel)]="login.password" class="form-control" id="loginpassword" name="password">
                         </div>
                         <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <input type="checkbox" [(ngModel)]="keepUserLoggedIn" class="form-check-input" id="rememberMe" name="keepUserLoggedIn">
                             <label class="form-check-label" for="rememberMe">Remember me</label>
                         </div>
                         <button type="submit" class="btn btn-light w-100">Login</button>
                     </form>
                 </div>
             </div>
+            <div class="alert alert-danger mt-3" *ngIf="hasLoginError" role="alert">{{loginError}}</div>
         </div>
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-body">
-                    <form>
+                    <form name="registerForm">
                         <span class="text-muted fs-4 d-block mb-3">Register</span>
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
@@ -51,6 +52,7 @@
                     </form>
                 </div>
             </div>
+            <div class="alert alert-danger mt-3" *ngIf="hasRegisterError" role="alert">{{registerError}}</div>
         </div>
     </div>
 </div>
