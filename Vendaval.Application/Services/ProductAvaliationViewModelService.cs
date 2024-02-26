@@ -89,13 +89,13 @@ namespace Vendaval.Application.Services
             if (Enum.IsDefined(productAvaliationViewModel.Stars))
                 return new MethodResult<ProductAvaliationViewModel> { Success = false, Message = "Rating is required and should be between 1 and 5" };
 
-            if (productAvaliationViewModel.Description == null)
+            if (string.IsNullOrEmpty(productAvaliationViewModel.Description))
                 return new MethodResult<ProductAvaliationViewModel> { Success = false, Message = "Description is required" };
 
-            if (productAvaliationViewModel.CostumerName == null)
+            if (string.IsNullOrEmpty(productAvaliationViewModel.CostumerName))
                 return new MethodResult<ProductAvaliationViewModel> { Success = false, Message = "Costumer Name is required" };
 
-            if (productAvaliationViewModel.Title == null)
+            if (string.IsNullOrEmpty(productAvaliationViewModel.Title))
                 return new MethodResult<ProductAvaliationViewModel> { Success = false, Message = "Title is required" };
 
             var product = await _productRepository.GetByIdAsync(productAvaliationViewModel.ProductId);
