@@ -30,12 +30,7 @@ export class MenuComponent implements OnInit{
   }
 
   public logout() {
-    localStorage.removeItem('login');
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    sessionStorage.removeItem('token');
-    this.isLoggedIn = false;
-
+    this.authService.logOut();
   };
 
 }

@@ -8,6 +8,7 @@ import { LoginService } from './login.service';
 import { lastValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../shared/common/auth.service';
+import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ import { AuthService } from '../shared/common/auth.service';
 })
 export class LoginComponent implements OnInit{
 
-  constructor(private router: Router, private loginService: LoginService, private authService: AuthService) { }
+  constructor(private router: Router, private loginService: LoginService, private socialLoginService: SocialAuthService , private authService: AuthService) { }
 
   keepUserLoggedIn: boolean = false;
 
@@ -77,14 +78,13 @@ export class LoginComponent implements OnInit{
 
     if (this.keepUserLoggedIn) {
       localStorage.setItem('login', JSON.stringify(this.login));
-      localStorage.setItem('user', JSON.stringify(loginRes.user));
       localStorage.setItem('token', loginRes.token);
     }
 
     sessionStorage.setItem('token', loginRes.token);
-    sessionStorage.setItem('user', JSON.stringify(loginRes.user));
+    this.authService.setUser(loginRes.user, this.keepUserLoggedIn);
 
-    this.authService.login();
+    this.authService.logIn();
     this.router.navigate(['/home']);
   };
 
@@ -118,6 +118,22 @@ export class LoginComponent implements OnInit{
 
   };
 
+  public async signInWithGoogleAsync() {
+      var socialUser = await this.socialLoginService.signIn(GoogleLoginProvider.PROVIDER_ID)
+  }
+
+  public async signInWithFacebookAsync() {
+    var socialUser = await this.socialLoginService.signIn(FacebookLoginProvider.PROVIDER_ID)
+  }
+
+  public async signOutAsync() {
+    await this.socialLoginService.signOut();
+  }
+
+  refreshSocialToken(): void {
+    this.socialLoginService.refreshAuthToken(GoogleLoginProvider.PROVIDER_ID);
+  }
+
   public async checkIfUserIsLoggedInAsync() {
     const login = localStorage.getItem('login');
     const user = localStorage.getItem('user');
@@ -127,7 +143,7 @@ export class LoginComponent implements OnInit{
       this.login = JSON.parse(login);
       this.user = JSON.parse(user);
       this.keepUserLoggedIn = true;
-      this.authService.login();
+      this.authService.logIn();
       this.router.navigate(['/home']);
       return;
     }
@@ -136,7 +152,7 @@ export class LoginComponent implements OnInit{
     const sessionUser = sessionStorage.getItem('user');
 
     if (sessionToken && sessionUser) {
-      this.authService.login();
+      this.authService.logIn();
       this.router.navigate(['/home']);
       return;
     }
