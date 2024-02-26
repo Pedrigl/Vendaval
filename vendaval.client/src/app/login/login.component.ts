@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Login } from './login';
+import { Login, LoginResponse } from './login';
 import { User } from './user';
 import { UserType } from './user-type';
 
