@@ -53,5 +53,62 @@ namespace Vendaval.Api.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, Seller")]
+        [HttpPut("updateProduct")]
+        public async Task<IActionResult> UpdateProduct([FromBody] ProductViewModel productViewModel)
+        {
+            try
+            {
+                var result = await _productViewModelService.UpdateProduct(productViewModel);
+
+                if (!result.Success)
+                    return BadRequest(result);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("getProductById")]
+        public async Task<IActionResult> GetProductById(int id)
+        {
+            try
+            {
+                var result = await _productViewModelService.GetProductById(id);
+
+                if (!result.Success)
+                    return BadRequest(result);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin, Seller")]
+        [HttpDelete("deleteProduct")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            try
+            {
+                var result = await _productViewModelService.DeleteProduct(id);
+
+                if (!result.Success)
+                    return BadRequest(result);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
     }
 }

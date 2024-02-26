@@ -12,5 +12,8 @@ namespace Vendaval.Application.Services.Interfaces
     {
         Task<MethodResult<ProductViewModel>> RegisterProduct(ProductViewModel productViewModel);
         Task<MethodResult<List<ProductViewModel>>> GetAllProducts();
+        Task<MethodResult<ProductViewModel>> UpdateProduct(ProductViewModel productViewModel);
+        Task<MethodResult<ProductViewModel>> GetProductById(int id);
+        Task<MethodResult<ProductViewModel>> DeleteProduct(int id);
     }
 }
