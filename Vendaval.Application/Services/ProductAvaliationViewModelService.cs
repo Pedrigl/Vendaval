@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vendaval.Application.Services.Interfaces;
 using Vendaval.Application.ValueObjects;
 using Vendaval.Application.ViewModels;
 using Vendaval.Domain.Entities;
@@ -11,7 +12,7 @@ using Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces;
 
 namespace Vendaval.Application.Services
 {
-    public class ProductAvaliationViewModelService
+    public class ProductAvaliationViewModelService : IProductAvaliationViewModelService
     {
         private readonly IProductAvaliationRepository _productAvaliationRepository;
         private readonly IProductRepository _productRepository;
@@ -104,6 +105,25 @@ namespace Vendaval.Application.Services
                 return new MethodResult<ProductAvaliationViewModel> { Success = false, Message = "Product not found" };
 
             return new MethodResult<ProductAvaliationViewModel> { Success = true, Message = "Product Avaliation is valid" };
+        }
+
+        public async Task<MethodResult<ProductAvaliationViewModel>> DeleteProductAvaliation(int productAvaliationId)
+        {
+            var productAvaliation = await _productAvaliationRepository.GetByIdAsync(productAvaliationId);
+
+            if (productAvaliation == null)
+                return new MethodResult<ProductAvaliationViewModel> { Success = false, Message = "Product Avaliation not found" };
+
+            try
+            {
+                _productAvaliationRepository.Delete(productAvaliation);
+                await _productAvaliationRepository.Save();
+                return new MethodResult<ProductAvaliationViewModel> { Success = true, Message = "Product Avaliation was deleted successfuly" };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error on delete product avaliation", ex);
+            }
         }
     }
 }
