@@ -1,7 +1,7 @@
 import { KeyValue } from "@angular/common";
 import { HttpClient, HttpErrorResponse, HttpHandler, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { catchError, throwError } from "rxjs";
+import { Observable, catchError, throwError } from "rxjs";
 
 @Injectable({
   providedIn: "root"
@@ -22,21 +22,23 @@ export class AuthorizedHttpClient {
   }
   
   getAuthToken(): string {
-    let token = localStorage.getItem("token");
-    if (!token)
-      throw new Error("Token not found");
+    
+    let token = sessionStorage.getItem("token") ?? localStorage.getItem("token");
 
-    return token
+    if (token === null)
+      throw new Error("You are not logged in");
+
+    return token;
   }
 
-  get(url: string, headers?: KeyValue<string, string>[]) {
+  get<T>(url: string, headers?: KeyValue<string, string>[]): Observable<T> {
     let token = this.getAuthToken();
 
     if (!headers)
       headers = [];
 
     headers.push({ key: "Authorization", value: `Bearer ${token}` });
-    return this.client.get(url, { headers: this.addHeaders(headers) }).pipe(
+    return this.client.get<T>(url, { headers: this.addHeaders(headers) }).pipe(
       catchError((error: HttpErrorResponse) => {
         if(error.status == 401)
           localStorage.removeItem("token");
@@ -45,14 +47,14 @@ export class AuthorizedHttpClient {
       }));
   }
 
-  post(url: string, body: any, headers?: KeyValue<string, string>[]) {
+  post<T>(url: string, body: any, headers?: KeyValue<string, string>[]): Observable<T> {
     let token = this.getAuthToken();
 
     if (!headers)
       headers = [];
 
     headers.push({ key: "Authorization", value: `Bearer ${token}` });
-    return this.client.post(url, body, { headers: this.addHeaders(headers) }).pipe(
+    return this.client.post<T>(url, body, { headers: this.addHeaders(headers) }).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status == 401)
           localStorage.removeItem("token");
@@ -61,14 +63,14 @@ export class AuthorizedHttpClient {
       }));
   }
 
-  put(url: string, body: any, headers?: KeyValue<string, string>[]) {
+  put<T>(url: string, body: any, headers?: KeyValue<string, string>[]): Observable<T> {
     let token = this.getAuthToken();
 
     if (!headers)
       headers = [];
 
     headers.push({ key: "Authorization", value: `Bearer ${token}` });
-    return this.client.put(url, body, { headers: this.addHeaders(headers) }).pipe(
+    return this.client.put<T>(url, body, { headers: this.addHeaders(headers) }).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status == 401)
           localStorage.removeItem("token");
@@ -77,14 +79,14 @@ export class AuthorizedHttpClient {
       }));
   }
 
-  patch(url: string, body: any, headers?: KeyValue<string, string>[]) {
+  patch<T>(url: string, body: any, headers?: KeyValue<string, string>[]): Observable<T> {
     let token = this.getAuthToken();
 
     if (!headers)
       headers = [];
 
     headers.push({ key: "Authorization", value: `Bearer ${token}` });
-    return this.client.patch(url, body, { headers: this.addHeaders(headers) }).pipe(
+    return this.client.patch<T>(url, body, { headers: this.addHeaders(headers) }).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status == 401)
           localStorage.removeItem("token");
@@ -93,14 +95,14 @@ export class AuthorizedHttpClient {
       }));
   }
 
-  delete(url: string, headers?: KeyValue<string, string>[]) {
+  delete<T>(url: string, headers?: KeyValue<string, string>[]): Observable<T> {
     let token = this.getAuthToken();
 
     if (!headers)
       headers = [];
 
     headers.push({ key: "Authorization", value: `Bearer ${token}` });
-    return this.client.delete(url, { headers: this.addHeaders(headers) }).pipe(
+    return this.client.delete<T>(url, { headers: this.addHeaders(headers) }).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status == 401)
           localStorage.removeItem("token");
