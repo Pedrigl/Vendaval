@@ -94,11 +94,11 @@ namespace Vendaval.Api.Controllers
 
         [Authorize]
         [HttpDelete("delete")]
-        public IActionResult DeleteAccount([FromBody] UserViewModel userViewModel)
+        public async Task<IActionResult> DeleteAccount(int id)
         {
             try
             {
-                var result = _userViewModelService.DeleteLogin(userViewModel);
+                var result = await _userViewModelService.DeleteLogin(id);
 
                 if(!result.Success)
                     return BadRequest(result);
