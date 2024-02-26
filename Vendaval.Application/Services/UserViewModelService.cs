@@ -171,6 +171,8 @@ namespace Vendaval.Application.Services
             if (CheckIfUserExists(mappedUser))
                 return new LoginResult { Success = false, Message = "User already exists" };
 
+            mappedUser.BirthDate = mappedUser.BirthDate.ToUniversalTime();
+
             mappedUser.Password = HashPassword(mappedUser.Password);
             var newUser = await _userRepository.AddAsync(mappedUser);
 

@@ -58,7 +58,8 @@ export class LoginComponent implements OnInit{
       this.hasLoginError = true;
 
       if (error instanceof HttpErrorResponse) {
-        this.loginError = error.error;
+        var errorParse : LoginResponse = error.error;
+        this.loginError = errorParse.message;
       }
       else {
         this.loginError = error;
@@ -97,7 +98,8 @@ export class LoginComponent implements OnInit{
       this.hasRegisterError = true;
 
       if (error instanceof HttpErrorResponse) {
-        this.registerError = error.error;
+        var errorParse: LoginResponse = error.error;
+        this.registerError = errorParse.message;
       }
       else {
         this.registerError = error;

@@ -26,7 +26,7 @@
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-body">
-                    <form name="registerForm">
+                    <form name="registerForm" (ngSubmit)="registerAsync()">
                         <span class="text-muted fs-4 d-block mb-3">Register</span>
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
@@ -46,13 +46,13 @@
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="registerpassword">
+                            <input type="password" [(ngModel)]="user.password" class="form-control" name="password" id="registerpassword">
                         </div>
                         <button type="submit" class="btn btn-light w-100">Register</button>
                     </form>
                 </div>
             </div>
-            <div class="alert alert-danger mt-3" *ngIf="hasRegisterError" role="alert">{{registerError}}</div>
+            <div class="alert alert-danger mt-3 animate__animated animate__fadeIn" *ngIf="hasRegisterError" role="alert">{{registerError}}</div>
         </div>
     </div>
 </div>
