@@ -8,6 +8,7 @@
     <PublishAssetsDirectory>$(MSBuildProjectDirectory)\dist\vendaval.client\</PublishAssetsDirectory>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="src\app\shared\common\" />
     <Folder Include="src\environments\" />
   </ItemGroup>
 </Project>
