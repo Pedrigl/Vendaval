@@ -13,24 +13,32 @@ export class RolesGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Promise<boolean | UrlTree> {
 
-    const isLoggedIn = this.authService.isLoggedIn;
+    try {
+      const isLoggedIn = await lastValueFrom(this.authService.isLoggedIn);
 
-    if (!isLoggedIn) {
-      const navigationExtras = { queryParams: { reason: "notLoggedIn" } };
-      return this.router.createUrlTree(['/login'], navigationExtras);
+      //TODO: FIX THIS
+
+      if (!isLoggedIn) {
+        const navigationExtras = { queryParams: { reason: "notLoggedIn" } };
+        return this.router.createUrlTree(['/login'], navigationExtras);
+      }
+
+      var user = this.authService.GetUser();
+
+      var userValue = await lastValueFrom(user);
+
+      const expectedRoles = next.data['roles'] as string[];
+
+      if (userValue == null || !expectedRoles.includes(userValue.userType.toString())) {
+        const navigationExtras = { queryParams: { reason: "noPermission" } };
+        return this.router.createUrlTree(['/login'], navigationExtras);
+      }
+
+      return true;
     }
-
-    var user = this.authService.GetUser();
-
-    var userValue = await lastValueFrom(user);
-
-    const expectedRoles = next.data['roles'] as string[];
-    
-    if (userValue == null || !expectedRoles.includes(userValue.userType.toString())) {
-      const navigationExtras = { queryParams: { reason: "noPermission" } };
-      return this.router.createUrlTree(['/login'], navigationExtras);
+    catch (error) {
+      console.log(error);
+      return false;
     }
-
-    return true;
   }
 }
