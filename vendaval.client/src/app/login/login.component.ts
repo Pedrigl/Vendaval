@@ -122,7 +122,7 @@ export class LoginComponent implements OnInit{
     const user = localStorage.getItem('user');
     const token = localStorage.getItem('token');
 
-    if (login && user && token) {
+    if (login != null && user != null && token != null) {
       this.login = JSON.parse(login);
       this.user = JSON.parse(user);
       this.keepUserLoggedIn = true;
@@ -134,7 +134,7 @@ export class LoginComponent implements OnInit{
     const sessionToken = sessionStorage.getItem('token');
     const sessionUser = sessionStorage.getItem('user');
 
-    if (sessionToken && sessionUser) {
+    if (sessionToken != null && sessionUser != null) {
       this.authService.logIn();
       this.router.navigate(['/home']);
       return;

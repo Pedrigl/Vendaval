@@ -44,6 +44,8 @@ export class AuthService implements OnInit{
   }
 
   public logOut() {
+    sessionStorage.clear();
+    localStorage.clear();
     this.loggedIn.next(false);
   }
 }

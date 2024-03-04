@@ -8,17 +8,16 @@ import { AuthService } from './auth.service';
 })
 export class RolesGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) { }
+  isLoggedIn: boolean = false;
 
   async canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Promise<boolean | UrlTree> {
 
     try {
-      const isLoggedIn = await lastValueFrom(this.authService.isLoggedIn);
-
-      //TODO: FIX THIS
-
-      if (!isLoggedIn) {
+      this.authService.isLoggedIn.subscribe(loggedIn => this.isLoggedIn = loggedIn);
+      
+      if (!this.isLoggedIn) {
         const navigationExtras = { queryParams: { reason: "notLoggedIn" } };
         return this.router.createUrlTree(['/login'], navigationExtras);
       }
