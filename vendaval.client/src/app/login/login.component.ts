@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Login, LoginResponse } from './login';
 import { User } from './user';
@@ -16,7 +16,7 @@ import { AuthService } from '../shared/common/auth.service';
 })
 export class LoginComponent implements OnInit{
 
-  constructor(private router: Router, private loginService: LoginService, private authService: AuthService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private loginService: LoginService, private authService: AuthService) { }
 
   keepUserLoggedIn: boolean = false;
 
@@ -43,6 +43,7 @@ export class LoginComponent implements OnInit{
   };
 
   async ngOnInit() {
+    this.checkRedirect();
     await this.checkIfUserIsLoggedInAsync();
   }
 
@@ -74,14 +75,16 @@ export class LoginComponent implements OnInit{
       this.loginError = loginRes.message;
       return;
     }
-
+    let expiration = new Date(Date.now() + 1);
     if (this.keepUserLoggedIn) {
       localStorage.setItem('login', JSON.stringify(this.login));
       localStorage.setItem('token', loginRes.token);
+      localStorage.setItem('tokenExpiration', expiration.toString());
     }
 
     sessionStorage.setItem('token', loginRes.token);
     this.authService.setUser(loginRes.user, this.keepUserLoggedIn);
+    sessionStorage.setItem('tokenExpiration', expiration.toString());
 
     this.authService.logIn();
     this.router.navigate(['/home']);
@@ -125,6 +128,7 @@ export class LoginComponent implements OnInit{
     if (login != null && user != null && token != null) {
       this.login = JSON.parse(login);
       this.user = JSON.parse(user);
+      
       this.keepUserLoggedIn = true;
       this.authService.logIn();
       this.router.navigate(['/home']);
@@ -141,5 +145,21 @@ export class LoginComponent implements OnInit{
     }
     
   };
+
+  private checkRedirect() {
+    this.route.queryParams.subscribe(params => {
+      let redirectReason = params['reason'];
+      if (redirectReason != null) {
+        if (redirectReason == "notLoggedIn") {
+          this.hasLoginError = true;
+          this.loginError = "You need to be logged in to access this page";
+        }
+        else if (redirectReason == "noPermission") {
+          this.hasLoginError = true;
+          this.loginError = "You don't have permission to access this page";
+        }
+      }
+    });
+  }
   
 }
