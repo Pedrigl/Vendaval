@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit{
         this.loginError = errorParse.message;
       }
       else {
-        this.loginError = error;
+        this.loginError = error.error;
       }
 
       return
