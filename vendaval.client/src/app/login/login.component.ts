@@ -81,6 +81,7 @@ export class LoginComponent implements OnInit{
 
     this.authService.setUser(loginRes.user, this.keepUserLoggedIn);
     this.authService.setLogin(this.login, this.keepUserLoggedIn);
+    this.authService.setToken(loginRes.token, this.keepUserLoggedIn);
     this.authService.setTokenExpiration(currentDate, this.keepUserLoggedIn);
 
     this.authService.logIn();
@@ -145,16 +146,11 @@ export class LoginComponent implements OnInit{
     this.route.queryParams.subscribe(params => {
       let redirectReason = params['reason'];
       if (redirectReason != null) {
-        if (redirectReason == "notLoggedIn") {
+        if (redirectReason == "notloggedin") {
           this.hasLoginError = true;
           this.loginError = "You need to be logged in to access this page";
         }
-        else if (redirectReason == "noPermission") {
-          this.hasLoginError = true;
-          this.loginError = "You don't have permission to access this page";
-        }
-      }
-    });
+    }});
   }
   
 }

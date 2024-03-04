@@ -6,27 +6,25 @@ import { Login } from '../../login/login';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService implements OnInit{
+export class AuthService{
   private loggedIn = new BehaviorSubject<boolean>(false);
   private user!: BehaviorSubject<User | null>;
   private login!: BehaviorSubject<Login | null>;
   private tokenExpiration!: BehaviorSubject<Date | null>;
   private token!: BehaviorSubject<string | null>;
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor() {
     var storedUser = sessionStorage.getItem('user') ?? localStorage.getItem('user');
     var storedLogin = sessionStorage.getItem('login') ?? localStorage.getItem('login');
     var storedTokenExpiration = sessionStorage.getItem('tokenExpiration') ?? localStorage.getItem('tokenExpiration');
     var storedToken = sessionStorage.getItem('token') ?? localStorage.getItem('token');
-
-    this.user = storedUser != null ? JSON.parse(storedUser) : new BehaviorSubject<User | null>(null);
-    this.login = storedLogin != null ? JSON.parse(storedLogin) : new BehaviorSubject<Login | null>(null);
-    this.tokenExpiration = storedTokenExpiration != null ? new BehaviorSubject<Date | null>(new Date(storedTokenExpiration)) : new BehaviorSubject<Date | null>(null);
-    this.token = storedToken != null ? new BehaviorSubject<string | null>(storedToken) : new BehaviorSubject<string | null>(null);
-
-    if(this.user != null && this.login != null && this.tokenExpiration != null && this.token != null) {
+  
+    this.user = new BehaviorSubject<User | null>(storedUser != null ? JSON.parse(storedUser) : null);
+    this.login = new BehaviorSubject<Login | null>(storedLogin != null ? JSON.parse(storedLogin) : null);
+    this.tokenExpiration = new BehaviorSubject<Date | null>(storedTokenExpiration != null ? new Date(storedTokenExpiration) : null);
+    this.token = new BehaviorSubject<string | null>(storedToken != null ? storedToken : null);
+  
+    if(this.user.value != null && this.login.value != null && this.tokenExpiration.value != null && this.token.value != null) {
       this.loggedIn.next(true);
     }
   }

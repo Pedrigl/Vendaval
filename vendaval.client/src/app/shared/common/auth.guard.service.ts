@@ -17,12 +17,12 @@ export class AuthGuardService implements CanActivate{
     return this.authService.getUser.pipe(
       map(user => {
         if (user == null) {
-          return this.router.createUrlTree(['/login'], { queryParams: { reason: "you are not logged in" } });
+          return this.router.createUrlTree(['/login'], { queryParams: { reason: "notloggedin" } });
         }
 
         const roles = route.data['roles'] as Array<string>;
         if (roles && !roles.includes(user.userType.toString())) {
-          return this.router.createUrlTree(['/login'], { queryParams: { reason: `you don't have the permissions to access ${state.url}` } });
+          return this.router.createUrlTree(['/notallowed']);
         }
 
         return true;
