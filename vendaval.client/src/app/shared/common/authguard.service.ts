@@ -13,9 +13,10 @@ export async function canActivateRoles(expectedRoles: string[], authService: Aut
     var user = authService.GetUser();
     var userValue = await lastValueFrom(user);
 
-    if (userValue == null||) {
+    if (userValue == null|| expectedRoles.includes(userValue.userType.toString())) {
       return router.parseUrl('/login');
     }
+
     return true;
   };
 }
