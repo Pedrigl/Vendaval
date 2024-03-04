@@ -1,22 +1,36 @@
-import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { Injectable } from '@angular/core';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Observable, lastValueFrom } from 'rxjs';
-import { User } from '../../login/user';
 import { AuthService } from './auth.service';
 
-export async function canActivateRoles(expectedRoles: string[], authService: AuthService, router: Router): Promise<(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) => Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree> {
-  return async (next: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-    const isLoggedIn = authService.isLoggedIn;
+@Injectable({
+  providedIn: 'root'
+})
+export class RolesGuard implements CanActivate {
+  constructor(private authService: AuthService, private router: Router) { }
+
+  async canActivate(
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Promise<boolean | UrlTree> {
+
+    const isLoggedIn = this.authService.isLoggedIn;
+
     if (!isLoggedIn) {
-      return router.parseUrl('/login');
+      const navigationExtras = { queryParams: { reason: "notLoggedIn" } };
+      return this.router.createUrlTree(['/login'], navigationExtras);
     }
 
-    var user = authService.GetUser();
+    var user = this.authService.GetUser();
+
     var userValue = await lastValueFrom(user);
 
-    if (userValue == null|| expectedRoles.includes(userValue.userType.toString())) {
-      return router.parseUrl('/login');
+    const expectedRoles = next.data['roles'] as string[];
+    
+    if (userValue == null || !expectedRoles.includes(userValue.userType.toString())) {
+      const navigationExtras = { queryParams: { reason: "noPermission" } };
+      return this.router.createUrlTree(['/login'], navigationExtras);
     }
 
     return true;
-  };
+  }
 }
