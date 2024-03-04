@@ -126,10 +126,7 @@ export class LoginComponent implements OnInit{
     if(login == null || user == null || token == null || tokenExpiration == null) {
       return;
     }
-
-    const loginValue = await lastValueFrom(login);
-    const userValue = await lastValueFrom(user);
-    const tokenValue = await lastValueFrom(token);
+    
     const tokenExpirationValue = await lastValueFrom(tokenExpiration) ;
 
     if (tokenExpirationValue == null) {
