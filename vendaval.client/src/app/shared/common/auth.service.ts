@@ -11,6 +11,7 @@ export class AuthService implements OnInit{
   private user!: BehaviorSubject<User | null>;
   private login!: BehaviorSubject<Login | null>;
   private tokenExpiration!: BehaviorSubject<Date | null>;
+  private token!: BehaviorSubject<string | null>;
 
   constructor() { }
 
@@ -18,12 +19,14 @@ export class AuthService implements OnInit{
     var storedUser = sessionStorage.getItem('user') ?? localStorage.getItem('user');
     var storedLogin = sessionStorage.getItem('login') ?? localStorage.getItem('login');
     var storedTokenExpiration = sessionStorage.getItem('tokenExpiration') ?? localStorage.getItem('tokenExpiration');
+    var storedToken = sessionStorage.getItem('token') ?? localStorage.getItem('token');
 
     this.user = storedUser != null ? JSON.parse(storedUser) : new BehaviorSubject<User | null>(null);
     this.login = storedLogin != null ? JSON.parse(storedLogin) : new BehaviorSubject<Login | null>(null);
     this.tokenExpiration = storedTokenExpiration != null ? new BehaviorSubject<Date | null>(new Date(storedTokenExpiration)) : new BehaviorSubject<Date | null>(null);
+    this.token = storedToken != null ? new BehaviorSubject<string | null>(storedToken) : new BehaviorSubject<string | null>(null);
 
-    if(this.user != null && this.login != null && this.tokenExpiration != null) {
+    if(this.user != null && this.login != null && this.tokenExpiration != null && this.token != null) {
       this.loggedIn.next(true);
     }
   }
@@ -43,6 +46,10 @@ export class AuthService implements OnInit{
     return this.tokenExpiration.asObservable();
   }
 
+  get getToken() {
+    return this.token.asObservable();
+  }
+
   public setUser(user: User, keepLoggedIn: boolean) {
     this.user.next(user);
     sessionStorage.setItem('user', JSON.stringify(user))
@@ -58,6 +65,15 @@ export class AuthService implements OnInit{
 
     if(keepLoggedIn) {
       localStorage.setItem('tokenExpiration', expiration.toString());
+    }
+  }
+
+  public setToken(token: string, keepLoggedIn: boolean) {
+    this.token.next(token);
+    sessionStorage.setItem('token', token);
+
+    if (keepLoggedIn) {
+      localStorage.setItem('token', token);
     }
   }
 

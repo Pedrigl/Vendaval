@@ -118,29 +118,30 @@ export class LoginComponent implements OnInit{
   };
 
   public async checkIfUserIsLoggedInAsync() {
-    const login = localStorage.getItem('login');
-    const user = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
+    const login = this.authService.getLogin;
+    const user = this.authService.getUser;
+    const token = this.authService.getToken;
+    const tokenExpiration = this.authService.getTokenExpiration;
 
-    if (login != null && user != null && token != null) {
-      this.login = JSON.parse(login);
-      this.user = JSON.parse(user);
-      
-      this.keepUserLoggedIn = true;
-      this.authService.logIn();
-      this.router.navigate(['/home']);
+    if(login == null || user == null || token == null || tokenExpiration == null) {
       return;
     }
 
-    const sessionToken = sessionStorage.getItem('token');
-    const sessionUser = sessionStorage.getItem('user');
+    const loginValue = await lastValueFrom(login);
+    const userValue = await lastValueFrom(user);
+    const tokenValue = await lastValueFrom(token);
+    const tokenExpirationValue = await lastValueFrom(tokenExpiration) ;
 
-    if (sessionToken != null && sessionUser != null) {
-      this.authService.logIn();
-      this.router.navigate(['/home']);
+    if (tokenExpirationValue == null) {
       return;
     }
-    
+  
+    if(tokenExpirationValue < new Date()) {
+      this.authService.logOut();
+      return;
+    }
+    this.authService.logIn();
+    this.router.navigate(['/home']);
   };
 
   private checkRedirect() {
