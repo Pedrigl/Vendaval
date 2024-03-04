@@ -75,16 +75,13 @@ export class LoginComponent implements OnInit{
       this.loginError = loginRes.message;
       return;
     }
-    let expiration = new Date(Date.now() + 1);
-    if (this.keepUserLoggedIn) {
-      localStorage.setItem('login', JSON.stringify(this.login));
-      localStorage.setItem('token', loginRes.token);
-      localStorage.setItem('tokenExpiration', expiration.toString());
-    }
+    let currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() + 1);
 
-    sessionStorage.setItem('token', loginRes.token);
+
     this.authService.setUser(loginRes.user, this.keepUserLoggedIn);
-    sessionStorage.setItem('tokenExpiration', expiration.toString());
+    this.authService.setLogin(this.login, this.keepUserLoggedIn);
+    this.authService.setTokenExpiration(currentDate, this.keepUserLoggedIn);
 
     this.authService.logIn();
     this.router.navigate(['/home']);
