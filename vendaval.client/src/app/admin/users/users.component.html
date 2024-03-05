@@ -11,14 +11,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users.data; index as i">
+        <tr *ngFor="let user of (users?.data || []); index as i">
           <th scope="row">{{ i + 1 }}</th>
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.userType }}</td>
           <td>
-            <button class="btn btn-primary" (click)="editUser(user.id)">Edit</button>
-            <button class="btn btn-danger" (click)="deleteUser(user.id)">Delete</button>
+            <button class="btn btn-outline-secondary me-3" (click)="editUser(user.id)">Edit</button>
+            <button class="btn btn-outline-danger" (click)="deleteUser(user.id)">Delete</button>
           </td>
         </tr>
       </tbody>
