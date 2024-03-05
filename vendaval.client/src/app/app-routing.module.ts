@@ -12,7 +12,7 @@ const routes: Routes = [
   {path: 'notallowed', component: NotallowedComponent},
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'admin', component: AdminComponent, canActivate: [AuthGuardService], data: { roles: ['admin']} }
+  { path: 'admin', component: AdminComponent, canActivate: [AuthGuardService], data: { roles: ['Admin']} }
 ];
 
 @NgModule({

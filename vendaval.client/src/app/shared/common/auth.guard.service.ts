@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { ActivatedRoute, ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs/internal/Observable';
 import { lastValueFrom, map } from 'rxjs';
+import { UserType } from '../../login/user-type';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,8 @@ export class AuthGuardService implements CanActivate{
         }
 
         const roles = route.data['roles'] as Array<string>;
-        if (roles && !roles.includes(user.userType.toString())) {
+        
+        if (roles && !roles.includes(UserType[user.userType])) {
           return this.router.createUrlTree(['/notallowed']);
         }
 
