@@ -30,7 +30,6 @@ export class MenuComponent implements OnInit{
   }
 
   public logout() {
-
     this.authService.logOut();
   };
 

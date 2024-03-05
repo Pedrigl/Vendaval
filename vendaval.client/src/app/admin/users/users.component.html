@@ -17,7 +17,7 @@
           <td>{{ user.email }}</td>
           <td>{{ userType[user.userType] }}</td>
           <td>
-            <button class="btn btn-outline-secondary me-3" (click)="editUser(user)">Edit</button>
+            <button class="btn btn-outline-secondary me-3" (click)="editUser(user.id)">Edit</button>
             <button class="btn btn-outline-danger" (click)="deleteUser(user.id)">Delete</button>
           </td>
         </tr>

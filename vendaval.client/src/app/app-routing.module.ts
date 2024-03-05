@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { AdminComponent } from './admin/admin.component';
 import { NotallowedComponent } from './notallowed/notallowed.component';
 import { UsersComponent } from './admin/users/users.component';
+import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -14,7 +15,9 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuardService], data: { roles: ['Admin']} },
-  {path: 'admin/users', component: UsersComponent, canActivate: [AuthGuardService], data: { roles: ['Admin']}}
+  {path: 'admin/users', component: UsersComponent, canActivate: [AuthGuardService], data: { roles: ['Admin']}},
+  {path: 'admin/users/edit', component: EditUserComponent, canActivate: [AuthGuardService], data: { roles: ['Admin']}}
+
 ];
 
 @NgModule({

@@ -17,22 +17,26 @@ export class LoginService {
   }
 
   register(user: User) {
-    return this.httpClient.post<LoginResponse>(environment.apiUrl + 'User/register', user);
+        return this.httpClient.post<LoginResponse>(environment.apiUrl + 'User/register', user);
   }
 
   putUser(user: User) {
-    return this.authClient.put<LoginResponse>(environment.apiUrl + 'User/put', user);
+        return this.authClient.put<LoginResponse>(environment.apiUrl + 'User/put', user);
   }
 
   patchUser(user: User) {
-    return this.authClient.patch<LoginResponse>(environment.apiUrl + 'User/patch', user);
+        return this.authClient.patch<LoginResponse>(environment.apiUrl + 'User/patch', user);
   }
 
-    getUsers() {
+   getUsers() {
         return this.authClient.get<ApiResponse<User[]>>(environment.apiUrl + 'User/getAll');
+   }
+   
+    getUser(id: Number) {
+        return this.authClient.get<ApiResponse<User>>(environment.apiUrl + `User/getById?id=${id}`);
     }
 
-  deleteUser(id: Number) {
-    return this.authClient.delete<LoginResponse>(environment.apiUrl + `User/delete?id=${id}`);
-  }
+    deleteUser(id: Number) {
+        return this.authClient.delete<LoginResponse>(environment.apiUrl + `User/delete?id=${id}`);
+    }
 }

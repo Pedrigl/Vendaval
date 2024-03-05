@@ -55,6 +55,25 @@ namespace Vendaval.Api.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpGet("getById")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var result = await _userViewModelService.GetUserAsync(id);
+
+                if(!result.Success)
+                    return BadRequest(result);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAllUsers()
         {

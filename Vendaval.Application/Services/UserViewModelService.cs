@@ -288,6 +288,15 @@ namespace Vendaval.Application.Services
             return await _redisRepository.RemoveValueAsync("UserEmail" + email);
         }
 
+        public async Task<MethodResult<User>> GetUserAsync(int id)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user == null)
+                return new MethodResult<User> { Success = false, Message = "User not found" };
+
+            return new MethodResult<User> { Success = true, data = user };
+        }
         public async Task<LoginResult> PutUser(UserViewModel user)
         {
             var mappedUser = _mapper.Map<User>(user);

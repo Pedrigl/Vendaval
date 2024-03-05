@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { User } from '../../login/user';
 import { LoginService } from '../../login/login.service';
 import { ApiResponse } from '../../shared/common/interfaces/apiResponse';
@@ -13,14 +14,14 @@ export class UsersComponent {
     users!: ApiResponse<User[]>;
     userType = UserType;
 
-    constructor(private loginService: LoginService) {
+    constructor(private router: Router, private loginService: LoginService) {
       loginService.getUsers().subscribe(response => {
         this.users = response;
       });
      }
 
-     editUser(user: User) {
-       
+    editUser(id: number) {
+        this.router.navigate(['/admin/users/edit'], { queryParams: { id: id } });
      }
 
      deleteUser(id: number) {
