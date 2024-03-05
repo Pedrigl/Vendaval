@@ -90,6 +90,38 @@ namespace Vendaval.Application.Services
             return result;
         }
 
+        public async Task<MethodResult<List<User>>> GetAllUsersAsync()
+        {
+            var usersOnCache = await GetUsersFromRedis();
+
+            if (usersOnCache.Success)
+                return usersOnCache;
+
+            var users = await _userRepository.GetAllAsync();
+
+            if (users == null || users.Count == 0)
+            {
+                return new MethodResult<List<User>> { Success = false, Message = "No users where foudn"};
+            }
+
+            await _redisRepository.SetValueAsync("Users", JsonConvert.SerializeObject(users));
+            return new MethodResult<List<User>> { Success = true, data = users};
+        }
+
+        private async Task<MethodResult<List<User>>> GetUsersFromRedis()
+        {
+
+            var usersOnCache = await _redisRepository.GetValueAsync("Users");
+
+            if (usersOnCache.IsNullOrEmpty)
+            {
+                return new MethodResult<List<User>> { Success = false, Message = "No users where foudn" };
+            }
+
+            var users = JsonConvert.DeserializeObject<List<User>>(usersOnCache);
+
+            return new MethodResult<List<User>> { Success = true, Message = $"{users.Count} users found", data = users};
+        }
         private LoginResult CheckIfLoginIsSuccesfull(User user, LoginDto login)
         {
             var result = new LoginResult();
