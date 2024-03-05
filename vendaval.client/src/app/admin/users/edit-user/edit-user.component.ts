@@ -27,12 +27,12 @@ export class EditUserComponent{
             var req = await lastValueFrom(this.loginService.putUser(this.user));
             this.user = req.user;
             this.hasError = false;
+          this.error = req.message;
         }
 
         catch (error:any) {
             this.hasError = true;
-            console.log(error);
-            this.error = error;
+            this.error = error.message;
         }
         
     }
