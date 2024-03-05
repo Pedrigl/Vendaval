@@ -15,7 +15,7 @@
           <th scope="row">{{ i + 1 }}</th>
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
-          <td>{{ user.userType }}</td>
+          <td>{{ userType[user.userType] }}</td>
           <td>
             <button class="btn btn-outline-secondary me-3" (click)="editUser(user.id)">Edit</button>
             <button class="btn btn-outline-danger" (click)="deleteUser(user.id)">Delete</button>
