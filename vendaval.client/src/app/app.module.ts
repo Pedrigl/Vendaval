@@ -10,6 +10,7 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { NotallowedComponent } from './notallowed/notallowed.component';
+import { UsersComponent } from './admin/users/users.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { NotallowedComponent } from './notallowed/notallowed.component';
     LoginComponent,
     HomeComponent,
     AdminComponent,
-    NotallowedComponent
+    NotallowedComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,
