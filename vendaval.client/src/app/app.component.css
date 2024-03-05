@@ -21,20 +21,13 @@ table {
     margin: 0 auto;
 }
 
+.container-fluid{
+    flex-grow: 1;
+}
+
 footer {
-    position: fixed;
-    bottom: 0;
+    overflow-x: hidden;
     width: 100%;
     background-color: #f8f9fa;
     text-align: center;
-}
-
-.footer-btn-start {
-  background-color: #d3d3d3; /* Você pode ajustar essa cor conforme necessário */
-  color: #000;
-}
-
-.footer-btn-start:hover {
-  background-color: #c0c0c0; /* Você pode ajustar essa cor conforme necessário */
-  color: #000;
 }
