@@ -1,14 +1,65 @@
 <div class="container">
 <div class="row">
-    <div class="col-md-12">
-      <p>Administração</p>
+    <div class="col-md-12 mb-3">
+      <h1 class="text-muted">Administration</h1>
     </div>
-  </div>
-  <div class="container">
-      <ul class="list-group">
-          <button type="button" class="list-group-item list-group-item-action btn btn-primary">Item 1</button>
-          <button type="button" class="list-group-item list-group-item-action btn btn-primary">Item 2</button>
-          <button type="button" class="list-group-item list-group-item-action btn btn-primary">Item 3</button>
-      </ul>
-  </div>
+</div>
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Users</h5>
+                <p class="card-text">Manage the system's users.</p>
+                <a class="btn btn-primary" routerLink="/admin/users">See Users</a>
+              </div>
+            </div>
+          </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Products</h5>
+                    <p class="card-text">Manage the store's products.</p>
+                    <a class="btn btn-primary" routerLink="/admin/products">See Products</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Orders</h5>
+                    <p class="card-text">Manage the store's orders.</p>
+                    <a class="btn btn-primary" routerLink="/admin/orders">See Orders</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Categories</h5>
+                    <p class="card-text">Manage the product's categories.</p>
+                    <a class="btn btn-primary" routerLink="/admin/categories">See Categories</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Dashboards</h5>
+                    <p class="card-text">See data and insights about products and sales</p>
+                    <a class="btn btn-primary" routerLink="/admin/dashboards">See Dashboards</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Coming</h5>
+                    <p class="card-text">See the incoming features</p>
+                    <a class="btn btn-primary" routerLink="/admin/usuarios">See coming Features</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
