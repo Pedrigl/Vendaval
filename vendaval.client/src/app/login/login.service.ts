@@ -27,6 +27,10 @@ export class LoginService {
     return this.authClient.patch<LoginResponse>(environment.apiUrl + 'User/patch', user);
   }
 
+getUsers() {
+    return this.authClient.get<User[]>(environment.apiUrl + 'User/get');
+}
+
   deleteUser(id: Number) {
     return this.authClient.delete<LoginResponse>(environment.apiUrl + `User/delete?id=${id}`);
   }

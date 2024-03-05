@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { User } from '../../login/user';
 import { LoginService } from '../../login/login.service';
+import { ApiResponse } from '../../shared/common/interfaces/apiResponse';
 
 @Component({
   selector: 'app-users',
@@ -8,7 +9,7 @@ import { LoginService } from '../../login/login.service';
   styleUrl: './users.component.css'
 })
 export class UsersComponent {
-    users: User[];
+    users!: ApiResponse<User[]>;
     constructor(private loginService: LoginService) {
         
      }
