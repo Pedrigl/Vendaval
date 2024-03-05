@@ -17,11 +17,11 @@ export class UsersComponent {
       });
      }
 
-     viewUser(id: number) {
+     editUser(id: number) {
        console.log(id);
      }
 
-     editUser(id: number) {
+     deleteUser(id: number) {
          console.log(id);
      }
 }

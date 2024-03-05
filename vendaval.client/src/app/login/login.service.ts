@@ -29,7 +29,7 @@ export class LoginService {
   }
 
     getUsers() {
-        return this.authClient.get<ApiResponse<User[]>>(environment.apiUrl + 'User/get');
+        return this.authClient.get<ApiResponse<User[]>>(environment.apiUrl + 'User/getAll');
     }
 
   deleteUser(id: Number) {
