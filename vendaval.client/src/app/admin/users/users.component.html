@@ -1,26 +1,29 @@
 <div class="container">
     <h1 class="text-muted">User Management</h1>
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Name</th>
-          <th scope="col">Email</th>
-          <th scope="col">User Type</th>
-          <th scope="col">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of (users?.data || []); index as i">
-          <th scope="row">{{ i + 1 }}</th>
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ userType[user.userType] }}</td>
-          <td>
-            <button class="btn btn-outline-secondary me-3" (click)="editUser(user.id)">Edit</button>
-            <button class="btn btn-outline-danger" (click)="deleteUser(user.id)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <div class="justify-content-start text-start">
+        <a class="btn btn-outline-primary" href="/admin/users/create">Create</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">User Type</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of (users?.data || []); index as i">
+                    <th scope="row">{{ i + 1 }}</th>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ userType[user.userType] }}</td>
+                    <td>
+                        <button class="btn btn-outline-secondary me-3" (click)="editUser(user.id)">Edit</button>
+                        <button class="btn btn-outline-danger" (click)="deleteUser(user.id)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

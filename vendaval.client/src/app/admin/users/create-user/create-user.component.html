@@ -1,0 +1,37 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form name="registerForm" (ngSubmit)="createUser()">
+                        <span class="text-muted fs-4 d-block mb-3">Create User</span>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" [(ngModel)]="user.name" class="form-control" id="name" name="name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="phonenumber" class="form-label">Phone Number</label>
+                            <input type="text" [(ngModel)]="user.phoneNumber" class="form-control" id="phonenumber" name="phonenumber">
+                        </div>
+                        <div class="mb-3">
+                            <label for="birthDate" class="form-label">Birth Date</label>
+                            <input type="date" [(ngModel)]="user.birthDate" class="form-control" id="birthDate" name="birthDate">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" [(ngModel)]="user.email" class="form-control" id="registeremail" name="email" aria-describedby="emailHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" [(ngModel)]="user.password" class="form-control" name="password" id="registerpassword">
+                        </div>
+                        <button type="submit" class="btn btn-light w-100">Save</button>
+                    </form>
+                    <div *ngIf="hasError" class="alert alert-danger mt-3" role="alert">
+                        {{error}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -8,6 +8,7 @@ import { AdminComponent } from './admin/admin.component';
 import { NotallowedComponent } from './notallowed/notallowed.component';
 import { UsersComponent } from './admin/users/users.component';
 import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
+import { CreateUserComponent } from './admin/users/create-user/create-user.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -16,7 +17,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuardService], data: { roles: ['Admin']} },
   {path: 'admin/users', component: UsersComponent, canActivate: [AuthGuardService], data: { roles: ['Admin']}},
-  {path: 'admin/users/edit', component: EditUserComponent, canActivate: [AuthGuardService], data: { roles: ['Admin']}}
+  { path: 'admin/users/edit', component: EditUserComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } },
+  {path: 'admin/users/create', component: CreateUserComponent, canActivate: [AuthGuardService], data: { roles: ['Admin']}}
 
 ];
 

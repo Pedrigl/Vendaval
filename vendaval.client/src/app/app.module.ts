@@ -12,6 +12,7 @@ import { AdminComponent } from './admin/admin.component';
 import { NotallowedComponent } from './notallowed/notallowed.component';
 import { UsersComponent } from './admin/users/users.component';
 import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
+import { CreateUserComponent } from './admin/users/create-user/create-user.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
     AdminComponent,
     NotallowedComponent,
     UsersComponent,
-    EditUserComponent
+    EditUserComponent,
+    CreateUserComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,
