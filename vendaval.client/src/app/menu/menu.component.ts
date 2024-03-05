@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../login/user';
 import { UserType } from '../login/user-type';
 import { AuthService } from '../shared/common/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -10,7 +11,7 @@ import { AuthService } from '../shared/common/auth.service';
 })
 export class MenuComponent implements OnInit{
 
-  constructor(private authService: AuthService) { }
+  constructor(private router: Router,private authService: AuthService) { }
 
   navBarCollapsed: boolean = true;
   isLoggedIn: boolean = false;
@@ -31,6 +32,7 @@ export class MenuComponent implements OnInit{
 
   public logout() {
     this.authService.logOut();
+    this.router.navigate(['/login']);
   };
 
 }

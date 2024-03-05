@@ -318,12 +318,20 @@ namespace Vendaval.Application.Services
             mappedUser.Password = HashPassword(mappedUser.Password);
 
             _userRepository.Update(mappedUser.Id, mappedUser);
-            await _userRepository.Save();
 
+            await SaveAndRemoveFromCache(oldUser);
+            await _redisRepository.RemoveValueAsync("UserEmail" + oldUser.Email);
             var newUser = await _userRepository.GetByIdAsync(mappedUser.Id);
             return new LoginResult { Success = true, Message = "User updated", User = _mapper.Map<UserViewModel>(newUser) };
         }
+        private async Task SaveAndRemoveFromCache(User? oldUser)
+        {
+            await _userRepository.Save();
+            if(oldUser != null)
+                await _redisRepository.RemoveValueAsync("UserEmail" + oldUser.Email);
 
+            await _redisRepository.RemoveValueAsync("Users");
+        }
         public async Task<LoginResult> PatchUser(UserViewModel user)
         {
             var mappedUser = _mapper.Map<User>(user);
@@ -364,7 +372,7 @@ namespace Vendaval.Application.Services
             try
             {
                 _userRepository.Update(oldUser.Id, oldUser);
-                _userRepository.Save();
+                SaveAndRemoveFromCache(oldUser).Wait();
             }
             catch (Exception ex)
             {

@@ -36,6 +36,9 @@
                         </div>
                         <button type="submit" class="btn btn-light w-100">Save</button>
                     </form>
+
+                    <div *ngIf="hasError" class="alert alert-danger mt-3" role="alert">
+                        {{error}}</div>
                 </div>
             </div>
         </div>    

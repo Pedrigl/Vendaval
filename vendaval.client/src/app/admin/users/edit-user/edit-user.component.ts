@@ -13,6 +13,8 @@ import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 })
 export class EditUserComponent{
     user!: User;
+    hasError = false;
+    error = '';
 
     constructor(private route: ActivatedRoute,private loginService: LoginService){
         
@@ -20,8 +22,19 @@ export class EditUserComponent{
             this.user = response.data;
         })
     }
-    saveUser() {
-        console.log(this.user);
+    async saveUser() {
+        try {
+            var req = await lastValueFrom(this.loginService.putUser(this.user));
+            this.user = req.user;
+            this.hasError = false;
+        }
+
+        catch (error:any) {
+            this.hasError = true;
+            console.log(error);
+            this.error = error;
+        }
+        
     }
 
 }

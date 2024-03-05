@@ -40,10 +40,16 @@ export class AuthorizedHttpClient {
     headers.push({ key: "Authorization", value: `Bearer ${token}` });
     return this.client.get<T>(url, { headers: this.addHeaders(headers) }).pipe(
       catchError((error: HttpErrorResponse) => {
-        if(error.status == 401)
-          localStorage.removeItem("token");
+        if(error.status == 401){
+            localStorage.removeItem("token");
 
         return throwError(() => "Your session expired, you can only be logged in for one day, please login again");
+        }
+
+        if(error.status == 400){
+            return throwError(() => error.error.message);
+        }
+        return throwError(() => error.message);
       }));
   }
 
@@ -56,10 +62,16 @@ export class AuthorizedHttpClient {
     headers.push({ key: "Authorization", value: `Bearer ${token}` });
     return this.client.post<T>(url, body, { headers: this.addHeaders(headers) }).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status == 401)
-          localStorage.removeItem("token");
+        if(error.status == 401){
+            localStorage.removeItem("token");
 
         return throwError(() => "Your session expired, you can only be logged in for one day, please login again");
+        }
+
+        if(error.status == 400){
+            return throwError(() => error.error.message);
+        }
+        return throwError(() => error.message);
       }));
   }
 
@@ -72,10 +84,16 @@ export class AuthorizedHttpClient {
     headers.push({ key: "Authorization", value: `Bearer ${token}` });
     return this.client.put<T>(url, body, { headers: this.addHeaders(headers) }).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status == 401)
-          localStorage.removeItem("token");
+        if(error.status == 401){
+            localStorage.removeItem("token");
 
         return throwError(() => "Your session expired, you can only be logged in for one day, please login again");
+        }
+
+        if(error.status == 400){
+            return throwError(() => error.error.message);
+        }
+        return throwError(() => error.message);
       }));
   }
 
@@ -88,10 +106,16 @@ export class AuthorizedHttpClient {
     headers.push({ key: "Authorization", value: `Bearer ${token}` });
     return this.client.patch<T>(url, body, { headers: this.addHeaders(headers) }).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status == 401)
-          localStorage.removeItem("token");
+        if(error.status == 401){
+            localStorage.removeItem("token");
 
         return throwError(() => "Your session expired, you can only be logged in for one day, please login again");
+        }
+
+        if(error.status == 400){
+            return throwError(() => error.error.message);
+        }
+        return throwError(() => error.message);
       }));
   }
 
@@ -104,10 +128,16 @@ export class AuthorizedHttpClient {
     headers.push({ key: "Authorization", value: `Bearer ${token}` });
     return this.client.delete<T>(url, { headers: this.addHeaders(headers) }).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status == 401)
-          localStorage.removeItem("token");
+        if(error.status == 401){
+            localStorage.removeItem("token");
 
         return throwError(() => "Your session expired, you can only be logged in for one day, please login again");
+        }
+
+        if(error.status == 400){
+            return throwError(() => error.error.message);
+        }
+        return throwError(() => error.message);
       }));
   }
   
