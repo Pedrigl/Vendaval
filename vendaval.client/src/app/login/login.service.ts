@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { Login, LoginResponse } from './login';
 import { User } from './user';
 import { AuthorizedHttpClient } from '../shared/common/authorized-httpclient';
+import { ApiResponse } from '../shared/common/interfaces/apiResponse';
 @Injectable({
   providedIn: 'root'
 })
@@ -27,9 +28,9 @@ export class LoginService {
     return this.authClient.patch<LoginResponse>(environment.apiUrl + 'User/patch', user);
   }
 
-getUsers() {
-    return this.authClient.get<User[]>(environment.apiUrl + 'User/get');
-}
+    getUsers() {
+        return this.authClient.get<ApiResponse<User[]>>(environment.apiUrl + 'User/get');
+    }
 
   deleteUser(id: Number) {
     return this.authClient.delete<LoginResponse>(environment.apiUrl + `User/delete?id=${id}`);

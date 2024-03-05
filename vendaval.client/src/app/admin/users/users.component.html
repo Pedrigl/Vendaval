@@ -2,7 +2,7 @@
     <h1 class="text-muted">Users</h1>
     <div class="row justify-content-center">
         <ul class="list-group list-group-horizontal">
-            <li class="list-group-item" *ngFor="let user of users">
+            <li class="list-group-item" *ngFor="let user of users.data">
                 {{ user.name }}
                 <button class="btn btn-primary" (click)="viewUser(user.id)">View</button>
                 <button class="btn btn-secondary" (click)="editUser(user.id)">Edit</button>

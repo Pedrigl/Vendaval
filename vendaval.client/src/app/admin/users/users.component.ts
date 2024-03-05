@@ -10,7 +10,18 @@ import { ApiResponse } from '../../shared/common/interfaces/apiResponse';
 })
 export class UsersComponent {
     users!: ApiResponse<User[]>;
+
     constructor(private loginService: LoginService) {
-        
+      loginService.getUsers().subscribe(response => {
+        this.users = response;
+      });
+     }
+
+     viewUser(id: number) {
+       console.log(id);
+     }
+
+     editUser(id: number) {
+         console.log(id);
      }
 }
