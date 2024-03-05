@@ -85,8 +85,24 @@ export class LoginComponent implements OnInit{
     this.authService.setTokenExpiration(currentDate, this.keepUserLoggedIn);
 
     this.authService.logIn();
-    this.router.navigate(['/home']);
+    this.redirectBasedOnUserType(loginRes.user.userType);
   };
+
+  private async redirectBasedOnUserType(userType: UserType) {
+    switch (userType) {
+      case UserType.Costumer:
+        this.router.navigate(['/home']);
+        break;
+
+      case UserType.Seller:
+        this.router.navigate(['/employee']);
+          break;
+
+      case UserType.Admin:
+        this.router.navigate(['/admin']);
+        break;
+    }
+  }
 
   public async registerAsync() {
     var loginRes: LoginResponse;
