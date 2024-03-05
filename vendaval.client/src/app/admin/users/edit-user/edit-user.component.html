@@ -1,44 +1,48 @@
 <div class="container">
     <h1 class="text-muted">Edit User</h1>
-    <div class="col-md-6">
-        <div class="card shadow">
-            <div class="card-body">
-                <form *ngIf="user" name="registerForm" (ngSubmit)="saveUser()">
-                    <span class="text-muted fs-4 d-block mb-3">Update user</span>
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" [(ngModel)]="user.name" class="form-control" id="name" name="name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="phonenumber" class="form-label">Phone Number</label>
-                        <input type="text" [(ngModel)]="user.phoneNumber" class="form-control" id="phonenumber" name="phonenumber">
-                    </div>
-                    <div class="mb-3">
-                        <label for="birthDate" class="form-label">Birth Date</label>
-                        <input type="date" [(ngModel)]="user.birthDate" class="form-control" id="birthDate" name="birthDate">
-                    </div>
-                    <div class="mb-3">
-                        <label for="userType" class="form-label">User Type</label>
-                        <select class="form-select" [(ngModel)]="user.userType" id="userType" name="userType">
-                            <option value="1">Costumer</option>
-                            <option value="2">Seller</option>
-                            <option value="3">Admin</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email address</label>
-                        <input type="email" [(ngModel)]="user.email" class="form-control" id="registeremail" name="email" aria-describedby="emailHelp">
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" [(ngModel)]="user.password" class="form-control" name="password" id="registerpassword">
-                    </div>
-                    <button type="submit" class="btn btn-light w-100">Save</button>
-                </form>
-            </div>
-        </div>
-    
     <div class="row">
-        <a class="btn btn-outline-secondary" routerLink="/admin/users">Back</a>
+        <div class="col-md-6 mx-auto">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form *ngIf="user" name="registerForm" (ngSubmit)="saveUser()">
+                        <span class="text-muted fs-4 d-block mb-3">Update user</span>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" [(ngModel)]="user.name" class="form-control" id="name" name="name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="phonenumber" class="form-label">Phone Number</label>
+                            <input type="text" [(ngModel)]="user.phoneNumber" class="form-control" id="phonenumber" name="phonenumber">
+                        </div>
+                        <div class="mb-3">
+                            <label for="birthDate" class="form-label">Birth Date</label>
+                            <input type="date" [(ngModel)]="user.birthDate" class="form-control" id="birthDate" name="birthDate">
+                        </div>
+                        <div class="mb-3">
+                            <label for="userType" class="form-label">User Type</label>
+                            <select class="form-select" [(ngModel)]="user.userType" id="userType" name="userType">
+                                <option value="1">Costumer</option>
+                                <option value="2">Seller</option>
+                                <option value="3">Admin</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" [(ngModel)]="user.email" class="form-control" id="registeremail" name="email" aria-describedby="emailHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" [(ngModel)]="user.password" class="form-control" name="password" id="registerpassword">
+                        </div>
+                        <button type="submit" class="btn btn-light w-100">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>    
+    </div>
+    <div class="row mt-3 mb-3">
+        <div class="col-md-6 mx-auto">
+            <a class="btn btn-outline-secondary w-100" routerLink="/admin/users">Back</a>
+        </div>
     </div>
 </div>
