@@ -12,15 +12,15 @@ import { UserType } from '../../login/user-type';
 export class UsersComponent {
     users!: ApiResponse<User[]>;
     userType = UserType;
-    
+
     constructor(private loginService: LoginService) {
       loginService.getUsers().subscribe(response => {
         this.users = response;
       });
      }
 
-     editUser(id: number) {
-       console.log(id);
+     editUser(user: User) {
+       
      }
 
      deleteUser(id: number) {
