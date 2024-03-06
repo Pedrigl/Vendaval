@@ -207,7 +207,7 @@ namespace Vendaval.Application.Services
 
             mappedUser.Password = HashPassword(mappedUser.Password);
             var newUser = await _userRepository.AddAsync(mappedUser);
-
+            await SaveAndRemoveFromCache(newUser);
             var result = CheckIfRegistrationIsSuccesfull(newUser);
 
             return result;

@@ -19,6 +19,7 @@ export class UsersComponent {
     constructor(private router: Router, private loginService: LoginService) {
       loginService.getUsers().subscribe(response => {
         this.users = response;
+        console.log(response.data)
       });
      }
 

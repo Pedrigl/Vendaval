@@ -32,6 +32,8 @@ export class CreateUserComponent {
 
   async createUser() {
     try {
+
+      this.user.userType = Number(this.user.userType);
       var res = await lastValueFrom(this.loginService.register(this.user));
 
       if (res.success) {
@@ -48,7 +50,8 @@ export class CreateUserComponent {
 
     catch (e: any) {
       this.hasError = true;
-      this.error = e;
+      console.log(e);
+      this.error = e.error.message;
     }
   }
 }
