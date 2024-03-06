@@ -16,5 +16,16 @@ export class ProductComponent {
   error = '';
   constructor(productService: ProductService) { }
 
+  editProduct(id: number) {
+    console.log(id);
+  }
+
+  async deleteProduct(id: number) {
+    console.log(id);
+  }
+
+  async addProduct() {
+    console.log('add');
+  }
 
 }
