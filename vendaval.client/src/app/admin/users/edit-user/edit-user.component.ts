@@ -33,11 +33,9 @@ export class EditUserComponent{
         }
 
         catch (error: any) {
-          this.hasError = true;
-          if (typeof (error) === 'string') {
-            this.error = error;
-          }
-            this.error = error;
+        this.hasError = true;
+
+        this.error = error;
         }
         
     }
