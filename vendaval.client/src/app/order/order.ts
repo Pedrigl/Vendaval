@@ -8,4 +8,5 @@ export interface Order {
   total: number;
   orderDate: Date;
   status: OrderStatus;
+  statusDate: Date;
 }
