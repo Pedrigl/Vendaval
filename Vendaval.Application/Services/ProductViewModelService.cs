@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,16 +14,19 @@ using Vendaval.Domain.Enums;
 using Vendaval.Infrastructure.Data.Contexts;
 using Vendaval.Infrastructure.Data.Repositories.EFRepositories;
 using Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces;
+using Vendaval.Infrastructure.Data.Repositories.RedisRepositories.Interfaces;
 
 namespace Vendaval.Application.Services
 {
     public class ProductViewModelService : IProductViewModelService
     {
         private readonly IProductRepository _productRepository;
+        private readonly IRedisRepository _redisRepository;
         private readonly IMapper _mapper;
-        public ProductViewModelService(IProductRepository productRepository, IMapper mapper) 
+        public ProductViewModelService(IProductRepository productRepository, IRedisRepository redisRepository, IMapper mapper) 
         {
             _productRepository = productRepository;
+            _redisRepository = redisRepository;
             _mapper = mapper;
         }
 
@@ -37,6 +42,7 @@ namespace Vendaval.Application.Services
             try
             {
                 var productAdded = await _productRepository.AddAsync(product);
+                await SaveAndClearCache();
                 return new MethodResult<ProductViewModel> { Success = true, Message = "Product was added successfuly" , data = _mapper.Map<ProductViewModel>(productAdded) };
             }
             catch (Exception ex)
@@ -71,6 +77,11 @@ namespace Vendaval.Application.Services
         {
             try
             {
+                var productsOnCache = await GetProductsFromRedis();
+
+                if (productsOnCache.Success)
+                    return productsOnCache;
+
                 var products = await _productRepository.GetAllAsync();
 
                 if (products == null || products.Count == 0)
@@ -116,7 +127,7 @@ namespace Vendaval.Application.Services
             try
             {
                 _productRepository.Update(product.Id ,product);
-                await _productRepository.Save();
+                await SaveAndClearCache();
                 var productUpdated = await _productRepository.GetByIdAsync(product.Id);
                 return new MethodResult<ProductViewModel> { Success = true, Message = "Product was updated successfuly", data = _mapper.Map<ProductViewModel>(productUpdated) };
             }
@@ -137,7 +148,7 @@ namespace Vendaval.Application.Services
             try
             {
                 _productRepository.Delete(product);
-                await _productRepository.Save();
+                await SaveAndClearCache();
                 return new MethodResult<ProductViewModel> { Success = true, Message = "Product was deleted successfuly", data = _mapper.Map<ProductViewModel>(product) };
             }
             catch (Exception ex)
@@ -145,6 +156,27 @@ namespace Vendaval.Application.Services
                 throw new Exception("Error on delete product", ex);
             }
         }
-        
+
+        private async Task<MethodResult<List<ProductViewModel>>> GetProductsFromRedis()
+        {
+            var products = await _redisRepository.GetValueAsync("products");
+
+            if(products.IsNullOrEmpty)
+                return new MethodResult<List<ProductViewModel>> { Success = false, Message = "No products found" };
+
+            var productsList = JsonConvert.DeserializeObject<MethodResult<List<ProductViewModel>>>(products);
+
+            if(productsList == null || productsList.data == null || productsList.data.Count == 0)
+                return new MethodResult<List<ProductViewModel>> { Success = false, Message = "No products found" };
+
+            return productsList;
+        }
+        private async Task SaveAndClearCache()
+        {
+            await _productRepository.Save();
+            await _redisRepository.RemoveValueAsync("products");
+        }
+
+
     }
 }
