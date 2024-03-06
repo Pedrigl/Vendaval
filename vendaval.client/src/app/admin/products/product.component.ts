@@ -3,6 +3,8 @@ import { ProductService } from '../../product/product.service';
 import { ApiResponse } from '../../shared/common/interfaces/apiResponse';
 import { Product } from '../../product/product';
 import { ProductType } from '../../product/product-type';
+import { Router } from '@angular/router';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-product',
@@ -13,19 +15,30 @@ export class ProductComponent {
   products!: ApiResponse<Product[]>;
   productType = ProductType;
   hasError = false;
-  error = '';
-  constructor(productService: ProductService) { }
+  error!: string | null;
+
+  constructor(private router: Router, private productService: ProductService) {
+    productService.getAllProducts().subscribe(response => {
+      this.products.data = response.data;
+    });
+  }
 
   editProduct(id: number) {
-    console.log(id);
+    this.router.navigate(['/admin/products/edit'], { queryParams: { id: id } });
   }
 
   async deleteProduct(id: number) {
-    console.log(id);
-  }
+    try {
+      var req = await lastValueFrom(this.productService.deleteProduct(id));
 
-  async addProduct() {
-    console.log('add');
+      if(!req.success) {
+        this.hasError = true;
+        this.error = req.message;
+      }
+    }
+    catch (error: any) {
+      this.hasError = true;
+      this.error = error;
+    }
   }
-
 }
