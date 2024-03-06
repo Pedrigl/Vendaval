@@ -28,7 +28,7 @@ namespace Vendaval.Application.Services
         public async Task<MethodResult<ProductViewModel>> RegisterProduct(ProductViewModel productViewModel)
         {
             var productValidation = IsProductValid(productViewModel);
-            //FIX CATEGORY ALWAYS BEING 0
+            
             if (!productValidation.Success)
                 return productValidation;
 
