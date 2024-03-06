@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { ProductService } from './product.service';
-import { ApiResponse } from '../shared/common/interfaces/apiResponse';
-import { Product } from './product';
-import { ProductType } from './product-type';
+import { ProductService } from '../../product/product.service';
+import { ApiResponse } from '../../shared/common/interfaces/apiResponse';
+import { Product } from '../../product/product';
+import { ProductType } from '../../product/product-type';
 
 @Component({
   selector: 'app-product',

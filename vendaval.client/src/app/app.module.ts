@@ -13,7 +13,7 @@ import { NotallowedComponent } from './notallowed/notallowed.component';
 import { UsersComponent } from './admin/users/users.component';
 import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
 import { CreateUserComponent } from './admin/users/create-user/create-user.component';
-import { ProductComponent } from './product/product.component';
+import { ProductComponent } from './admin/products/product.component';
 
 @NgModule({
   declarations: [
