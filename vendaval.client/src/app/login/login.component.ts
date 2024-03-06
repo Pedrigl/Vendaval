@@ -48,7 +48,8 @@ export class LoginComponent implements OnInit{
   }
 
   public async loginAsync() {
-
+    this.hasLoginError = false;
+    this.loginError = '';
     var loginRes: LoginResponse;
 
     try {
