@@ -13,7 +13,7 @@ export class ProductService {
   constructor(private httpClient: HttpClient, private authClient: AuthorizedHttpClient) { }
 
   public getAllProducts() {
-    return this.httpClient.get<ApiResponse<Product>>(environment.apiUrl +'Product/getProducts');
+    return this.httpClient.get<ApiResponse<Product[]>>(environment.apiUrl +'Product/getProducts');
   }
 
   public getProductById(id: number) {
