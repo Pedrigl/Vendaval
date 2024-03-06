@@ -87,7 +87,9 @@ namespace Vendaval.Application.Services
                 if (products == null || products.Count == 0)
                     return new MethodResult<List<ProductViewModel>> { Success = false, Message = "No products found" };
 
-                return new MethodResult<List<ProductViewModel>> { Success = true, Message = $" {products.Count} Products found", data = _mapper.Map<List<ProductViewModel>>(products) };
+                var result = new MethodResult<List<ProductViewModel>> { Success = true, Message = $" {products.Count} Products found", data = _mapper.Map<List<ProductViewModel>>(products) };
+                await _redisRepository.SetValueAsync("products", JsonConvert.SerializeObject(result));
+                return result;
             }
             catch (Exception ex)
             {
