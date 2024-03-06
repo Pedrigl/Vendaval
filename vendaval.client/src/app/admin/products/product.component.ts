@@ -35,6 +35,10 @@ export class ProductComponent {
         this.hasError = true;
         this.error = req.message;
       }
+
+      else {
+        this.products.data = this.products.data.filter(p => p.id !== id);
+      }
     }
     catch (error: any) {
       this.hasError = true;
