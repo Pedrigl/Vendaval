@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form name="registerForm" (ngSubmit)="save()">
+                        <span class="text-muted fs-4 d-block mb-3>">Create Product</span>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" [(ngModel)]="product.name" class="form-control" id="name" name="name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" [(ngModel)]="product.description" class="form-control" id="description" name="description">
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Price</label>
+                            <input type="number" [(ngModel)]="product.price" class="form-control" id="price" name="price">
+                        </div>
+                        <div class="mb-3">
+                            <label for="stock" class="form-label">Stock</label>
+                            <input type="number" [(ngModel)]="product.stock" class="form-control" id="stock" name="stock">
+                        </div>
+                        <div class="mb-3">
+                            <label for="avaliation" class="form-label">Avaliation</label>
+                            <input type="number" [(ngModel)]="product.avaliation" class="form-control" id="avaliation" name="avaliation">
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoryId" class="form-label">Category</label>
+                            <select class="form-select" [(ngModel)]="product.category" id="categoryId" name="categoryId">
+                                <option *ngFor="let category of productTypesNames; index as i" [ngValue]=productTypesValues[i]>{{category}}</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-light">Create</button>
+                    </form>
+                    <div *ngIf="hasError" class="alert alert-danger mt-3" role="alert">
+                        {{error}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

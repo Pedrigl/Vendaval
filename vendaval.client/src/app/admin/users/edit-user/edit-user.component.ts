@@ -23,13 +23,20 @@ export class EditUserComponent{
         })
     }
     async saveUser() {
+      this.hasError = false;
       try {
-        this.user.userType = Number(this.user.userType);
-        var req = await lastValueFrom(this.loginService.putUser(this.user));
-        this.user = req.user;
-        this.hasError = false;
-        this.error = req.message;
-        this.router.navigate(['/admin/users']);
+          this.user.userType = Number(this.user.userType);
+          var req = await lastValueFrom(this.loginService.putUser(this.user));
+          this.user = req.user;
+
+          if (!req.success) {
+            this.hasError = true;
+            this.error = req.message;
+          }
+
+          else {
+            this.router.navigate(['/admin/users']);
+          }
         }
 
         catch (error: any) {

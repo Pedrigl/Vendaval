@@ -15,6 +15,7 @@ import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
 import { CreateUserComponent } from './admin/users/create-user/create-user.component';
 import { ProductComponent } from './admin/products/product.component';
 import { CreateProductComponent } from './admin/products/create-product/create-product.component';
+import { EditProductComponent } from './admin/products/edit-product/edit-product.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { CreateProductComponent } from './admin/products/create-product/create-p
     EditUserComponent,
     CreateUserComponent,
     ProductComponent,
-    CreateProductComponent
+    CreateProductComponent,
+    EditProductComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,
