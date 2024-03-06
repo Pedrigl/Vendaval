@@ -22,7 +22,8 @@ const routes: Routes = [
   { path: 'admin/users/edit', component: EditUserComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } },
   { path: 'admin/users/create', component: CreateUserComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } },
   { path: 'admin/products', component: ProductComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } },
-  {path: 'admin/products/create', component: CreateProductComponent, canActivate: [AuthGuardService], data: { roles: ['Admin']}}
+  { path: 'admin/products/create', component: CreateProductComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } },
+  {path: 'admin/products/edit', component: CreateProductComponent, canActivate: [AuthGuardService], data: { roles: ['Admin']}}
 
 ];
 

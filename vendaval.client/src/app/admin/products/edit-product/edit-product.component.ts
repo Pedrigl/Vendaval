@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../product/product.service';
 import { Product } from '../../../product/product';
 import { lastValueFrom } from 'rxjs';
@@ -13,7 +13,11 @@ export class EditProductComponent {
   product!: Product;
   hasError = false;
   error!: string | null;
-  constructor(private router: Router, private productService: ProductService) { }
+  constructor(private route: ActivatedRoute,private router: Router, private productService: ProductService) {
+    this.productService.getProductById(this.route.snapshot.queryParams['id']).subscribe(response => {
+      this.product = response.data;
+    })
+  }
 
   async save() {
     this.hasError = false;
