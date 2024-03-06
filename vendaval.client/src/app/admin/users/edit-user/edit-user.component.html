@@ -15,15 +15,11 @@
                             <input type="text" [(ngModel)]="user.phoneNumber" class="form-control" id="phonenumber" name="phonenumber">
                         </div>
                         <div class="mb-3">
-                            <label for="birthDate" class="form-label">Birth Date</label>
-                            <input type="date" [(ngModel)]="user.birthDate" class="form-control" id="birthDate" name="birthDate">
-                        </div>
-                        <div class="mb-3">
                             <label for="userType" class="form-label">User Type</label>
                             <select class="form-select" [(ngModel)]="user.userType" id="userType" name="userType">
-                                <option value="1">Costumer</option>
-                                <option value="2">Seller</option>
-                                <option value="3">Admin</option>
+                                <option value=1>Costumer</option>
+                                <option value=2>Seller</option>
+                                <option value=3>Admin</option>
                             </select>
                         </div>
                         <div class="mb-3">
