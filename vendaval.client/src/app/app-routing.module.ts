@@ -12,6 +12,7 @@ import { CreateUserComponent } from './admin/users/create-user/create-user.compo
 import { ProductComponent } from './admin/products/product.component';
 import { CreateProductComponent } from './admin/products/create-product/create-product.component';
 import { EditProductComponent } from './admin/products/edit-product/edit-product.component';
+import { OrdersComponent } from './admin/orders/orders.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -24,7 +25,8 @@ const routes: Routes = [
   { path: 'admin/users/create', component: CreateUserComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } },
   { path: 'admin/products', component: ProductComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } },
   { path: 'admin/products/create', component: CreateProductComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } },
-  {path: 'admin/products/edit', component: EditProductComponent, canActivate: [AuthGuardService], data: { roles: ['Admin']}}
+  { path: 'admin/products/edit', component: EditProductComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } },
+  { path: 'admin/orders', component: OrdersComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } }
 
 ];
 
