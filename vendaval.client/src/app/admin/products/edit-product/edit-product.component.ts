@@ -12,7 +12,7 @@ import { lastValueFrom } from 'rxjs';
 export class EditProductComponent {
   product!: Product;
   hasError = false;
-  error = '';
+  error!: string | null;
   constructor(private router: Router, private productService: ProductService) { }
 
   async save() {
@@ -27,7 +27,11 @@ export class EditProductComponent {
 
       if(req.success){
         this.router.navigate(['/admin/products']);
-      })
+      }
+      else{
+        this.hasError = true;
+        this.error = req.message;
+      }
 
     }
 
