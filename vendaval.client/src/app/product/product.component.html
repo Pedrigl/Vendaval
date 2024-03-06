@@ -1,0 +1,36 @@
+<div class="container">
+    <h1 class="text-muted">Product Management</h1>
+    <div class="justify-content-start text-start">
+        <a class="btn btn-outline-primary" href="/admin/products/create">Create</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Stock</th>
+                    <th scope="col">Avg Avaliation</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let product of (products?.data || []); index as i">
+                    <th scope="row">{{ i + 1 }}</th>
+                    <td><img [src]="product.image" alt="product.name" width="50" height="50"></td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.stock }}</td>
+                    <td>{{ product.avaliation }}</td>
+                    <td>{{ productType[product.categoryId] }}</td>
+                    <td>{{</td>
+                    <td>
+                        <button class="btn btn-outline-secondary me-3" (click)="editProduct(product.id)">Edit</button>
+                        <button class="btn btn-outline-danger" (click)="deleteProduct(product.id)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="alert alert-danger mt-3" *ngIf="hasError">{{error}}</div>
+</div>
