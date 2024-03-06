@@ -60,7 +60,7 @@ namespace Vendaval.Application.Services
             if (productViewModel.Price <= 0)
                 return new MethodResult<ProductViewModel> { Success = false, Message = "Price is required and should be greater than 0" };
 
-            if(!Enum.IsDefined(typeof(ProductType), productViewModel.CategoryId))
+            if(!Enum.IsDefined(typeof(ProductType), productViewModel.Category))
                 return new MethodResult<ProductViewModel> { Success = false, Message = "Invalid Category" };
 
 

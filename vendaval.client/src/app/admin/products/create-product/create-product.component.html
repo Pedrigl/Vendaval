@@ -23,7 +23,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="categoryId" class="form-label">Category</label>
-                            <select class="form-select" [(ngModel)]="product.categoryId" id="categoryId" name="categoryId">
+                            <select class="form-select" [(ngModel)]="product.category" id="categoryId" name="categoryId">
                                 <option *ngFor="let category of productTypesNames; index as i" [ngValue]=productTypesValues[i]>{{category}}</option>
                             </select>
                         </div>

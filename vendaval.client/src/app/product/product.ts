@@ -7,6 +7,6 @@ export interface Product {
   price: number;
   stock: number;
   image: string;
-  categoryId: ProductType;
+  category: ProductType;
   avaliation: number
 }

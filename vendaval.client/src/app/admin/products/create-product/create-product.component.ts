@@ -19,7 +19,7 @@ export class CreateProductComponent {
     avaliation: 0.00,
     stock: 0,
     image: '',
-    categoryId: ProductType.Clothing
+    category: ProductType.Clothing
   }
   productType = ProductType;
   productTypesNames = Object.keys(ProductType).filter(key => isNaN(Number(key)));
@@ -32,7 +32,7 @@ export class CreateProductComponent {
 
   async createProduct() {
     try {
-      this.product.categoryId = Number(this.product.categoryId);
+      this.product.category = Number(this.product.category);
       console.log(this.product);
       var res = await lastValueFrom(this.productService.createProduct(this.product));
 

@@ -15,7 +15,7 @@ namespace Vendaval.Application.ViewModels
         public decimal Price { get; set; }
         public int Stock { get; set; }
         public string Image { get; set; }
-        public ProductType CategoryId { get; set; }
+        public ProductType Category { get; set; }
         public float Avaliation { get; set; }
     }
 }

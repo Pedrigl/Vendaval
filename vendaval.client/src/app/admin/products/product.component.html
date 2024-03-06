@@ -23,7 +23,7 @@
                     <td>{{ product.price }}</td>
                     <td>{{ product.stock }}</td>
                     <td>{{ product.avaliation }}</td>
-                    <td>{{ productType[product.categoryId] }}</td>
+                    <td>{{ productType[product.category] }}</td>
                     <td>
                         <button class="btn btn-outline-secondary me-3" (click)="editProduct(product.id)">Edit</button>
                         <button class="btn btn-outline-danger" (click)="deleteProduct(product.id)">Delete</button>
