@@ -50,7 +50,6 @@ export class CreateUserComponent {
 
     catch (e: any) {
       this.hasError = true;
-      console.log(e);
       this.error = e.error.message;
     }
   }
