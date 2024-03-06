@@ -28,6 +28,7 @@ export class EditProductComponent {
       if(req.success){
         this.router.navigate(['/admin/products']);
       }
+
       else{
         this.hasError = true;
         this.error = req.message;
