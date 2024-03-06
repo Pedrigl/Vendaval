@@ -72,7 +72,7 @@ namespace Vendaval.Application.Services
         {
             var result = new LoginResult();
 
-            var loginOnCache = await _redisRepository.GetValueAsync(login.Email);
+            var loginOnCache = await _redisRepository.GetValueAsync("UserEmail" + login.Email);
 
             if (loginOnCache.IsNullOrEmpty)
             {
