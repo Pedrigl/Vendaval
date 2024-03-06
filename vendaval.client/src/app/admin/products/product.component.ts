@@ -19,7 +19,7 @@ export class ProductComponent {
 
   constructor(private router: Router, private productService: ProductService) {
     productService.getAllProducts().subscribe(response => {
-      this.products.data = response.data;
+      this.products = response;
     });
   }
 
