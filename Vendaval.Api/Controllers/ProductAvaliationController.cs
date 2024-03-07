@@ -35,7 +35,7 @@ namespace Vendaval.Api.Controllers
         }
 
         [Authorize]
-        [HttpPost("register")]
+        [HttpPost("create")]
         public async Task<IActionResult> RegisterProductAvaliation([FromBody] ProductAvaliationViewModel productAvaliationViewModel)
         {
             try
