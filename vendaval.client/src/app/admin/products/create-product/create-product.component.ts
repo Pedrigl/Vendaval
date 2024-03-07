@@ -21,6 +21,7 @@ export class CreateProductComponent {
     image: '',
     category: ProductType.Clothing
   }
+  productImage!: File;
   productType = ProductType;
   productTypesNames = Object.keys(ProductType).filter(key => isNaN(Number(key)));
   productTypesValues = Object.values(ProductType).filter(value => !isNaN(Number(value)));

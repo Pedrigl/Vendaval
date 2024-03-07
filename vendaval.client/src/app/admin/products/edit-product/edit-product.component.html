@@ -31,6 +31,10 @@
                                 <option *ngFor="let category of productTypesNames; index as i" [ngValue]=productTypesValues[i]>{{category}}</option>
                             </select>
                         </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Image</label>
+                            <input type="file" [(ngModel)]="productImage" class="form-control" id="image" name="image">
+                        </div>
                         <button type="submit" class="btn btn-light">Save</button>
                     </form>
                     <div *ngIf="hasError" class="alert alert-danger mt-3" role="alert">

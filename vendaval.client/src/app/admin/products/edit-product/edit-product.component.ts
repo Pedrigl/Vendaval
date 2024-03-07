@@ -12,6 +12,7 @@ import { ProductType } from '../../../product/product-type';
 })
 export class EditProductComponent {
   product!: Product;
+  productImage!: File;
   productTypes = ProductType;
   productTypesNames = Object.keys(ProductType).filter(key => isNaN(Number(key)));
   productTypesValues = Object.values(ProductType).filter(value => !isNaN(Number(value)));

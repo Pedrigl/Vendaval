@@ -1,7 +1,7 @@
 <div class="container">
-    <div class="row">
+    <div class="row ">
         <div class="col-md-6 mx-auto">
-            <div class="card shadow">
+            <div class="card shadow mb-5">
                 <div class="card-body">
                     <form name="registerForm" (ngSubmit)="createProduct()">
                         <span class="text-muted fs-4 d-block mb-3>">Create Product</span>
@@ -30,6 +30,10 @@
                             <select class="form-select" [(ngModel)]="product.category" id="categoryId" name="categoryId">
                                 <option *ngFor="let category of productTypesNames; index as i" [ngValue]=productTypesValues[i]>{{category}}</option>
                             </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Image</label>
+                            <input type="file" [(ngModel)]="productImage" class="form-control" id="image" name="image">
                         </div>
                         <button type="submit" class="btn btn-light">Create</button>
                     </form>
