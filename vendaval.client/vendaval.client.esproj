@@ -8,7 +8,18 @@
     <PublishAssetsDirectory>$(MSBuildProjectDirectory)\dist\vendaval.client\</PublishAssetsDirectory>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="src\app\shared\common\" />
     <Folder Include="src\environments\" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptConfiguration Remove="src\app\shared\common\NovaPasta\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="src\app\shared\common\NovaPasta\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptConfiguration Remove="src\app\shared\common\NovaPasta1\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="src\app\shared\common\NovaPasta1\**" />
   </ItemGroup>
 </Project>
