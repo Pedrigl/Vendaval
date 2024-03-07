@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Vendaval.Application.Services.Interfaces;
@@ -26,6 +27,7 @@ namespace Vendaval.Application.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly IRedisRepository _redisRepository;
+        private HttpClient _httpClient;
         private readonly IMapper _mapper;
 
         public ProductViewModelService(IProductRepository productRepository, IRedisRepository redisRepository, IConfiguration configuration, IMapper mapper) 
@@ -33,16 +35,20 @@ namespace Vendaval.Application.Services
             _productRepository = productRepository;
             _redisRepository = redisRepository;
             _mapper = mapper;
+            if (configuration == null )
+                throw new ArgumentNullException(nameof(configuration));
+
+            SetupHttpClient(configuration);
         }
 
         private HttpClient HttpClient
         {
             get
             {
-                if (HttpClient == null)
-                    return new HttpClient();
+                if (_httpClient == null)
+                    _httpClient = new HttpClient();
 
-                return HttpClient;
+                return _httpClient;
             }
 
         }
@@ -50,15 +56,16 @@ namespace Vendaval.Application.Services
         {
             var ociConfig = configuration.GetSection("Oci");
             var storageConfig = ociConfig.GetSection("Storage");
-            var baseUri = storageConfig.GetSection("BaseUri").ToString();
-            var nameSpace = storageConfig.GetSection("Namespace").ToString();
-            var bucketName = storageConfig.GetSection("Bucket").ToString();
+            var baseUri = storageConfig.GetSection("BaseUri").Value;
+            var nameSpace = storageConfig.GetSection("Namespace").Value;
+            var bucketName = storageConfig.GetSection("Bucket").Value;
 
             var uri = new StringBuilder(baseUri,150);
             uri.Append("/n/");
             uri.Append(nameSpace);
             uri.Append("/b/");
             uri.Append(bucketName);
+            uri.Append("/");
             HttpClient.BaseAddress = new Uri(uri.ToString());
         }
         public async Task<MethodResult<ProductViewModel>> RegisterProduct(ProductViewModel productViewModel)
@@ -225,7 +232,7 @@ namespace Vendaval.Application.Services
 
             try
             {
-                request = await HttpClient.PutAsync("/o/ProductId"+productId.ToString(), new ByteArrayContent(fileBytes));
+                request = await HttpClient.PutAsync("o/ProductId"+productId.ToString(), new ByteArrayContent(fileBytes));
 
             }
             catch (Exception ex)
@@ -241,18 +248,26 @@ namespace Vendaval.Application.Services
             return new MethodResult<object> { Success = false, Message = "Error uploading image", data = JsonConvert.DeserializeObject<OciError>(response) };
         }
 
+        private string CreateAuthorizationHeader(string requestMethod, string requestUri, string contentMd5, string contentType, string date)
+        {
+            var stringToSign = $"{requestMethod}\n{contentMd5}\n{contentType}\n{date}\n{requestUri}";
+            var hmac = new HMACSHA256(Encoding.UTF8.GetBytes("secret"));
+            var signature = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(stringToSign)));
+            return $"Signature {signature}";
+        }
+
         public async Task<MethodResult<object>> GetLinksToProductImages()
         {
             var preauthRequestDetails = new CreatePreauthenticatedRequestDetails { 
-                Name = "ProductImageList", 
-                TimeExpires = DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm:ssZ"),
-                AccessType = AccessType.AnyObjectRead.ToString(),
-                BucketListingAction = BucketListingAction.ListObjects.ToString()
+                name = "ProductImageList", 
+                timeExpires = DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                accessType = AccessType.AnyObjectRead.ToString(),
+                bucketListingAction = BucketListingAction.ListObjects.ToString()
             };
             
             try
             {
-                var request = await HttpClient.PostAsync("/p/", new StringContent(JsonConvert.SerializeObject(preauthRequestDetails)));
+                var request = await HttpClient.PostAsync("p/", new StringContent(JsonConvert.SerializeObject(preauthRequestDetails), Encoding.UTF8,"application/json"));
                 var response = await request.Content.ReadAsStringAsync();
 
                 if (!request.IsSuccessStatusCode)

@@ -10,10 +10,10 @@ namespace Vendaval.Application.ValueObjects.Oci
     public class CreatePreauthenticatedRequestDetails
     {
         //https://docs.oracle.com/en-us/iaas/api/#/en/objectstorage/20160918/datatypes/CreatePreauthenticatedRequestDetails
-        public string AccessType { get; set; } = Enums.AccessType.AnyObjectRead.ToString();
-        public string? BucketListingAction { get; set; } = Enums.BucketListingAction.ListObjects.ToString();
-        public required string Name { get; set; }
-        public string? ObjectName { get; set; }
-        public required string TimeExpires { get; set; }
+        public string accessType { get; set; } = Enums.AccessType.AnyObjectRead.ToString();
+        public string? bucketListingAction { get; set; } = Enums.BucketListingAction.ListObjects.ToString();
+        public required string name { get; set; }
+        public string? objectName { get; set; }
+        public required string timeExpires { get; set; }
     }
 }
