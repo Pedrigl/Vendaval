@@ -72,6 +72,43 @@ namespace Vendaval.Api.Controllers
             }
         }
 
+        [HttpGet("getLinkToProductImages")]
+        public async Task<IActionResult> GetLinksToProductImages()
+        {
+            try
+            {
+                var result = await _productViewModelService.GetLinksToProductImages();
+
+                if (!result.Success)
+                    return BadRequest(result);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("uploadProductImage")]
+        public async Task<IActionResult> UploadProductImage(int productId, IFormFile image)
+        {
+            try
+            {
+                var result = await _productViewModelService.UploadProductImage(productId, image);
+
+                if (!result.Success)
+                    return BadRequest(result);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
         [HttpGet("getProductById")]
         public async Task<IActionResult> GetProductById(int id)
         {
