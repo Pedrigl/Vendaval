@@ -24,7 +24,7 @@ export class ProductavaliationService {
     return this.authClient.put<ApiResponse<ProductAvaliation>>(environment.apiUrl + 'ProductAvaliation/update', avaliation);
   }
 
-  public deleteAvaliation(avaliationId: number) {
-    return this.authClient.delete<ApiResponse<ProductAvaliation>>(environment.apiUrl + `ProductAvaliation/delete?avaliationId=${avaliationId}`);
+  public deleteAvaliation(productId: number,avaliationId: number) {
+    return this.authClient.delete<ApiResponse<ProductAvaliation>>(environment.apiUrl + `ProductAvaliation/delete?productId=${productId}&avaliationId=${avaliationId}`);
   }
 }

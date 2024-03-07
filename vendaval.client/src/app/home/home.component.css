@@ -1,0 +1,4 @@
+.carousel-image {
+  height: 700px; /* Altere para a altura desejada */
+  object-fit: cover; /* Isso garante que a imagem cubra toda a área, mesmo que isso signifique cortar parte da imagem */
+}
