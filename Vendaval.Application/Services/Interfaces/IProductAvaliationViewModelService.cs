@@ -10,9 +10,9 @@ namespace Vendaval.Application.Services.Interfaces
 {
     public interface IProductAvaliationViewModelService
     {
-        MethodResult<List<ProductAvaliationViewModel>> GetAvaliationsByProductId(int productId);
+        Task<MethodResult<List<ProductAvaliationViewModel>>> GetAvaliationsByProductId(int productId);
         Task<MethodResult<ProductAvaliationViewModel>> RegisterProductAvaliation(ProductAvaliationViewModel productAvaliationViewModel);
         Task<MethodResult<ProductAvaliationViewModel>> UpdateProductAvaliation(ProductAvaliationViewModel productAvaliationViewModel);
-        Task<MethodResult<ProductAvaliationViewModel>> DeleteProductAvaliation(int productAvaliationId);
+        Task<MethodResult<ProductAvaliationViewModel>> DeleteProductAvaliation(int productId,int productAvaliationId);
     }
 }

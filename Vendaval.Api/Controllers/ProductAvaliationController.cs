@@ -18,11 +18,11 @@ namespace Vendaval.Api.Controllers
         }
 
         [HttpGet("getByProductId")]
-        public IActionResult GetAvaliationsByProductId(int productId)
+        public async Task<IActionResult> GetAvaliationsByProductId(int productId)
         {
             try
             {
-                var result = _productAvaliationViewModelService.GetAvaliationsByProductId(productId);
+                var result = await _productAvaliationViewModelService.GetAvaliationsByProductId(productId);
                 if (result.Success)
                     return Ok(result);
                 else
@@ -72,11 +72,11 @@ namespace Vendaval.Api.Controllers
 
         [Authorize]
         [HttpDelete("delete")]
-        public async Task<IActionResult> DeleteProductAvaliation(int id)
+        public async Task<IActionResult> DeleteProductAvaliation(int productId, int avaliationId)
         {
             try
             {
-                var result = await _productAvaliationViewModelService.DeleteProductAvaliation(id);
+                var result = await _productAvaliationViewModelService.DeleteProductAvaliation(productId, avaliationId);
                 if (result.Success)
                     return Ok(result);
                 else
