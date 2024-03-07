@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ namespace Vendaval.Application.Services.Interfaces
     {
         Task<MethodResult<ProductViewModel>> RegisterProduct(ProductViewModel productViewModel);
         Task<MethodResult<List<ProductViewModel>>> GetAllProducts();
+        Task<MethodResult<object>> GetLinksToProductImages();
+        Task<MethodResult<object>> UploadProductImage(int productId, IFormFile image);
         Task<MethodResult<ProductViewModel>> UpdateProduct(ProductViewModel productViewModel);
         Task<MethodResult<ProductViewModel>> GetProductById(int id);
         Task<MethodResult<ProductViewModel>> DeleteProduct(int id);
