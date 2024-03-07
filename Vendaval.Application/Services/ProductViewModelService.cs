@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
@@ -8,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Vendaval.Application.Services.Interfaces;
 using Vendaval.Application.ValueObjects;
+using Vendaval.Application.ValueObjects.Oci;
+using Vendaval.Application.ValueObjects.Oci.Enums;
 using Vendaval.Application.ViewModels;
 using Vendaval.Domain.Entities;
 using Vendaval.Domain.Enums;
@@ -23,13 +27,40 @@ namespace Vendaval.Application.Services
         private readonly IProductRepository _productRepository;
         private readonly IRedisRepository _redisRepository;
         private readonly IMapper _mapper;
-        public ProductViewModelService(IProductRepository productRepository, IRedisRepository redisRepository, IMapper mapper) 
+
+        public ProductViewModelService(IProductRepository productRepository, IRedisRepository redisRepository, IConfiguration configuration, IMapper mapper) 
         {
             _productRepository = productRepository;
             _redisRepository = redisRepository;
             _mapper = mapper;
         }
 
+        private HttpClient HttpClient
+        {
+            get
+            {
+                if (HttpClient == null)
+                    return new HttpClient();
+
+                return HttpClient;
+            }
+
+        }
+        private void SetupHttpClient(IConfiguration configuration)
+        {
+            var ociConfig = configuration.GetSection("Oci");
+            var storageConfig = ociConfig.GetSection("Storage");
+            var baseUri = storageConfig.GetSection("BaseUri").ToString();
+            var nameSpace = storageConfig.GetSection("Namespace").ToString();
+            var bucketName = storageConfig.GetSection("Bucket").ToString();
+
+            var uri = new StringBuilder(baseUri,150);
+            uri.Append("/n/");
+            uri.Append(nameSpace);
+            uri.Append("/b/");
+            uri.Append(bucketName);
+            HttpClient.BaseAddress = new Uri(uri.ToString());
+        }
         public async Task<MethodResult<ProductViewModel>> RegisterProduct(ProductViewModel productViewModel)
         {
             var productValidation = IsProductValid(productViewModel);
@@ -177,6 +208,64 @@ namespace Vendaval.Application.Services
         {
             await _productRepository.Save();
             await _redisRepository.RemoveValueAsync("products");
+        }
+
+        public async Task<MethodResult<object>> UploadProductImage(int productId, IFormFile image)
+        {
+
+            byte[] fileBytes;
+
+            using (var ms = new MemoryStream())
+            {
+                image.CopyTo(ms);
+                fileBytes = ms.ToArray();
+            }
+            
+            HttpResponseMessage request;
+
+            try
+            {
+                request = await HttpClient.PutAsync("/o/ProductId"+productId.ToString(), new ByteArrayContent(fileBytes));
+
+            }
+            catch (Exception ex)
+            {
+                return new MethodResult<object> { Success = false, Message = ex.Message};
+            }
+
+            if (request.IsSuccessStatusCode)
+                return new MethodResult<object> { Success = true, Message = "Image uploaded successfuly" };
+
+            var response = await request.Content.ReadAsStringAsync();
+
+            return new MethodResult<object> { Success = false, Message = "Error uploading image", data = JsonConvert.DeserializeObject<OciError>(response) };
+        }
+
+        public async Task<MethodResult<object>> GetLinksToProductImages()
+        {
+            var preauthRequestDetails = new CreatePreauthenticatedRequestDetails { 
+                Name = "ProductImageList", 
+                TimeExpires = DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                AccessType = AccessType.AnyObjectRead.ToString(),
+                BucketListingAction = BucketListingAction.ListObjects.ToString()
+            };
+            
+            try
+            {
+                var request = await HttpClient.PostAsync("/p/", new StringContent(JsonConvert.SerializeObject(preauthRequestDetails)));
+                var response = await request.Content.ReadAsStringAsync();
+
+                if (!request.IsSuccessStatusCode)
+                    return new MethodResult<object> { Success = false, Message = "Error creating preauthenticated request", data = JsonConvert.DeserializeObject<OciError>(response) };
+
+                var preauthRequest = JsonConvert.DeserializeObject<PreauthenticatedRequest>(response);
+
+                return new MethodResult<object> { Success = true, Message = "Preauthenticated request created", data = preauthRequest};
+            }
+            catch (Exception ex)
+            {
+                return new MethodResult<object> { Success = false, Message = ex.Message};
+            }
         }
 
 
