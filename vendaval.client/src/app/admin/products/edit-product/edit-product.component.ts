@@ -27,9 +27,17 @@ export class EditProductComponent {
   async save() {
     this.hasError = false;
     this.error = '';
-
+    this.productImage = (document.getElementById('image') as HTMLInputElement).files![0];
+    
     try {
       this.product.category = Number(this.product.category);
+      var upload = await lastValueFrom(this.productService.uploadImage(this.product.id, this.productImage));
+      
+      var getLink = await lastValueFrom(this.productService.CreateAuthRequestToProductImagesLink());
+      
+      var names = await lastValueFrom(this.productService.getProductImagesNames(getLink.data.fullPath));
+      
+      this.product.image = getLink.data.fullPath + names.objects[0].name;
       var req = await lastValueFrom(this.productService.updateProduct(this.product));
 
       this.product = req.data;
@@ -47,7 +55,7 @@ export class EditProductComponent {
 
     catch (error: any) {
       this.hasError = true;
-      this.error = error;
+      this.error = error.title;
     }
       
     }

@@ -4,6 +4,9 @@ import { AuthorizedHttpClient } from '../shared/common/authorized-httpclient';
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../shared/common/interfaces/apiResponse';
 import { Product } from './product';
+import { KeyValue, KeyValuePipe } from '@angular/common';
+import { CreatePreAuthenticatedRequest } from '../shared/common/interfaces/createPreAuthenticatedRequest';
+import { ImageNames } from '../shared/common/interfaces/imageNames';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +25,21 @@ export class ProductService {
 
   public createProduct(product: Product) {
     return this.authClient.post<ApiResponse<Product>>(environment.apiUrl + 'Product/registerProduct', product);
+  }
+
+  public uploadImage(productId: number, image: File) {
+    const formData = new FormData();
+    formData.append('image', image);
+    
+    return this.authClient.post<ApiResponse<object>>(environment.apiUrl + `Product/uploadProductImage?productId=${productId}`, formData);
+  }
+
+  public CreateAuthRequestToProductImagesLink() {
+    return this.httpClient.get<ApiResponse<CreatePreAuthenticatedRequest>>(environment.apiUrl + 'Product/getLinkToProductImages');
+  }
+
+  public getProductImagesNames(preAuthenticatedLink: string) {
+    return this.httpClient.get<ImageNames>(preAuthenticatedLink);
   }
 
   public updateProduct(product: Product) {

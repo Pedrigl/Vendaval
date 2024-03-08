@@ -14,14 +14,32 @@ import { lastValueFrom } from 'rxjs';
 export class ProductComponent {
   products!: ApiResponse<Product[]>;
   productType = ProductType;
+  imagesLink: string = '';
   hasError = false;
   error!: string | null;
 
   constructor(private router: Router, private productService: ProductService) {
-    productService.getAllProducts().subscribe(response => {
+    productService.getAllProducts().subscribe(async response => {
       this.products = response;
+
+      if (this.products.data.some(p => p.image == null || p.image == '')) {
+        const imagesLinkResponse = await lastValueFrom(productService.CreateAuthRequestToProductImagesLink());
+        this.imagesLink = imagesLinkResponse.data.fullPath;
+        
+
+        for (let p of this.products.data) {
+          const imagesNamesResponse = await lastValueFrom(productService.getProductImagesNames(this.imagesLink));
+          
+          var names = imagesNamesResponse.objects;
+          for (var i = 0; i < names.length; i++) {
+            if (names[i].name.includes(p.id.toString()))
+              p.image = this.imagesLink + names[i].name;
+          }
+        }
+      }
     });
   }
+
 
   editProduct(id: number) {
     this.router.navigate(['/admin/products/edit'], { queryParams: { id: id } });
