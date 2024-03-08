@@ -177,9 +177,10 @@ namespace Vendaval.Application.Services
             if (product == null)
                 return new MethodResult<ProductViewModel> { Success = false, Message = "Product not found" };
 
+            var productImageName = product.Image.Substring(product.Image.IndexOf("/o/"));
             try
             {
-                await DeleteProductImage(product.Name);
+                await DeleteProductImage(productImageName);
                 _productRepository.Delete(product);
                 await SaveAndClearCache();
                 return new MethodResult<ProductViewModel> { Success = true, Message = "Product was deleted successfuly", data = _mapper.Map<ProductViewModel>(product) };
@@ -216,13 +217,13 @@ namespace Vendaval.Application.Services
             var provider = new ConfigFileAuthenticationDetailsProvider("DEFAULT");
             return new ObjectStorageClient(provider, new ClientConfiguration());
         }
-        public async Task<MethodResult<DeleteObjectResponse>> DeleteProductImage(string productName)
+        public async Task<MethodResult<DeleteObjectResponse>> DeleteProductImage(string imageName)
         {
             var deleteObjectRequest = new Oci.ObjectstorageService.Requests.DeleteObjectRequest
             {
                 NamespaceName = _nameSpace,
                 BucketName = _bucketName,
-                ObjectName = $"ProductName{productName}"
+                ObjectName = imageName
             };
 
             try
@@ -254,7 +255,7 @@ namespace Vendaval.Application.Services
             return true;
         }
 
-        public async Task<MethodResult<object>> UploadProductImage(string productName, IFormFile image)
+        public async Task<MethodResult<object>> UploadProductImage(IFormFile image)
         {
             if (!IsImageValid(image))
                 return new MethodResult<object> { Success = false, Message = "Invalid image" };
@@ -263,7 +264,7 @@ namespace Vendaval.Application.Services
             {
                 NamespaceName = _nameSpace,
                 BucketName = _bucketName,
-                ObjectName = $"ProductName{productName}",
+                ObjectName = image.FileName,
                 PutObjectBody = image.OpenReadStream()
             };
 

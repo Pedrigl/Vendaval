@@ -92,11 +92,11 @@ namespace Vendaval.Api.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost("uploadProductImage")]
-        public async Task<IActionResult> UploadProductImage(string productName, IFormFile image)
+        public async Task<IActionResult> UploadProductImage(IFormFile image)
         {
             try
             {
-                var result = await _productViewModelService.UploadProductImage(productName, image);
+                var result = await _productViewModelService.UploadProductImage(image);
 
                 if (!result.Success)
                     return BadRequest(result);
