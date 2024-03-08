@@ -64,7 +64,7 @@ export class EditProductComponent {
             
             var names = await lastValueFrom(this.productService.getProductImagesNames(getLink.data.fullPath));
 
-            var productImage = names.objects.filter((obj: any) => obj.name.includes(this.product.name));
+            var productImage = names.objects.filter((obj: any) => obj.name == `ProductName${this.product.name}`);
             this.product.image = getLink.data.fullPath + productImage[0].name;
         }
     }
