@@ -23,7 +23,7 @@ export class EditProductComponent {
       this.product = response.data;
     })
   }
-
+  
   async save() {
     this.hasError = false;
     this.error = '';
@@ -31,13 +31,9 @@ export class EditProductComponent {
     
     try {
       this.product.category = Number(this.product.category);
-      var upload = await lastValueFrom(this.productService.uploadImage(this.product.id, this.productImage));
-      
-      var getLink = await lastValueFrom(this.productService.CreateAuthRequestToProductImagesLink());
-      
-      var names = await lastValueFrom(this.productService.getProductImagesNames(getLink.data.fullPath));
-      
-      this.product.image = getLink.data.fullPath + names.objects[0].name;
+
+      await this.updateImage();
+
       var req = await lastValueFrom(this.productService.updateProduct(this.product));
 
       this.product = req.data;
@@ -58,5 +54,17 @@ export class EditProductComponent {
       this.error = error.title;
     }
       
+    }
+
+    private async updateImage() {
+        if (this.productImage) {
+            var upload = await lastValueFrom(this.productService.uploadImage(this.product.id, this.productImage));
+
+            var getLink = await lastValueFrom(this.productService.CreateAuthRequestToProductImagesLink());
+
+            var names = await lastValueFrom(this.productService.getProductImagesNames(getLink.data.fullPath));
+
+            this.product.image = getLink.data.fullPath + names.objects[0].name;
+        }
     }
 }

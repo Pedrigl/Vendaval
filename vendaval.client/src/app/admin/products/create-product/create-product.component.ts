@@ -34,14 +34,17 @@ export class CreateProductComponent {
   async createProduct() {
     try {
       this.product.category = Number(this.product.category);
-      console.log(this.product);
       var res = await lastValueFrom(this.productService.createProduct(this.product));
 
       if (res.success) {
         this.hasError = false;
         this.error = '';
+        this.product = res.data;
+        await this.uploadImage();
+        var req = await lastValueFrom(this.productService.updateProduct(this.product));
 
-        this.router.navigate(['/admin/products']);
+        if (req.success)
+          this.router.navigate(['/admin/products']);
       }
 
       else {
@@ -53,6 +56,20 @@ export class CreateProductComponent {
       this.hasError = true;
       console.log(error);
       this.error = error;
+    }
+  }
+
+  private async uploadImage() {
+    this.productImage = (document.getElementById('image') as HTMLInputElement).files![0];
+    
+    if (this.productImage != null) {
+      var upload = await lastValueFrom(this.productService.uploadImage(this.product.id, this.productImage));
+      
+      var getLink = await lastValueFrom(this.productService.CreateAuthRequestToProductImagesLink());
+      
+      var names = await lastValueFrom(this.productService.getProductImagesNames(getLink.data.fullPath));
+      
+      this.product.image = getLink.data.fullPath + names.objects[0].name;
     }
   }
 }
