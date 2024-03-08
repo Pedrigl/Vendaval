@@ -22,6 +22,8 @@ using Vendaval.Infrastructure.Data.Repositories.RedisRepositories.Interfaces;
 using Oci.Common.Auth;
 using Oci.Common;
 using Oci.ObjectstorageService;
+using Oci.ObjectstorageService.Models;
+using Oci.ObjectstorageService.Responses;
 
 namespace Vendaval.Application.Services
 {
@@ -177,6 +179,7 @@ namespace Vendaval.Application.Services
 
             try
             {
+                await DeleteProductImage(id);
                 _productRepository.Delete(product);
                 await SaveAndClearCache();
                 return new MethodResult<ProductViewModel> { Success = true, Message = "Product was deleted successfuly", data = _mapper.Map<ProductViewModel>(product) };
@@ -213,10 +216,52 @@ namespace Vendaval.Application.Services
             var provider = new ConfigFileAuthenticationDetailsProvider("DEFAULT");
             return new ObjectStorageClient(provider, new ClientConfiguration());
         }
+        public async Task<MethodResult<DeleteObjectResponse>> DeleteProductImage(int productId)
+        {
+            var deleteObjectRequest = new Oci.ObjectstorageService.Requests.DeleteObjectRequest
+            {
+                NamespaceName = _nameSpace,
+                BucketName = _bucketName,
+                ObjectName = $"ProductId{productId}"
+            };
 
+            try
+            {
+                using (var client = CreateObjectStorageClient())
+                {
+                    var deleteObjectResponse = await client.DeleteObject(deleteObjectRequest);
+                    return new MethodResult<DeleteObjectResponse> { Success = true, Message = "Image deleted successfuly", data = deleteObjectResponse };
+                }
+            }
+
+            catch (Exception ex)
+            {
+                return new MethodResult<DeleteObjectResponse> { Success = false, Message = ex.Message };
+            }
+        }
+
+        private bool IsImageValid(IFormFile image)
+        {
+            if (image == null)
+                return false;
+
+            if (image.Length == 0)
+                return false;
+
+            if (image.Length > 1000000)
+                return false;
+
+            if (!image.ContentType.Contains("image"))
+                return false;
+
+            return true;
+        }
 
         public async Task<MethodResult<object>> UploadProductImage(int productId, IFormFile image)
         {
+            if (!IsImageValid(image))
+                return new MethodResult<object> { Success = false, Message = "Invalid image" };
+
             var product = await _productRepository.GetByIdAsync(productId);
 
             if(product == null)
@@ -245,14 +290,14 @@ namespace Vendaval.Application.Services
             }
         }
 
-        public async Task<MethodResult<object>> GetLinksToProductImages()
+        public async Task<MethodResult<PreauthenticatedRequest>> GetLinksToProductImages()
         {
-            var createPreauthenticatedRequestDetails = new Oci.ObjectstorageService.Models.CreatePreauthenticatedRequestDetails
+            var createPreauthenticatedRequestDetails = new CreatePreauthenticatedRequestDetails
             {
                 Name = "ProductImagesRequest",
-                AccessType = Oci.ObjectstorageService.Models.CreatePreauthenticatedRequestDetails.AccessTypeEnum.AnyObjectRead,
+                AccessType = CreatePreauthenticatedRequestDetails.AccessTypeEnum.AnyObjectRead,
                 TimeExpires = DateTime.Now.AddDays(7),
-                BucketListingAction = Oci.ObjectstorageService.Models.PreauthenticatedRequest.BucketListingActionEnum.ListObjects
+                BucketListingAction = PreauthenticatedRequest.BucketListingActionEnum.ListObjects
             };
 
             var createPreauthenticatedRequestRequest = new Oci.ObjectstorageService.Requests.CreatePreauthenticatedRequestRequest
@@ -267,13 +312,13 @@ namespace Vendaval.Application.Services
                 using (var client = CreateObjectStorageClient())
                 {
                     var createPreauthenticatedRequestResponse = await client.CreatePreauthenticatedRequest(createPreauthenticatedRequestRequest);
-                    return new MethodResult<object> { Success = true, data = createPreauthenticatedRequestResponse.PreauthenticatedRequest };
+                    return new MethodResult<PreauthenticatedRequest> { Success = true, data = createPreauthenticatedRequestResponse.PreauthenticatedRequest };
                 }
             }
 
             catch (Exception ex)
             {
-                return new MethodResult<object> { Success = false, Message = ex.Message };
+                return new MethodResult<PreauthenticatedRequest> { Success = false, Message = ex.Message };
             }
         }
 

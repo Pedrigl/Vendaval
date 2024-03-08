@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Oci.ObjectstorageService.Models;
+using Oci.ObjectstorageService.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +15,8 @@ namespace Vendaval.Application.Services.Interfaces
     {
         Task<MethodResult<ProductViewModel>> RegisterProduct(ProductViewModel productViewModel);
         Task<MethodResult<List<ProductViewModel>>> GetAllProducts();
-        Task<MethodResult<object>> GetLinksToProductImages();
+        Task<MethodResult<PreauthenticatedRequest>> GetLinksToProductImages();
+        Task<MethodResult<DeleteObjectResponse>> DeleteProductImage(int productId);
         Task<MethodResult<object>> UploadProductImage(int productId, IFormFile image);
         Task<MethodResult<ProductViewModel>> UpdateProduct(ProductViewModel productViewModel);
         Task<MethodResult<ProductViewModel>> GetProductById(int id);
