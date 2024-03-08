@@ -4,6 +4,7 @@ import { ProductService } from '../../../product/product.service';
 import { Product } from '../../../product/product';
 import { ProductType } from '../../../product/product-type';
 import { lastValueFrom } from 'rxjs';
+import { LoadingService } from '../../../shared/common/loading.service';
 
 @Component({
   selector: 'app-create-product',
@@ -28,10 +29,11 @@ export class CreateProductComponent {
   hasError = false;
   error!: string | null;
 
-  constructor(private router: Router, private productService: ProductService) {
+  constructor(private router: Router, private loadingService: LoadingService, private productService: ProductService) {
   }
 
   async createProduct() {
+    this.loadingService.isLoading.next(true);
     try {
       this.product.category = Number(this.product.category);
       var res = await lastValueFrom(this.productService.createProduct(this.product));
@@ -43,16 +45,21 @@ export class CreateProductComponent {
         await this.uploadImage();
         var req = await lastValueFrom(this.productService.updateProduct(this.product));
 
-        if (req.success)
+        if (req.success) {
+          this.loadingService.isLoading.next(false);
           this.router.navigate(['/admin/products']);
+        }
+          
       }
 
       else {
+        this.loadingService.isLoading.next(false);
         this.hasError = true;
         this.error = res.message;
       }
     }
     catch (error: any) {
+      this.loadingService.isLoading.next(false);
       this.hasError = true;
       console.log(error);
       this.error = error;

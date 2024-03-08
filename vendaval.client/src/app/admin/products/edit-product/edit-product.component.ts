@@ -4,6 +4,7 @@ import { ProductService } from '../../../product/product.service';
 import { Product } from '../../../product/product';
 import { lastValueFrom } from 'rxjs';
 import { ProductType } from '../../../product/product-type';
+import { LoadingService } from '../../../shared/common/loading.service';
 
 @Component({
   selector: 'app-edit-product',
@@ -18,13 +19,16 @@ export class EditProductComponent {
   productTypesValues = Object.values(ProductType).filter(value => !isNaN(Number(value)));
   hasError = false;
   error!: string | null;
-  constructor(private route: ActivatedRoute, private router: Router, private productService: ProductService) {
+  constructor(private route: ActivatedRoute, private router: Router, private loadingService: LoadingService, private productService: ProductService) {
+    loadingService.isLoading.next(true);
     this.productService.getProductById(this.route.snapshot.queryParams['id']).subscribe(response => {
       this.product = response.data;
+      loadingService.isLoading.next(false);
     })
   }
   
   async save() {
+    this.loadingService.isLoading.next(true);
     this.hasError = false;
     this.error = '';
     this.productImage = (document.getElementById('image') as HTMLInputElement).files![0];
@@ -39,11 +43,13 @@ export class EditProductComponent {
 
       this.product = req.data;
 
-      if(req.success){
+      if (req.success) {
+        this.loadingService.isLoading.next(false);
         this.router.navigate(['/admin/products']);
       }
 
-      else{
+      else {
+        this.loadingService.isLoading.next(false);
         this.hasError = true;
         this.error = req.message;
       }

@@ -5,6 +5,7 @@ import { Product } from '../../product/product';
 import { ProductType } from '../../product/product-type';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
+import { LoadingService } from '../../shared/common/loading.service';
 
 @Component({
   selector: 'app-product',
@@ -18,11 +19,13 @@ export class ProductComponent implements OnInit {
   hasError = false;
   error!: string | null;
 
-  constructor(private router: Router, private productService: ProductService) { }
+  constructor(private router: Router, private loadingService: LoadingService, private productService: ProductService) { }
 
   async ngOnInit() {
     try {
+      this.loadingService.isLoading.next(true);
       this.products = await lastValueFrom(this.productService.getAllProducts());
+      this.loadingService.isLoading.next(false);
     } catch (error: any) {
       this.hasError = true;
       this.error = error;
