@@ -217,6 +217,11 @@ namespace Vendaval.Application.Services
 
         public async Task<MethodResult<object>> UploadProductImage(int productId, IFormFile image)
         {
+            var product = await _productRepository.GetByIdAsync(productId);
+
+            if(product == null)
+                return new MethodResult<object> { Success = false, Message = "Product not found" };
+
             var putObjectRequest = new Oci.ObjectstorageService.Requests.PutObjectRequest
             {
                 NamespaceName = _nameSpace,
