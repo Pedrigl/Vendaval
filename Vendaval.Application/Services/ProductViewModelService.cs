@@ -288,7 +288,7 @@ namespace Vendaval.Application.Services
             {
                 Name = "ProductImagesRequest",
                 AccessType = CreatePreauthenticatedRequestDetails.AccessTypeEnum.AnyObjectRead,
-                TimeExpires = DateTime.Now.AddDays(7),
+                TimeExpires = DateTime.Now.AddYears(10),
                 BucketListingAction = PreauthenticatedRequest.BucketListingActionEnum.ListObjects
             };
 
