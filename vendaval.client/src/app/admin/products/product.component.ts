@@ -31,7 +31,7 @@ export class ProductComponent implements OnInit {
             const imagesLinkResponse = await lastValueFrom(this.productService.CreateAuthRequestToProductImagesLink());
             this.imagesLink = imagesLinkResponse.data.fullPath;
           }
-          product.image = this.imagesLink + product.id;
+          product.image = this.imagesLink + product.name;
         }
       });
 

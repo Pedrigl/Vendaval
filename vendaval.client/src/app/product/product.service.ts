@@ -27,11 +27,11 @@ export class ProductService {
     return this.authClient.post<ApiResponse<Product>>(environment.apiUrl + 'Product/registerProduct', product);
   }
 
-  public uploadImage(productId: number, image: File) {
+  public uploadImage(productName: string, image: File) {
     const formData = new FormData();
     formData.append('image', image);
     
-    return this.authClient.post<ApiResponse<object>>(environment.apiUrl + `Product/uploadProductImage?productId=${productId}`, formData);
+    return this.authClient.post<ApiResponse<object>>(environment.apiUrl + `Product/uploadProductImage?productName=${productName}`, formData);
   }
 
   public CreateAuthRequestToProductImagesLink() {

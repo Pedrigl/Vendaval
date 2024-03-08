@@ -16,8 +16,8 @@ namespace Vendaval.Application.Services.Interfaces
         Task<MethodResult<ProductViewModel>> RegisterProduct(ProductViewModel productViewModel);
         Task<MethodResult<List<ProductViewModel>>> GetAllProducts();
         Task<MethodResult<PreauthenticatedRequest>> GetLinksToProductImages();
-        Task<MethodResult<DeleteObjectResponse>> DeleteProductImage(int productId);
-        Task<MethodResult<object>> UploadProductImage(int productId, IFormFile image);
+        Task<MethodResult<DeleteObjectResponse>> DeleteProductImage(string productName);
+        Task<MethodResult<object>> UploadProductImage(string productName, IFormFile image);
         Task<MethodResult<ProductViewModel>> UpdateProduct(ProductViewModel productViewModel);
         Task<MethodResult<ProductViewModel>> GetProductById(int id);
         Task<MethodResult<ProductViewModel>> DeleteProduct(int id);

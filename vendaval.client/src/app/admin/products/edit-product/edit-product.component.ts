@@ -57,14 +57,15 @@ export class EditProductComponent {
     }
 
     private async updateImage() {
-        if (this.productImage) {
-            var upload = await lastValueFrom(this.productService.uploadImage(this.product.id, this.productImage));
-
+        if (this.productImage != null) {
+            var upload = await lastValueFrom(this.productService.uploadImage(this.product.name, this.productImage));
+            
             var getLink = await lastValueFrom(this.productService.CreateAuthRequestToProductImagesLink());
-
+            
             var names = await lastValueFrom(this.productService.getProductImagesNames(getLink.data.fullPath));
 
-            this.product.image = getLink.data.fullPath + names.objects[0].name;
+            var productImage = names.objects.filter((obj: any) => obj.name.includes(this.product.name));
+            this.product.image = getLink.data.fullPath + productImage[0].name;
         }
     }
 }

@@ -179,7 +179,7 @@ namespace Vendaval.Application.Services
 
             try
             {
-                await DeleteProductImage(id);
+                await DeleteProductImage(product.Name);
                 _productRepository.Delete(product);
                 await SaveAndClearCache();
                 return new MethodResult<ProductViewModel> { Success = true, Message = "Product was deleted successfuly", data = _mapper.Map<ProductViewModel>(product) };
@@ -216,13 +216,13 @@ namespace Vendaval.Application.Services
             var provider = new ConfigFileAuthenticationDetailsProvider("DEFAULT");
             return new ObjectStorageClient(provider, new ClientConfiguration());
         }
-        public async Task<MethodResult<DeleteObjectResponse>> DeleteProductImage(int productId)
+        public async Task<MethodResult<DeleteObjectResponse>> DeleteProductImage(string productName)
         {
             var deleteObjectRequest = new Oci.ObjectstorageService.Requests.DeleteObjectRequest
             {
                 NamespaceName = _nameSpace,
                 BucketName = _bucketName,
-                ObjectName = $"ProductId{productId}"
+                ObjectName = $"ProductName{productName}"
             };
 
             try
@@ -248,30 +248,22 @@ namespace Vendaval.Application.Services
             if (image.Length == 0)
                 return false;
 
-            if (image.Length > 1000000)
-                return false;
-
             if (!image.ContentType.Contains("image"))
                 return false;
 
             return true;
         }
 
-        public async Task<MethodResult<object>> UploadProductImage(int productId, IFormFile image)
+        public async Task<MethodResult<object>> UploadProductImage(string productName, IFormFile image)
         {
             if (!IsImageValid(image))
                 return new MethodResult<object> { Success = false, Message = "Invalid image" };
-
-            var product = await _productRepository.GetByIdAsync(productId);
-
-            if(product == null)
-                return new MethodResult<object> { Success = false, Message = "Product not found" };
 
             var putObjectRequest = new Oci.ObjectstorageService.Requests.PutObjectRequest
             {
                 NamespaceName = _nameSpace,
                 BucketName = _bucketName,
-                ObjectName = $"ProductId{productId}",
+                ObjectName = $"ProductName{productName}",
                 PutObjectBody = image.OpenReadStream()
             };
 
