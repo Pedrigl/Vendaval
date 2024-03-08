@@ -14,6 +14,8 @@
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="OCI.DotNetSDK.Common" Version="82.0.0" />
+    <PackageReference Include="OCI.DotNetSDK.Objectstorage" Version="82.0.0" />
     <PackageReference Include="StackExchange.Redis" Version="2.7.20" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.3.1" />
   </ItemGroup>

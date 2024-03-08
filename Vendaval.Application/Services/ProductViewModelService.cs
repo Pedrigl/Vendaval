@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,8 +12,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Vendaval.Application.Services.Interfaces;
 using Vendaval.Application.ValueObjects;
-using Vendaval.Application.ValueObjects.Oci;
-using Vendaval.Application.ValueObjects.Oci.Enums;
 using Vendaval.Application.ViewModels;
 using Vendaval.Domain.Entities;
 using Vendaval.Domain.Enums;
@@ -20,6 +19,9 @@ using Vendaval.Infrastructure.Data.Contexts;
 using Vendaval.Infrastructure.Data.Repositories.EFRepositories;
 using Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces;
 using Vendaval.Infrastructure.Data.Repositories.RedisRepositories.Interfaces;
+using Oci.Common.Auth;
+using Oci.Common;
+using Oci.ObjectstorageService;
 
 namespace Vendaval.Application.Services
 {
@@ -27,47 +29,35 @@ namespace Vendaval.Application.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly IRedisRepository _redisRepository;
-        private HttpClient _httpClient;
         private readonly IMapper _mapper;
-
-        public ProductViewModelService(IProductRepository productRepository, IRedisRepository redisRepository, IConfiguration configuration, IMapper mapper) 
+        private readonly string _baseUri;
+        private readonly string _nameSpace;
+        private readonly string _bucketName;
+        private readonly string _tenancyId;
+        private readonly string _userId;
+        private readonly string _fingerprint;
+        private readonly string _privateKeyPath;
+        private readonly string _ociConfigPath;
+        public ProductViewModelService(IProductRepository productRepository, IRedisRepository redisRepository, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, IMapper mapper) 
         {
             _productRepository = productRepository;
             _redisRepository = redisRepository;
             _mapper = mapper;
+
             if (configuration == null )
                 throw new ArgumentNullException(nameof(configuration));
-
-            SetupHttpClient(configuration);
-        }
-
-        private HttpClient HttpClient
-        {
-            get
-            {
-                if (_httpClient == null)
-                    _httpClient = new HttpClient();
-
-                return _httpClient;
-            }
+            
+            _baseUri = configuration.GetSection("Oci:Storage:BaseUri").Value;
+            _nameSpace = configuration.GetSection("Oci:Storage:Namespace").Value;
+            _bucketName = configuration.GetSection("Oci:Storage:Bucket").Value;
+            _tenancyId = configuration.GetSection("Oci:TenancyId").Value;
+            _userId = configuration.GetSection("Oci:UserId").Value;
+            _fingerprint = configuration.GetSection("Oci:Fingerprint").Value;
+            _privateKeyPath = $"{webHostEnvironment.WebRootPath}/{configuration.GetSection("Oci:PrivateKeyName").Value}";
+            _ociConfigPath = $"{webHostEnvironment.WebRootPath}/ociConfig";
 
         }
-        private void SetupHttpClient(IConfiguration configuration)
-        {
-            var ociConfig = configuration.GetSection("Oci");
-            var storageConfig = ociConfig.GetSection("Storage");
-            var baseUri = storageConfig.GetSection("BaseUri").Value;
-            var nameSpace = storageConfig.GetSection("Namespace").Value;
-            var bucketName = storageConfig.GetSection("Bucket").Value;
 
-            var uri = new StringBuilder(baseUri,150);
-            uri.Append("/n/");
-            uri.Append(nameSpace);
-            uri.Append("/b/");
-            uri.Append(bucketName);
-            uri.Append("/");
-            HttpClient.BaseAddress = new Uri(uri.ToString());
-        }
         public async Task<MethodResult<ProductViewModel>> RegisterProduct(ProductViewModel productViewModel)
         {
             var productValidation = IsProductValid(productViewModel);
@@ -217,71 +207,71 @@ namespace Vendaval.Application.Services
             await _redisRepository.RemoveValueAsync("products");
         }
 
+        private ObjectStorageClient CreateObjectStorageClient()
+        {
+            Environment.SetEnvironmentVariable("OCI_CONFIG_FILE", _ociConfigPath);
+            var provider = new ConfigFileAuthenticationDetailsProvider("DEFAULT");
+            return new ObjectStorageClient(provider, new ClientConfiguration());
+        }
+
+
         public async Task<MethodResult<object>> UploadProductImage(int productId, IFormFile image)
         {
-
-            byte[] fileBytes;
-
-            using (var ms = new MemoryStream())
+            var putObjectRequest = new Oci.ObjectstorageService.Requests.PutObjectRequest
             {
-                image.CopyTo(ms);
-                fileBytes = ms.ToArray();
-            }
-            
-            HttpResponseMessage request;
+                NamespaceName = _nameSpace,
+                BucketName = _bucketName,
+                ObjectName = $"ProductId{productId}",
+                PutObjectBody = image.OpenReadStream()
+            };
 
             try
             {
-                request = await HttpClient.PutAsync("o/ProductId"+productId.ToString(), new ByteArrayContent(fileBytes));
-
+                using (var client = CreateObjectStorageClient())
+                {
+                    var putObjectResponse = await client.PutObject(putObjectRequest);
+                    return new MethodResult<object> { Success = true, Message = "Image uploaded successfuly" };
+                }
             }
+
             catch (Exception ex)
             {
-                return new MethodResult<object> { Success = false, Message = ex.Message};
+                return new MethodResult<object> { Success = false, Message = ex.Message };
             }
-
-            if (request.IsSuccessStatusCode)
-                return new MethodResult<object> { Success = true, Message = "Image uploaded successfuly" };
-
-            var response = await request.Content.ReadAsStringAsync();
-
-            return new MethodResult<object> { Success = false, Message = "Error uploading image", data = JsonConvert.DeserializeObject<OciError>(response) };
-        }
-
-        private string CreateAuthorizationHeader(string requestMethod, string requestUri, string contentMd5, string contentType, string date)
-        {
-            var stringToSign = $"{requestMethod}\n{contentMd5}\n{contentType}\n{date}\n{requestUri}";
-            var hmac = new HMACSHA256(Encoding.UTF8.GetBytes("secret"));
-            var signature = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(stringToSign)));
-            return $"Signature {signature}";
         }
 
         public async Task<MethodResult<object>> GetLinksToProductImages()
         {
-            var preauthRequestDetails = new CreatePreauthenticatedRequestDetails { 
-                name = "ProductImageList", 
-                timeExpires = DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm:ssZ"),
-                accessType = AccessType.AnyObjectRead.ToString(),
-                bucketListingAction = BucketListingAction.ListObjects.ToString()
+            var createPreauthenticatedRequestDetails = new Oci.ObjectstorageService.Models.CreatePreauthenticatedRequestDetails
+            {
+                Name = "ProductImagesRequest",
+                AccessType = Oci.ObjectstorageService.Models.CreatePreauthenticatedRequestDetails.AccessTypeEnum.AnyObjectRead,
+                TimeExpires = DateTime.Now.AddDays(7),
+                BucketListingAction = Oci.ObjectstorageService.Models.PreauthenticatedRequest.BucketListingActionEnum.ListObjects
             };
-            
+
+            var createPreauthenticatedRequestRequest = new Oci.ObjectstorageService.Requests.CreatePreauthenticatedRequestRequest
+            {
+                NamespaceName = _nameSpace,
+                BucketName = _bucketName,
+                CreatePreauthenticatedRequestDetails = createPreauthenticatedRequestDetails
+            };
+
             try
             {
-                var request = await HttpClient.PostAsync("p/", new StringContent(JsonConvert.SerializeObject(preauthRequestDetails), Encoding.UTF8,"application/json"));
-                var response = await request.Content.ReadAsStringAsync();
-
-                if (!request.IsSuccessStatusCode)
-                    return new MethodResult<object> { Success = false, Message = "Error creating preauthenticated request", data = JsonConvert.DeserializeObject<OciError>(response) };
-
-                var preauthRequest = JsonConvert.DeserializeObject<PreauthenticatedRequest>(response);
-
-                return new MethodResult<object> { Success = true, Message = "Preauthenticated request created", data = preauthRequest};
+                using (var client = CreateObjectStorageClient())
+                {
+                    var createPreauthenticatedRequestResponse = await client.CreatePreauthenticatedRequest(createPreauthenticatedRequestRequest);
+                    return new MethodResult<object> { Success = true, data = createPreauthenticatedRequestResponse.PreauthenticatedRequest };
+                }
             }
+
             catch (Exception ex)
             {
-                return new MethodResult<object> { Success = false, Message = ex.Message};
+                return new MethodResult<object> { Success = false, Message = ex.Message };
             }
         }
+
 
 
     }
