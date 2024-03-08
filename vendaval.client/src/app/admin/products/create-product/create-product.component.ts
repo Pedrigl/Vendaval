@@ -61,15 +61,12 @@ export class CreateProductComponent {
 
   private async uploadImage() {
     this.productImage = (document.getElementById('image') as HTMLInputElement).files![0];
-    
+    var imageName = this.productImage.name;
     if (this.productImage != null) {
-      var upload = await lastValueFrom(this.productService.uploadImage(this.product.name, this.productImage));
+      var upload = await lastValueFrom(this.productService.uploadImage(this.productImage));
       
       var getLink = await lastValueFrom(this.productService.CreateAuthRequestToProductImagesLink());
-      
-      var names = await lastValueFrom(this.productService.getProductImagesNames(getLink.data.fullPath));
-      var productImage = names.objects.filter((obj: any) => obj.name == `ProductName${this.product.name}`);
-      this.product.image = getLink.data.fullPath + productImage[0].name;
+      this.product.image = getLink.data.fullPath + imageName;
     }
   }
 }

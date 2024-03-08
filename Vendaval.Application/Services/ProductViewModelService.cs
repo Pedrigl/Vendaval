@@ -177,10 +177,11 @@ namespace Vendaval.Application.Services
             if (product == null)
                 return new MethodResult<ProductViewModel> { Success = false, Message = "Product not found" };
 
-            var productImageName = product.Image.Substring(product.Image.IndexOf("/o/"));
             try
             {
-                await DeleteProductImage(productImageName);
+                if(product.Image != null && product.Image.Contains("/o/"))
+                    await DeleteProductImage(product.Image.Substring(product.Image.IndexOf("/o/")));
+
                 _productRepository.Delete(product);
                 await SaveAndClearCache();
                 return new MethodResult<ProductViewModel> { Success = true, Message = "Product was deleted successfuly", data = _mapper.Map<ProductViewModel>(product) };

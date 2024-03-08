@@ -91,6 +91,25 @@ namespace Vendaval.Api.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpDelete("deleteProductImage")]
+        public async Task<IActionResult> DeleteProductImage(string imageName)
+        {
+            try
+            {
+                var result = await _productViewModelService.DeleteProductImage(imageName);
+
+                if (!result.Success)
+                    return BadRequest(result);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpPost("uploadProductImage")]
         public async Task<IActionResult> UploadProductImage(IFormFile image)
         {

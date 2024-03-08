@@ -23,32 +23,9 @@ export class ProductComponent implements OnInit {
   async ngOnInit() {
     try {
       this.products = await lastValueFrom(this.productService.getAllProducts());
-
-      const loadImagesPromises = this.products.data.map(async (product) => {
-        const isLinkValid = await this.checkImageLink(product.image);
-        if (!isLinkValid) {
-          if (!this.imagesLink) {
-            const imagesLinkResponse = await lastValueFrom(this.productService.CreateAuthRequestToProductImagesLink());
-            this.imagesLink = imagesLinkResponse.data.fullPath;
-          }
-          product.image = this.imagesLink + product.name;
-        }
-      });
-
-      await Promise.all(loadImagesPromises);
     } catch (error: any) {
       this.hasError = true;
       this.error = error;
-    }
-  }
-
-  async checkImageLink(imageLink: string): Promise<boolean> {
-    try {
-      const response = await fetch(imageLink);
-      return response.ok;
-    } catch (error: any) {
-      console.error('Erro ao verificar o link da imagem:', error);
-      return false;
     }
   }
 
@@ -64,6 +41,8 @@ export class ProductComponent implements OnInit {
         this.hasError = true;
         this.error = req.message;
       } else {
+        this.hasError = false;
+        this.error = '';
         this.products.data = this.products.data.filter(p => p.id !== id);
       }
     } catch (error: any) {

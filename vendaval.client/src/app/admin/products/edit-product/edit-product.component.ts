@@ -32,7 +32,8 @@ export class EditProductComponent {
     try {
       this.product.category = Number(this.product.category);
 
-      await this.updateImage();
+      if(this.productImage != null)
+        await this.updateImage();
 
       var req = await lastValueFrom(this.productService.updateProduct(this.product));
 
@@ -56,16 +57,18 @@ export class EditProductComponent {
       
     }
 
-    private async updateImage() {
-        if (this.productImage != null) {
-            var upload = await lastValueFrom(this.productService.uploadImage(this.product.name, this.productImage));
-            
-            var getLink = await lastValueFrom(this.productService.CreateAuthRequestToProductImagesLink());
-            
-            var names = await lastValueFrom(this.productService.getProductImagesNames(getLink.data.fullPath));
+  private async updateImage() {
+      var imageName = this.productImage.name;
+      if (this.productImage != null) {
+        var deleteOldImage = await lastValueFrom(this.productService.deleProductImage(this.product.image.substring(this.product.image.indexOf("/o/")+3)));
 
-            var productImage = names.objects.filter((obj: any) => obj.name == `ProductName${this.product.name}`);
-            this.product.image = getLink.data.fullPath + productImage[0].name;
+        var upload = await lastValueFrom(this.productService.uploadImage(this.productImage));
+            
+        var getLink = await lastValueFrom(this.productService.CreateAuthRequestToProductImagesLink());
+            
+        var names = await lastValueFrom(this.productService.getProductImagesNames(getLink.data.fullPath));
+
+        this.product.image = getLink.data.fullPath + imageName;
         }
     }
 }
