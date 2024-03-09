@@ -18,5 +18,6 @@ namespace Vendaval.Application.ViewModels
         public List<AvaliationMedia>? Media { get; set; }
         public ProductAvaliationStars Stars { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

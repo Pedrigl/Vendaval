@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -10,9 +9,9 @@ using Vendaval.Domain.Entities;
 
 namespace Vendaval.Infrastructure.Data.EntitiesConfiguraition
 {
-    public class ProductAvaliationConfiguration : IEntityTypeConfiguration<ProductAvaliation>
+    public class OrderConfiguration : IEntityTypeConfiguration<Order>
     {
-        public void Configure(EntityTypeBuilder<ProductAvaliation> builder)
+        public void Configure(EntityTypeBuilder<Order> builder)
         {
             builder.HasKey(x => x.Id);
 
@@ -22,17 +21,13 @@ namespace Vendaval.Infrastructure.Data.EntitiesConfiguraition
 
             builder.Property(x => x.UpdatedAt).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
 
-            builder.Property(x => x.ProductId).IsRequired();
+            builder.Property(x => x.CustomerId).IsRequired();
 
-            builder.Property(x => x.CostumerName).IsRequired().HasMaxLength(100);
+            builder.HasMany(x => x.Products).WithMany();
 
-            builder.Property(x => x.Title).IsRequired().HasMaxLength(100);
+            builder.Property(x => x.Total).IsRequired();
 
-            builder.Property(x => x.Description).IsRequired().HasMaxLength(500);
-
-            builder.OwnsMany(x => x.Media);
-
-            builder.Property(x => x.Stars).IsRequired();
+            builder.Property(x => x.Status).IsRequired();
         }
     }
 }

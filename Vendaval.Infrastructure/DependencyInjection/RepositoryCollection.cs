@@ -19,6 +19,7 @@ namespace Vendaval.Infrastructure.DependencyInjection
             services.AddScoped<IRedisRepository,RedisRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductAvaliationRepository, ProductAvaliationRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             return services;
         }
     }

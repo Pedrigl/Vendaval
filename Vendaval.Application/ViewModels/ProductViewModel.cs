@@ -17,5 +17,7 @@ namespace Vendaval.Application.ViewModels
         public string Image { get; set; }
         public ProductType Category { get; set; }
         public float Avaliation { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

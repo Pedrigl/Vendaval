@@ -16,7 +16,11 @@ namespace Vendaval.Infrastructure.Data.EntitiesConfiguraition
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
-            
+
+            builder.Property(x => x.CreatedAt).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
+
+            builder.Property(x => x.UpdatedAt).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
+
             builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
             
             builder.Property(x => x.Email).IsRequired().HasMaxLength(100);

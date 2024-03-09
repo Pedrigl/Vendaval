@@ -17,6 +17,10 @@ namespace Vendaval.Infrastructure.Data.EntitiesConfiguraition
 
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
+            builder.Property(x => x.CreatedAt).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
+
+            builder.Property(x => x.UpdatedAt).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
+
             builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
 
             builder.Property(x => x.Description).IsRequired().HasMaxLength(500);

@@ -16,7 +16,6 @@ namespace Vendaval.Domain.Entities
         public string Description { get; set; }
         public ProductAvaliationStars Stars { get; set; }
         public List<AvaliationMedia>? Media { get; set; }
-        public DateTime CreatedAt { get; set; }
 
     }
 }
