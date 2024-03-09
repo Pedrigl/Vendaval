@@ -10,6 +10,7 @@ namespace Vendaval.Application.Services.Interfaces
 {
     public interface IOrderVieModelService
     {
+        Task<MethodResult<List<OrderViewModel>>> GetAllOrders();
         Task<MethodResult<List<OrderViewModel>>> GetOrdersByUserIdAsync(int userId);
         Task<MethodResult<OrderViewModel>> GetOrderByIdAsync(int orderId);
         Task<MethodResult<OrderViewModel>> CreateOrderAsync(OrderViewModel orderViewModel);

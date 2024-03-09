@@ -1,12 +1,10 @@
 import { Product } from "../product/product";
+import { BaseModel } from "../shared/common/interfaces/BaseModel";
 import { OrderStatus } from "./orderStatus";
 
-export interface Order {
-  id: number;
-  userId: number;
+export interface Order extends BaseModel{
+  costumerId: number;
   products: Product[];
   total: number;
-  orderDate: Date;
   status: OrderStatus;
-  statusDate: Date;
 }

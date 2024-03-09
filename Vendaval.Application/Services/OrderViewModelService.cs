@@ -30,9 +30,40 @@ namespace Vendaval.Application.Services
             _redisRepository = redisRepository;
             _mapper = mapper;
         }
+        public async Task<MethodResult<List<OrderViewModel>>> GetAllOrders()
+        {
+            var ordersOnCache = await _redisRepository.GetValueAsync("UserId0Orders");
 
+            if (!ordersOnCache.IsNullOrEmpty)
+            {
+                var ordersOnCacheParse = JsonConvert.DeserializeObject<List<Order>>(ordersOnCache);
+                var orderOnCacheViewModel = _mapper.Map<List<OrderViewModel>>(ordersOnCacheParse);
+                return new MethodResult<List<OrderViewModel>> { Success = true, data = orderOnCacheViewModel };
+            }
+            var orders = await _orderRepository.GetAllAsync();
+
+            if (orders.Count == 0)
+            {
+                return new MethodResult<List<OrderViewModel>> { Success = false, Message = "No orders where found" };
+            }
+
+            var orderViewModel = _mapper.Map<List<OrderViewModel>>(orders);
+
+            await SaveOrdersOnCache(0, orders);
+
+            return new MethodResult<List<OrderViewModel>> { Success = true, data = orderViewModel };
+        }
         public async Task<MethodResult<List<OrderViewModel>>> GetOrdersByUserIdAsync(int userId)
         {
+            var ordersOnCache = await _redisRepository.GetValueAsync($"UserId{userId}Orders");
+
+            if (!ordersOnCache.IsNullOrEmpty)
+            {
+                var orders = JsonConvert.DeserializeObject<List<Order>>(ordersOnCache);
+                var orderOnCacheViewModel = _mapper.Map<List<OrderViewModel>>(orders);
+                return new MethodResult<List<OrderViewModel>> { Success = true, data = orderOnCacheViewModel };
+            }
+
             var order = _orderRepository.GetWhere(x => x.CustomerId == userId);
 
             if (order == null)

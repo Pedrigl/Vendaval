@@ -17,6 +17,27 @@ namespace Vendaval.Api.Controllers
             _orderViewModelService = orderViewModelService;
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpGet("getAll")]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            try
+            {
+                var orders = await _orderViewModelService.GetAllOrders();
+
+                if(orders.Success)
+                {
+                    return Ok(orders);
+                }
+
+                return BadRequest(orders);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
         [Authorize]
         [HttpGet("getByUserId")]
         public async Task<IActionResult> GetByUserId(int userId)
@@ -62,7 +83,7 @@ namespace Vendaval.Api.Controllers
 
         [Authorize]
         [HttpPut("updateOrder")]
-        public async Task<IActionResult> UpdateOrderStatus(OrderViewModel order)
+        public async Task<IActionResult> UpdateOrder(OrderViewModel order)
         {
             try
             {
