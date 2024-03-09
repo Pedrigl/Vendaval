@@ -1,8 +1,8 @@
+import { BaseModel } from "../../shared/common/interfaces/BaseModel";
 import { AvaliationMedia } from "./avaliationMedia";
 import { ProductAvaliationStars } from "./productavaliationstars";
 
-export interface ProductAvaliation {
-  id: number;
+export interface ProductAvaliation extends BaseModel{
   productId: number;
   costumerName: string;
   title: string;
