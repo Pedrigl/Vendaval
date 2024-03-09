@@ -141,7 +141,6 @@ export class LoginComponent implements OnInit{
   };
 
   public async checkIfUserIsLoggedInAsync() {
-    this.loadingService.isLoading.next(true);
     const login = this.authService.getLogin;
     const user = this.authService.getUser;
     const token = this.authService.getToken;
@@ -155,12 +154,10 @@ export class LoginComponent implements OnInit{
     const tokenExpirationValue = await lastValueFrom(tokenExpiration) ;
 
     if (tokenExpirationValue == null) {
-      this.loadingService.isLoading.next(false);
       return;
     }
   
     if (tokenExpirationValue < new Date()) {
-      this.loadingService.isLoading.next(false);
       this.authService.logOut();
       return;
     }
