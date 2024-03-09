@@ -37,6 +37,7 @@ export class ProductComponent implements OnInit {
   }
 
   async deleteProduct(id: number) {
+    this.loadingService.isLoading.next(true);
     try {
       var req = await lastValueFrom(this.productService.deleteProduct(id));
 
@@ -48,7 +49,9 @@ export class ProductComponent implements OnInit {
         this.error = '';
         this.products.data = this.products.data.filter(p => p.id !== id);
       }
+      this.loadingService.isLoading.next(false);
     } catch (error: any) {
+      this.loadingService.isLoading.next(false);
       this.hasError = true;
       this.error = error;
     }

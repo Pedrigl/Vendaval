@@ -3,6 +3,24 @@
     padding: 0;
     text-align: center;
 }
+.loading-image {
+  animation: spin 2s linear infinite;
+}
+
+.disable-pointer-events {
+  pointer-events: none;
+}
+
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
 tr:nth-child(even) {
     background: #F2F2F2;
