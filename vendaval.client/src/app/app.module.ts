@@ -17,6 +17,7 @@ import { ProductComponent } from './admin/products/product.component';
 import { CreateProductComponent } from './admin/products/create-product/create-product.component';
 import { EditProductComponent } from './admin/products/edit-product/edit-product.component';
 import { OrdersComponent } from './admin/orders/orders.component';
+import { OrderComponent } from './order/order.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { OrdersComponent } from './admin/orders/orders.component';
     ProductComponent,
     CreateProductComponent,
     EditProductComponent,
-    OrdersComponent
+    OrdersComponent,
+    OrderComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,

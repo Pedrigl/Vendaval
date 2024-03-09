@@ -13,20 +13,22 @@ import { ProductComponent } from './admin/products/product.component';
 import { CreateProductComponent } from './admin/products/create-product/create-product.component';
 import { EditProductComponent } from './admin/products/edit-product/edit-product.component';
 import { OrdersComponent } from './admin/orders/orders.component';
+import { UserType } from './login/user-type';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {path: 'notallowed', component: NotallowedComponent},
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'admin', component: AdminComponent, canActivate: [AuthGuardService], data: { roles: ['Admin']} },
-  {path: 'admin/users', component: UsersComponent, canActivate: [AuthGuardService], data: { roles: ['Admin']}},
-  { path: 'admin/users/edit', component: EditUserComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } },
-  { path: 'admin/users/create', component: CreateUserComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } },
-  { path: 'admin/products', component: ProductComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } },
-  { path: 'admin/products/create', component: CreateProductComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } },
-  { path: 'admin/products/edit', component: EditProductComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } },
-  { path: 'admin/orders', component: OrdersComponent, canActivate: [AuthGuardService], data: { roles: ['Admin'] } }
+  { path: 'orders', component: OrdersComponent, canActivate: [AuthGuardService], data: {roles: [UserType.Admin.toString(), UserType.Costumer.toString(), UserType.Seller.toString()]}},
+  { path: UserType.Admin.toString(), component: AdminComponent, canActivate: [AuthGuardService], data: { roles: [UserType.Admin.toString()]} },
+  {path: 'admin/users', component: UsersComponent, canActivate: [AuthGuardService], data: { roles: [UserType.Admin.toString()]}},
+  { path: 'admin/users/edit', component: EditUserComponent, canActivate: [AuthGuardService], data: { roles: [UserType.Admin.toString()] } },
+  { path: 'admin/users/create', component: CreateUserComponent, canActivate: [AuthGuardService], data: { roles: [UserType.Admin.toString()] } },
+  { path: 'admin/products', component: ProductComponent, canActivate: [AuthGuardService], data: { roles: [UserType.Admin.toString()] } },
+  { path: 'admin/products/create', component: CreateProductComponent, canActivate: [AuthGuardService], data: { roles: [UserType.Admin.toString()] } },
+  { path: 'admin/products/edit', component: EditProductComponent, canActivate: [AuthGuardService], data: { roles: [UserType.Admin.toString()] } },
+  { path: 'admin/orders', component: OrdersComponent, canActivate: [AuthGuardService], data: { roles: [UserType.Admin.toString()] } }
 
 ];
 
