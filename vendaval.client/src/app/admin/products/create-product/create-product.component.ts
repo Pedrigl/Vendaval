@@ -36,20 +36,16 @@ export class CreateProductComponent {
     this.loadingService.isLoading.next(true);
     try {
       this.product.category = Number(this.product.category);
+      if(this.productImage != null)
+        await this.uploadImage();
       var res = await lastValueFrom(this.productService.createProduct(this.product));
 
       if (res.success) {
         this.hasError = false;
         this.error = '';
-        this.product = res.data;
-        await this.uploadImage();
-        var req = await lastValueFrom(this.productService.updateProduct(this.product));
 
-        if (req.success) {
-          this.loadingService.isLoading.next(false);
-          this.router.navigate(['/admin/products']);
-        }
-          
+        this.loadingService.isLoading.next(false);
+        this.router.navigate(['/admin/products']);  
       }
 
       else {

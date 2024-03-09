@@ -14,13 +14,17 @@ import { LoadingService } from '../../shared/common/loading.service';
 })
 export class UsersComponent {
     users!: ApiResponse<User[]>;
+    filteredUsers!: ApiResponse<User[]>;
     userType = UserType;
     hasError = false;
     error = '';
+    searchTerm: string = '';
+
   constructor(private router: Router, private loadingService: LoadingService, private loginService: LoginService) {
       loadingService.isLoading.next(true);
       loginService.getUsers().subscribe(response => {
         this.users = response;
+        this.filteredUsers = { ...response, data: [...response.data] };
         loadingService.isLoading.next(false);
       });
      }
@@ -48,5 +52,15 @@ export class UsersComponent {
         this.error = error;
       }
       
-      }
+  }
+
+  filterList() {
+    if (this.searchTerm) {
+      this.filteredUsers.data = this.users.data.filter(item => item.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
+    } else {
+      this.filteredUsers.data = [...this.users.data];
+    }
+  }
+
+
 }

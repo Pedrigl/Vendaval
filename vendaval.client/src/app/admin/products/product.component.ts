@@ -14,7 +14,9 @@ import { LoadingService } from '../../shared/common/loading.service';
 })
 export class ProductComponent implements OnInit {
   products!: ApiResponse<Product[]>;
+  filteredProducts!: ApiResponse<Product[]>;
   productType = ProductType;
+  searchTerm: string = '';
   imagesLink: string = '';
   hasError = false;
   error!: string | null;
@@ -25,6 +27,7 @@ export class ProductComponent implements OnInit {
     try {
       this.loadingService.isLoading.next(true);
       this.products = await lastValueFrom(this.productService.getAllProducts());
+      this.filteredProducts = { ...this.products, data: [...this.products.data] };
       this.loadingService.isLoading.next(false);
     } catch (error: any) {
       this.hasError = true;
@@ -54,6 +57,15 @@ export class ProductComponent implements OnInit {
       this.loadingService.isLoading.next(false);
       this.hasError = true;
       this.error = error;
+    }
+  }
+
+  filterList() {
+    if (this.searchTerm) {
+      this.filteredProducts.data = this.products.data.filter(item => item.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
+    }
+    else {
+      this.filteredProducts.data = [...this.products.data];
     }
   }
 }
