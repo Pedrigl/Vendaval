@@ -9,10 +9,8 @@ using Vendaval.Domain.ValueObjects;
 
 namespace Vendaval.Application.ViewModels
 {
-    public class UserViewModel
+    public class UserViewModel: BaseModelViewModel
     {
-        public int Id { get; set; }
-
         public UserType UserType { get; set; }
 
         public string Email { get; set; }
@@ -27,8 +25,5 @@ namespace Vendaval.Application.ViewModels
 
         public List<Address>? Address { get; set; }
 
-        public DateTime CreatedAt { get; set; }
-
-        public DateTime UpdatedAt { get; set; }
     }
 }
