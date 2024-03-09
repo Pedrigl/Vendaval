@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiResponse } from '../../../shared/common/interfaces/apiResponse';
 import { Observable } from 'rxjs/internal/Observable';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
+import { LoadingService } from '../../../shared/common/loading.service';
 
 @Component({
   selector: 'app-edit-user',
@@ -16,19 +17,22 @@ export class EditUserComponent{
     hasError = false;
     error = '';
 
-    constructor(private route: ActivatedRoute, private router: Router,private loginService: LoginService){
-        
+    constructor(private route: ActivatedRoute, private router: Router, private loadingService: LoadingService,private loginService: LoginService){
+        loadingService.isLoading.next(true);
         this.loginService.getUser(this.route.snapshot.queryParams['id']).subscribe(response => {
           this.user = response.data;
+          loadingService.isLoading.next(false);
         })
     }
-    async saveUser() {
+  async saveUser() {
+      this.loadingService.isLoading.next(true);
       this.hasError = false;
       try {
           this.user.userType = Number(this.user.userType);
           var req = await lastValueFrom(this.loginService.putUser(this.user));
           this.user = req.user;
 
+        this.loadingService.isLoading.next(false);
           if (!req.success) {
             this.hasError = true;
             this.error = req.message;
@@ -39,7 +43,8 @@ export class EditUserComponent{
           }
         }
 
-        catch (error: any) {
+      catch (error: any) {
+        this.loadingService.isLoading.next(false);
         this.hasError = true;
 
         this.error = error;

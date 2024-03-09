@@ -21,15 +21,18 @@ table {
     margin: 0 auto;
 }
 
-.container-fluid{
-    flex-grow: 1;
+.container-fluid {
+  flex-grow: 1;
+  padding-bottom: 60px;
 }
 
 footer {
-    position: fixed;
-    bottom: 0;
-    overflow-x: hidden;
-    width: 100%;
-    background-color: #f8f9fa;
-    text-align: center;
+  position: fixed;
+  bottom: 0;
+  overflow-x: hidden;
+  width: 100%;
+  background-color: #f8f9fa;
+  text-align: center;
 }
+
+
