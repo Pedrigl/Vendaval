@@ -1,14 +1,45 @@
-<div class="container">
-  <div class="row">
-    <div class="col-md-3 mb-3" *ngFor="let product of products">
-      <div class="card">
-        <img [src]="product.image" width="100" height="250" class="card-img-top" alt="{{product.name}}">
-        <div class="card-body">
-          <h5 class="card-title">{{product.name}}</h5>
-          <p class="card-text">R$ {{product.price}}</p>
-          <a [href]="['/product', product.id]" class="btn btn-primary">Ver detalhes</a>
-        </div>
-      </div>
+<div class="container-fluid">
+  <div class="row justify-content-start">
+      <div class="col-md-2">
+          <h5>Filters</h5>
+          <!-- Adicione seus campos de filtro aqui -->
+          <div class="form-group">
+            <label for="filterName">Product name</label>
+            <input type="text" id="filterName" class="form-control mb-2" [(ngModel)]="nameFilter" (ngModelChange)="applyNameFilter()">
+
+            <div>
+                <label for="filterCategory">Category</label>
+                <select id="filterCategory" class="form-control mb-2" [(ngModel)]="fiteredProductTypes" (ngModelChange)="applyCategoryFilter()">
+                    <option value=-1>All</option>
+                    <option *ngFor="let category of productTypesValues; index as i" [value]="category">{{productTypesNames[i]}}</option>
+                </select>
+                <div clas="mt-2">
+                    <label for="filterPrice">Price</label>
+                </div>
+
+                <label for="filterPrice">From</label>
+                <input type="number" id="filterPrice" class="form-control mb-1" [(ngModel)]="initialPriceFilter">
+
+                <label for="filterPrice">To</label>
+                <input type="number" id="filterPrice" class="form-control mb-1" [(ngModel)]="maxPriceFilter">
+                <button class="btn btn-light border border-secondary mt-2" (click)="applyPriceFilter()">Apply</button>
+            </div>
+          </div>
+      <!-- Adicione mais campos de filtro conforme necessário -->
     </div>
-  </div>
+    <div class="col-md-10">
+        <div class="row">
+            <div class="col-md-3 mb-3" *ngFor="let product of filteredProducts">
+                <div class="card">
+                  <img [src]="product.image" width="100" height="250" class="card-img-top" alt="{{product.name}}">
+                  <div class="card-body">
+                    <h5 class="card-title">{{product.name}}</h5>
+                    <p class="card-text">R$ {{product.price}}</p>
+                    <a [routerLink]="['/product', product.id]" class="btn btn-light border border-secondary">Show details</a>
+                  </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
 </div>
