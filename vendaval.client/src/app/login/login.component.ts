@@ -40,7 +40,9 @@ export class LoginComponent implements OnInit{
     name: '',
     birthDate: new Date(),
     phoneNumber: '',
-    address: []
+    address: [],
+    createdAt: null,
+    updatedAt: null
   };
 
   async ngOnInit() {

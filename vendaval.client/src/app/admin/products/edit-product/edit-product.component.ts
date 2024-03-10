@@ -65,8 +65,10 @@ export class EditProductComponent {
 
   private async updateImage() {
       var imageName = this.productImage.name;
-      if (this.productImage != null) {
-        var deleteOldImage = await lastValueFrom(this.productService.deleProductImage(this.product.image.substring(this.product.image.indexOf("/o/")+3)));
+    if (this.productImage != null) {
+
+        if(this.product.image != null && this.product.image != "")
+          var deleteOldImage = await lastValueFrom(this.productService.deleProductImage(this.product.image.substring(this.product.image.indexOf("/o/")+3)));
 
         var upload = await lastValueFrom(this.productService.uploadImage(this.productImage));
             

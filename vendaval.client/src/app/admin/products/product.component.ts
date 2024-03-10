@@ -25,14 +25,21 @@ export class ProductComponent implements OnInit {
 
   async ngOnInit() {
     try {
-      this.loadingService.isLoading.next(true);
+      setTimeout(() => this.loadingService.isLoading.next(true));
       this.products = await lastValueFrom(this.productService.getAllProducts());
       this.filteredProducts = { ...this.products, data: [...this.products.data] };
-      this.loadingService.isLoading.next(false);
-    } catch (error: any) {
+
+    }
+
+    catch (error: any) {
       this.hasError = true;
       this.error = error;
     }
+
+    finally {
+      setTimeout(() => this.loadingService.isLoading.next(false));
+    }
+
   }
 
   editProduct(id: number) {
@@ -40,7 +47,7 @@ export class ProductComponent implements OnInit {
   }
 
   async deleteProduct(id: number) {
-    this.loadingService.isLoading.next(true);
+    setTimeout(() => this.loadingService.isLoading.next(true));
     try {
       var req = await lastValueFrom(this.productService.deleteProduct(id));
 
@@ -50,11 +57,11 @@ export class ProductComponent implements OnInit {
       } else {
         this.hasError = false;
         this.error = '';
-        this.products.data = this.products.data.filter(p => p.id !== id);
+        this.filteredProducts.data = this.products.data.filter(p => p.id !== id);
       }
-      this.loadingService.isLoading.next(false);
+      setTimeout(() => this.loadingService.isLoading.next(false));
     } catch (error: any) {
-      this.loadingService.isLoading.next(false);
+      setTimeout(() => this.loadingService.isLoading.next(false));
       this.hasError = true;
       this.error = error;
     }

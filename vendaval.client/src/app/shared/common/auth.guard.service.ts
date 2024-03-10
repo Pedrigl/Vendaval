@@ -21,9 +21,9 @@ export class AuthGuardService implements CanActivate{
           return this.router.createUrlTree(['/login'], { queryParams: { reason: "notloggedin" } });
         }
 
-        const roles = route.data['roles'] as Array<string>;
+        const roles = route.data['roles'] as Array<UserType>;
         
-        if (roles && !roles.includes(UserType[user.userType])) {
+        if (roles && !roles.includes(user.userType)) {
           return this.router.createUrlTree(['/notallowed']);
         }
 

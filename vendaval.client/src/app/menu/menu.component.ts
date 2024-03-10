@@ -23,7 +23,9 @@ export class MenuComponent implements OnInit{
     name: '',
     birthDate: new Date(),
     phoneNumber: '',
-    address: []
+    address: [],
+    createdAt: null,
+    updatedAt: null
   }
 
   ngOnInit() {

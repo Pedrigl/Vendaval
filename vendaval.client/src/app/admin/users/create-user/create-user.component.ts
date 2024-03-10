@@ -21,7 +21,9 @@ export class CreateUserComponent {
     userType: UserType.Costumer,
     birthDate: new Date(),
     phoneNumber: '',
-    address: []
+    address: [],
+    createdAt: null,
+    updatedAt: null
   };
 
   hasError = false;

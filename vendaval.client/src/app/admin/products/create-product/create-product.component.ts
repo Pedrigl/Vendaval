@@ -20,7 +20,9 @@ export class CreateProductComponent {
     avaliation: 0.00,
     stock: 0,
     image: '',
-    category: ProductType.Clothing
+    category: ProductType.Clothing,
+    createdAt: null,
+    updatedAt: null
   }
   productImage!: File;
   productType = ProductType;
@@ -36,10 +38,11 @@ export class CreateProductComponent {
     this.loadingService.isLoading.next(true);
     try {
       this.product.category = Number(this.product.category);
-      if(this.productImage != null)
-        await this.uploadImage();
-      var res = await lastValueFrom(this.productService.createProduct(this.product));
+      
+      await this.uploadImage();
 
+      var res = await lastValueFrom(this.productService.createProduct(this.product));
+      
       if (res.success) {
         this.hasError = false;
         this.error = '';
@@ -69,6 +72,7 @@ export class CreateProductComponent {
       var upload = await lastValueFrom(this.productService.uploadImage(this.productImage));
       
       var getLink = await lastValueFrom(this.productService.CreateAuthRequestToProductImagesLink());
+      
       this.product.image = getLink.data.fullPath + imageName;
     }
   }
