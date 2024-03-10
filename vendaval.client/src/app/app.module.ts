@@ -18,6 +18,8 @@ import { CreateProductComponent } from './admin/products/create-product/create-p
 import { EditProductComponent } from './admin/products/edit-product/edit-product.component';
 import { OrdersComponent } from './admin/orders/orders.component';
 import { OrderComponent } from './order/order.component';
+import {ProductsComponent } from './product/products.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -34,12 +36,13 @@ import { OrderComponent } from './order/order.component';
     CreateProductComponent,
     EditProductComponent,
     OrdersComponent,
-    OrderComponent
+    OrderComponent,
+    ProductsComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,
     AppRoutingModule, FormsModule,
-    NgbModule
+    NgbModule, CommonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

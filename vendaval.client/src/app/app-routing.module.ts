@@ -10,6 +10,7 @@ import { UsersComponent } from './admin/users/users.component';
 import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
 import { CreateUserComponent } from './admin/users/create-user/create-user.component';
 import { ProductComponent } from './admin/products/product.component';
+import { ProductsComponent } from './product/products.component';
 import { CreateProductComponent } from './admin/products/create-product/create-product.component';
 import { EditProductComponent } from './admin/products/edit-product/edit-product.component';
 import { OrdersComponent } from './admin/orders/orders.component';
@@ -20,6 +21,7 @@ const routes: Routes = [
   {path: 'notallowed', component: NotallowedComponent},
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
+  {path: 'products', component: ProductsComponent},
   { path: 'orders', component: OrdersComponent, canActivate: [AuthGuardService], data: {roles: [UserType.Admin, UserType.Costumer, UserType.Seller]}},
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuardService], data: { roles: [UserType.Admin]} },
   {path: 'admin/users', component: UsersComponent, canActivate: [AuthGuardService], data: { roles: [UserType.Admin]}},
