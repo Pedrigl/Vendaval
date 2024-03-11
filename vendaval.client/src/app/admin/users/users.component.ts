@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '../../login/user';
+import { User } from '../../shared/common/interfaces/user';
 import { LoginService } from '../../login/login.service';
 import { ApiResponse } from '../../shared/common/interfaces/apiResponse';
-import { UserType } from '../../login/user-type';
+import { UserType } from '../../shared/common/enums/user-type';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 import { LoadingService } from '../../shared/common/loading.service';
 

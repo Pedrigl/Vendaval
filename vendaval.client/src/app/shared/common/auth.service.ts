@@ -1,6 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import {BehaviorSubject } from 'rxjs';
-import { User } from '../../login/user';
+import { User } from './interfaces/user';
 import { Login } from '../../login/login';
 
 @Injectable({

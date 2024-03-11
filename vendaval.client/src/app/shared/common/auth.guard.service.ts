@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { ActivatedRoute, ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs/internal/Observable';
 import { lastValueFrom, map } from 'rxjs';
-import { UserType } from '../../login/user-type';
+import { UserType } from './enums/user-type';
 
 @Injectable({
   providedIn: 'root'

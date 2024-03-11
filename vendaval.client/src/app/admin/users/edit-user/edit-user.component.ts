@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { LoginService } from '../../../login/login.service';
-import { User } from '../../../login/user';
+import { User } from '../../../shared/common/interfaces/user';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiResponse } from '../../../shared/common/interfaces/apiResponse';
 import { Observable } from 'rxjs/internal/Observable';

@@ -14,7 +14,7 @@ import { ProductsComponent } from './product/products.component';
 import { CreateProductComponent } from './admin/products/create-product/create-product.component';
 import { EditProductComponent } from './admin/products/edit-product/edit-product.component';
 import { OrdersComponent } from './admin/orders/orders.component';
-import { UserType } from './login/user-type';
+import { UserType } from './shared/common/enums/user-type';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },

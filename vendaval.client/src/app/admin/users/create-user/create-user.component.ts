@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { LoginService } from '../../../login/login.service';
-import { User } from '../../../login/user';
-import { UserType } from '../../../login/user-type';
+import { User } from '../../../shared/common/interfaces/user';
+import { UserType } from '../../../shared/common/enums/user-type';
 import { lastValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoadingService } from '../../../shared/common/loading.service';

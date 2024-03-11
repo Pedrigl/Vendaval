@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment'; 
 import { Login, LoginResponse } from './login';
-import { User } from './user';
+import { User } from '../shared/common/interfaces/user';
 import { AuthorizedHttpClient } from '../shared/common/authorized-httpclient';
 import { ApiResponse } from '../shared/common/interfaces/apiResponse';
 @Injectable({
