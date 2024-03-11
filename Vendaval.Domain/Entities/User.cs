@@ -11,6 +11,5 @@ namespace Vendaval.Domain.Entities
         public string Name { get; set; }
         public DateTime BirthDate { get; set; }
         public string PhoneNumber { get; set; }
-        public List<Address>? Address { get; set; }
     }
 }

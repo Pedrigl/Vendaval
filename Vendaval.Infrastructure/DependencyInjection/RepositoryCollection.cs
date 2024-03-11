@@ -16,6 +16,7 @@ namespace Vendaval.Infrastructure.DependencyInjection
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserAddressRepository, UserAddressRepository>();
             services.AddScoped<IRedisRepository,RedisRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductAvaliationRepository, ProductAvaliationRepository>();

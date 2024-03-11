@@ -23,7 +23,5 @@ namespace Vendaval.Application.ViewModels
 
         public string PhoneNumber { get; set; }
 
-        public List<Address>? Address { get; set; }
-
     }
 }
