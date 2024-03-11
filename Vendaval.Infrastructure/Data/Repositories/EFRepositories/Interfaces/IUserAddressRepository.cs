@@ -9,7 +9,7 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces
 {
     public interface IUserAddressRepository
     {
-        Task<UserAddress> GetWhere(Func<UserAddress, bool> predicate);
+        IEnumerable<UserAddress> GetWhere(Func<UserAddress, bool> predicate);
         Task<UserAddress> AddAsync(UserAddress userAddress);
         void Update(int entityId, UserAddress userAddress);
         void Delete(UserAddress userAddress);

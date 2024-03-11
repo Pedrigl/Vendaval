@@ -388,9 +388,6 @@ namespace Vendaval.Application.Services
             oldUser.Password = string.IsNullOrEmpty(patchedUser.Password) ? oldUser.Password : HashPassword(patchedUser.Password);
             oldUser.Email = string.IsNullOrEmpty(patchedUser.Email) ? oldUser.Email : patchedUser.Email;
             oldUser.PhoneNumber = string.IsNullOrEmpty(patchedUser.PhoneNumber) ? oldUser.PhoneNumber : patchedUser.PhoneNumber;
-
-            if(oldUser.Address != null && oldUser.Address.Count > 0 && patchedUser.Address != null && patchedUser.Address.Count >0)
-                oldUser.Address.AddRange(patchedUser.Address);
         }
 
         public async Task<LoginResult> DeleteLogin(int id)

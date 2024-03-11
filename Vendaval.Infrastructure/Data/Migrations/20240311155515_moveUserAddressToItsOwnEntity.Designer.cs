@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Vendaval.Infrastructure.Data.Contexts;
@@ -11,9 +12,11 @@ using Vendaval.Infrastructure.Data.Contexts;
 namespace Vendaval.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(VendavalDbContext))]
-    partial class VendavalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240311155515_moveUserAddressToItsOwnEntity")]
+    partial class moveUserAddressToItsOwnEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
