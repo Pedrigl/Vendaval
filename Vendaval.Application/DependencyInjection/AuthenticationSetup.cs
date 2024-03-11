@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
+using Vendaval.Infrastructure.Data.Contexts;
 
 namespace Vendaval.Application.DependencyInjection
 {
@@ -25,7 +26,7 @@ namespace Vendaval.Application.DependencyInjection
                         ValidateIssuerSigningKey = true,
                         ValidIssuers = configuration.GetSection("Jwt:Issuers").Get<List<string>>(),
                         ValidAudiences = configuration.GetSection("Jwt:Audience").Get<List<string>>(),
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"] ?? throw new ArgumentNullException(nameof(AuthenticationSetup))))
                     };
                 });
         }

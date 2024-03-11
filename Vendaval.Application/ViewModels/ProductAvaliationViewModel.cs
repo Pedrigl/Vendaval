@@ -11,9 +11,9 @@ namespace Vendaval.Application.ViewModels
     public class ProductAvaliationViewModel : BaseModelViewModel
     {
         public int ProductId { get; set; }
-        public string CostumerName { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
+        public required string CostumerName { get; set; }
+        public required string Title { get; set; }
+        public required string Description { get; set; }
         public List<AvaliationMedia>? Media { get; set; }
         public ProductAvaliationStars Stars { get; set; }
     }

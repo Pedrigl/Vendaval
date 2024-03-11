@@ -84,6 +84,12 @@ namespace Vendaval.Application.Services
 
             result = JsonConvert.DeserializeObject<LoginResult>(loginOnCache);
 
+            if(result == null)
+                return new LoginResult { Success = false, Message = "Invalid login" };
+
+            if(result.User == null)
+                return new LoginResult { Success = false, Message = "Invalid login" };
+
             if (result.User.Email != login.Email || result.User.Password != login.Password)
                 return new LoginResult { Success = false, Message = "Invalid login" };
 
@@ -119,6 +125,9 @@ namespace Vendaval.Application.Services
             }
 
             var users = JsonConvert.DeserializeObject<List<User>>(usersOnCache);
+
+            if(users == null)
+                return new MethodResult<List<User>> { Success = false, Message = "No users where foudn" };
 
             return new MethodResult<List<User>> { Success = true, Message = $"{users.Count} users found", data = users};
         }
@@ -365,7 +374,7 @@ namespace Vendaval.Application.Services
         private LoginResult PatchUser(User patchedUser, User oldUser)
         {
             if (oldUser == null)
-                return null;
+                return new LoginResult { Success = false, Message = "User can't be null"};
 
             PatchProperties(patchedUser, oldUser);
 

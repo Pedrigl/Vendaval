@@ -9,13 +9,13 @@ namespace Vendaval.Application.ViewModels
     public class UserAddressViewModel : BaseModelViewModel
     {
         public int UserId { get; set; }
-        public string Street { get; set; }
-        public string Number { get; set; }
-        public string Complement { get; set; }
-        public string Neighborhood { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string Country { get; set; }
-        public string ZipCode { get; set; }
+        public required string Street { get; set; }
+        public required string Number { get; set; }
+        public string? Complement { get; set; }
+        public required string Neighborhood { get; set; }
+        public required string City { get; set; }
+        public required string State { get; set; }
+        public required string Country { get; set; }
+        public required string ZipCode { get; set; }
     }
 }

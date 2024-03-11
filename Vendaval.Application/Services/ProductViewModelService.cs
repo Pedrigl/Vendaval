@@ -24,6 +24,7 @@ using Oci.Common;
 using Oci.ObjectstorageService;
 using Oci.ObjectstorageService.Models;
 using Oci.ObjectstorageService.Responses;
+using Oci.Common.Model;
 
 namespace Vendaval.Application.Services
 {
@@ -49,12 +50,12 @@ namespace Vendaval.Application.Services
             if (configuration == null )
                 throw new ArgumentNullException(nameof(configuration));
             
-            _baseUri = configuration.GetSection("Oci:Storage:BaseUri").Value;
-            _nameSpace = configuration.GetSection("Oci:Storage:Namespace").Value;
-            _bucketName = configuration.GetSection("Oci:Storage:Bucket").Value;
-            _tenancyId = configuration.GetSection("Oci:TenancyId").Value;
-            _userId = configuration.GetSection("Oci:UserId").Value;
-            _fingerprint = configuration.GetSection("Oci:Fingerprint").Value;
+            _baseUri = configuration.GetSection("Oci:Storage:BaseUri").Value ?? throw new ArgumentNullException(nameof(OciException));
+            _nameSpace = configuration.GetSection("Oci:Storage:Namespace").Value ?? throw new ArgumentNullException(nameof(OciException));
+            _bucketName = configuration.GetSection("Oci:Storage:Bucket").Value ?? throw new ArgumentNullException(nameof(OciException));
+            _tenancyId = configuration.GetSection("Oci:TenancyId").Value ?? throw new ArgumentNullException(nameof(OciException));
+            _userId = configuration.GetSection("Oci:UserId").Value ?? throw new ArgumentNullException(nameof(OciException));
+            _fingerprint = configuration.GetSection("Oci:Fingerprint").Value ?? throw new ArgumentNullException(nameof(OciException));
             _privateKeyPath = $"{webHostEnvironment.WebRootPath}/{configuration.GetSection("Oci:PrivateKeyName").Value}";
             _ociConfigPath = $"{webHostEnvironment.WebRootPath}/ociConfig";
 

@@ -14,14 +14,17 @@ namespace Vendaval.Infrastructure.Data.Contexts
         public string Redis { get; set; }
 
         public ConnStr(IConfiguration configuration) {
-            VendavalDb = ParseConnectionString(configuration.GetConnectionString("VendavalDb"));
+            VendavalDb = ParseConnectionString(configuration.GetConnectionString("VendavalDb") ?? throw new ArgumentNullException(nameof(ConnStr)));
 
-            Redis = configuration["Redis:Url"];
+            Redis = configuration["Redis:Url"] ?? throw new ArgumentNullException(nameof(ConnStr));
 
         }
 
         private string ParseConnectionString(string url)
         {
+            if (string.IsNullOrWhiteSpace(url))
+                throw new ArgumentNullException(nameof(url));
+            
             var uriString = new Uri(url);
             var db = uriString.AbsolutePath.TrimStart('/');
             var user = uriString.UserInfo.Split(':')[0];
