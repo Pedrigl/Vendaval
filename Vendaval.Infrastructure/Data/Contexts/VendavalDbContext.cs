@@ -16,6 +16,7 @@ namespace Vendaval.Infrastructure.Data.Contexts
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<UserAddress> UserAddresses { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductAvaliation> ProductAvaliations { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -23,6 +24,7 @@ namespace Vendaval.Infrastructure.Data.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new UserAddressConfiguration());
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
             modelBuilder.ApplyConfiguration(new ProductAvaliationConfiguration());
             modelBuilder.ApplyConfiguration(new OrderConfiguration());

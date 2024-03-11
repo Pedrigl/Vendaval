@@ -9,12 +9,14 @@ using Vendaval.Domain.Entities;
 
 namespace Vendaval.Infrastructure.Data.EntitiesConfiguraition
 {
-    public class AddressConfiguration : IEntityTypeConfiguration<UserAddress>
+    public class UserAddressConfiguration : IEntityTypeConfiguration<UserAddress>
     {
         public void Configure(EntityTypeBuilder<UserAddress> builder)
         {
             builder.HasKey(a => a.Id);
             builder.Property(a => a.Id).ValueGeneratedOnAdd();
+            builder.Property(a=> a.CreatedAt).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()"); ;
+            builder.Property(a => a.UpdatedAt).ValueGeneratedOnUpdate().HasDefaultValueSql("NOW()"); ;
             builder.Property(a => a.UserId).IsRequired();
             builder.Property(a => a.Street).IsRequired().HasMaxLength(100);
             builder.Property(a => a.Number).IsRequired().HasMaxLength(10);
