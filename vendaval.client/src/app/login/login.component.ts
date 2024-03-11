@@ -40,7 +40,6 @@ export class LoginComponent implements OnInit{
     name: '',
     birthDate: new Date(),
     phoneNumber: '',
-    address: [],
     createdAt: null,
     updatedAt: null
   };

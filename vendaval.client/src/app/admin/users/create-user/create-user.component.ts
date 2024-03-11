@@ -21,7 +21,6 @@ export class CreateUserComponent {
     userType: UserType.Costumer,
     birthDate: new Date(),
     phoneNumber: '',
-    address: [],
     createdAt: null,
     updatedAt: null
   };

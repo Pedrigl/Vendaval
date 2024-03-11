@@ -9,5 +9,4 @@ export interface User extends BaseModel{
   name: string;
   birthDate: Date;
   phoneNumber: string;
-  address: Address[] | undefined;
 }
