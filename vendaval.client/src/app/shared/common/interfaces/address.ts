@@ -1,4 +1,4 @@
-export interface Adress {
+export interface Address {
   string: string;
   number: number;
   complement: string|null;

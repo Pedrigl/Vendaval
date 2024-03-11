@@ -1,5 +1,5 @@
 import { BaseModel } from "../shared/common/interfaces/BaseModel";
-import { Adress } from "./adress";
+import { Adress } from "../shared/common/interfaces/address";
 import { UserType } from "./user-type";
 
 export interface User extends BaseModel{
