@@ -1,5 +1,5 @@
 import { BaseModel } from "./BaseModel";
-import { Adress } from "./address";
+import { Address } from "./address";
 import { UserType } from "../enums/user-type";
 
 export interface User extends BaseModel{
@@ -9,5 +9,5 @@ export interface User extends BaseModel{
   name: string;
   birthDate: Date;
   phoneNumber: string;
-  address: Adress[] | undefined;
+  address: Address[] | undefined;
 }
