@@ -15,6 +15,7 @@ namespace Vendaval.Application.DependencyInjection
         {
             services.AddSignalR();
             services.AddScoped<IUserViewModelSerivce, UserViewModelService>();
+            services.AddScoped<IUserAddressViewModelService, UserAddressViewModelService>();
             services.AddScoped<IProductViewModelService, ProductViewModelService>();
             services.AddScoped<IProductAvaliationViewModelService, ProductAvaliationViewModelService>();
             services.AddScoped<IOrderVieModelService, OrderViewModelService>();

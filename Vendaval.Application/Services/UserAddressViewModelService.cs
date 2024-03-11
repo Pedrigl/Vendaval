@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vendaval.Application.Services.Interfaces;
 using Vendaval.Application.ValueObjects;
 using Vendaval.Application.ViewModels;
 using Vendaval.Domain.Entities;
@@ -13,7 +14,7 @@ using Vendaval.Infrastructure.Data.Repositories.RedisRepositories.Interfaces;
 
 namespace Vendaval.Application.Services
 {
-    public class UserAddressViewModelService
+    public class UserAddressViewModelService : IUserAddressViewModelService
     {
         private readonly IUserAddressRepository _userAddressRepository;
         private readonly IRedisRepository _redisRepository;
@@ -94,7 +95,7 @@ namespace Vendaval.Application.Services
             }
         }
 
-        public async Task<MethodResult<UserAddressViewModel>> RemoveAddress(UserAddressViewModel userAddress)
+        public async Task<MethodResult<UserAddressViewModel>> DeleteAddress(UserAddressViewModel userAddress)
         {
             var mappedAddress = _mapper.Map<UserAddress>(userAddress);
             try
