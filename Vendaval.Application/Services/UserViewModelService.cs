@@ -341,6 +341,7 @@ namespace Vendaval.Application.Services
 
             await _redisRepository.RemoveValueAsync("Users");
         }
+
         public async Task<LoginResult> PatchUser(UserViewModel user)
         {
             var mappedUser = _mapper.Map<User>(user);
@@ -409,7 +410,7 @@ namespace Vendaval.Application.Services
             try
             {
                 _userRepository.Delete(user);
-                await _userRepository.Save();
+                await SaveAndRemoveFromCache(user);
                 return new LoginResult { Success = true, Message = "User deleted" };
             }
             catch (Exception ex)

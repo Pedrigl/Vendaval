@@ -45,11 +45,12 @@ export class UsersComponent {
         this.loadingService.isLoading.next(false);
         this.hasError = false;
         this.users.data = this.users.data.filter(user => user.id !== id);
+        this.filteredUsers.data = this.filteredUsers.data.filter(user => user.id !== id);
       }
       catch (error: any) {
         this.loadingService.isLoading.next(false);
         this.hasError = true;
-        this.error = error;
+        this.error = error.error.message;
       }
       
   }
