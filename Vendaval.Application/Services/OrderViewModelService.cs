@@ -142,7 +142,7 @@ namespace Vendaval.Application.Services
             }
             catch (Exception ex)
             {
-                return new MethodResult<OrderViewModel> { Success = false, Message = "An error occurred while updating the order" };
+                return new MethodResult<OrderViewModel> { Success = false, Message = $"An error occurred while updating the order: {ex.Message}" };
             }
 
             var orderViewModelResult = _mapper.Map<OrderViewModel>(await GetOrderByIdAsync(order.Id));
@@ -165,7 +165,7 @@ namespace Vendaval.Application.Services
             }
             catch (Exception ex)
             {
-                return new MethodResult<object> { Success = false, Message = "An error occurred while deleting the order" };
+                return new MethodResult<object> { Success = false, Message = $"An error occurred while deleting the order: {ex.Message}" };
             }
 
             return new MethodResult<object> { Success = true, Message = "The order was deleted successfully" };
