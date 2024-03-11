@@ -28,6 +28,23 @@ namespace Vendaval.Infrastructure.Data.EntitiesConfiguraition
             builder.Property(x => x.Total).IsRequired();
 
             builder.Property(x => x.Status).IsRequired();
+
+            builder.Property(x => x.PaymentMethod).IsRequired();
+
+            builder.Property(x => x.Installments).IsRequired();
+
+            builder.Property(x => x.InstallmentValue).IsRequired();
+
+            builder.Property(x => x.PaymentDate).IsRequired(false);
+
+            builder.OwnsOne(x => x.DeliveryAddress);
+
+            builder.Property(x => x.DeliveryType).IsRequired();
+
+            builder.Property(x => x.TrackingCode).IsRequired(false);
+
+            builder.Property(x => x.OrderNotes).IsRequired(false);
+
         }
     }
 }
