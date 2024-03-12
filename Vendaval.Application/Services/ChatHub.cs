@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using Polly.Caching;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using Vendaval.Domain.Enums;
 
 namespace Vendaval.Application.Services
 {
+    [Authorize]
     public class ChatHub : Hub
     {
         private readonly IUserStatusService _userStatusService;
