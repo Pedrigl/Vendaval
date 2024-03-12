@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class ChatService {
+  //continue a implementação do chat
   onlineSellers = new BehaviorSubject<string[]>([]);
   constructor(private hubConnection: SignalR.HubConnection) { }
 }
