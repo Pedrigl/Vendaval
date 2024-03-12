@@ -14,6 +14,10 @@ export class ChatService {
   private hubConnection!: HubConnection;
   private messagesSubject = new BehaviorSubject<string[]>([]);
   messages$ = this.messagesSubject.asObservable();
+
+  private onlineCustomersSubject = new BehaviorSubject<string[]>([]);
+  onlineCustomers$ = this.onlineCustomersSubject.asObservable();
+
   private hubUrl = environment.apiUrl + "chathub";
   constructor(private http: AuthorizedHttpClient, private authService: AuthService) {
   }
@@ -35,10 +39,6 @@ export class ChatService {
           .build();
 
         await this.startConnection();
-
-        this.hubConnection.on('ReceiveMessage', (senderName: string, message: string) => {
-          this.messagesSubject.next([...this.messagesSubject.value, `${senderName}: ${message}`]);
-        });
       }
       
     } catch (error) {
@@ -60,14 +60,12 @@ export class ChatService {
     }
   }
 
-  getOnlineCustomers(): Observable<string[]> {
-    return this.http.get<string[]>(`${environment.apiUrl}/Chat/onlineCustomers`);
+  getOnlineCustomers(): void {
+    this.hubConnection.on("OnlineCostumers", (d) => {
+      this.onlineCustomersSubject.next(d);
+    });
   }
-
-  getOnlineSellers(): Observable<string[]> {
-    return this.http.get<string[]>(`${environment.apiUrl}/Chat/onlineSellers`);
-  }
-
+  
   sendMessage(message: string): void {
     this.hubConnection.invoke('SendMessage', message)
       .catch(err => console.error('Error while sending message: ', err));

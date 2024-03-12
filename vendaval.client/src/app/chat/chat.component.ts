@@ -20,8 +20,11 @@ export class ChatComponent implements OnInit{
   async ngOnInit() {
     try {
       await this.chatService.initializeHubConnection();
-      this.chatService.getOnlineCustomers().pipe(map(u => this.onlineCustomers = u));
-      this.chatService.getOnlineSellers().pipe(map(u => this.onlineSellers = u));
+      this.chatService.getOnlineCustomers();
+      this.chatService.onlineCustomers$.subscribe(customers => {
+        this.onlineCustomers = customers;
+      })
+      
     } catch (e:any) {
       console.log('Error initializing chat component: ', e.message);
     }
