@@ -25,7 +25,19 @@ namespace Vendaval.Application.Services
 
         public async Task SendPrivateMessage(string receiverId, MessageViewModel message)
         {
-            var senderId = Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if(Context == null)
+            {
+                Console.WriteLine("Context is null");
+                return;
+            }
+
+            if(Context.User == null)
+            {
+                Console.WriteLine("Context.User is null");
+                return;
+            }
+
+            var senderId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
             var senderName = Context.User.Identity.Name;
 
             await Clients.Client(receiverId).SendAsync("ReceivePrivateMessage", senderId, senderName, message);
@@ -45,15 +57,17 @@ namespace Vendaval.Application.Services
 
         public override async Task OnConnectedAsync()
         {
-            var userId = Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var role = Context.User.FindFirst(ClaimTypes.Role).Value;
+
+            var userId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
+            var role = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
 
             if (role == UserType.Costumer.ToString())
             {
                 _userStatusService.AddOnlineCostumer(userId, Context.ConnectionId);
                 await SendOnlineCostumers();
             }
-            else if (role == UserType.Seller.ToString())
+
+            if (role == UserType.Seller.ToString())
             {
                 _userStatusService.AddOnlineSeller(userId, Context.ConnectionId);
                 await SendOnlineSellers();
@@ -64,15 +78,16 @@ namespace Vendaval.Application.Services
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var userId = Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var role = Context.User.FindFirst(ClaimTypes.Role).Value;
+            var userId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
+            var role = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
 
             if (role == UserType.Costumer.ToString())
             {
                 _userStatusService.RemoveOnlineCostumer(userId);
                 await SendOnlineCostumers();
             }
-            else if (role == UserType.Seller.ToString())
+
+            if (role == UserType.Seller.ToString())
             {
                 _userStatusService.RemoveOnlineSeller(userId);
                 await SendOnlineSellers();

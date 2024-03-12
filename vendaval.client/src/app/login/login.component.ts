@@ -99,7 +99,7 @@ export class LoginComponent implements OnInit{
         break;
 
       case UserType.Seller:
-        this.router.navigate(['/employee']);
+        this.router.navigate(['/chat']);
           break;
 
       case UserType.Admin:
