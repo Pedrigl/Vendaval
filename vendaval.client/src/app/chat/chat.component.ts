@@ -32,10 +32,4 @@ export class ChatComponent implements OnInit{
     this.newMessage = '';
   }
 
-  getOnlineCustomers(): void {
-    this.chatService.getOnlineCustomers().subscribe(
-      customers => this.onlineCustomers = customers,
-      error => console.error('Error fetching online customers: ', error)
-    );
-  }
 }

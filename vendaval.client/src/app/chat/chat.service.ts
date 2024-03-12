@@ -30,7 +30,7 @@ export class ChatService {
         this.hubConnection = new HubConnectionBuilder()
           .withUrl(this.hubUrl, {
             accessTokenFactory: () => token,
-            headers: { "Authorization": "Bearer " + token }
+            transport: SignalR.HttpTransportType.WebSockets 
           })
           .build();
 
