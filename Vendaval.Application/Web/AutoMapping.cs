@@ -21,6 +21,7 @@ namespace Vendaval.Application.Web
             CreateMap<ProductAvaliationViewModel, ProductAvaliation>();
             CreateMap<Order, OrderViewModel>();
             CreateMap<OrderViewModel, Order>();
+            CreateMap<User, ChatUserViewModel>();
         }
     }
 }
