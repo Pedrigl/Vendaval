@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using Vendaval.Application.DependencyInjection;
+using Vendaval.Application.Services;
 using Vendaval.Application.Web;
 using Vendaval.Infrastructure.Data.Contexts;
 using Vendaval.Infrastructure.DependencyInjection;
@@ -26,9 +27,10 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
                builder =>
                {
-            builder.AllowAnyOrigin()
+            builder.WithOrigins("http://localhost:4200")
                 .AllowAnyHeader()
-                .AllowAnyMethod();
+                .AllowAnyMethod()
+                .AllowCredentials();
         });
 });
 
@@ -44,6 +46,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.MapHub<ChatHub>("api/chathub");
 app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
