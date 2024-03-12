@@ -20,7 +20,8 @@ import { OrdersComponent } from './admin/orders/orders.component';
 import { OrderComponent } from './order/order.component';
 import {ProductsComponent } from './product/products.component';
 import { CommonModule } from '@angular/common';
-
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import {AuthInterceptorService} from './shared/common/auth.interceptor.service'; 
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,7 +45,8 @@ import { CommonModule } from '@angular/common';
     AppRoutingModule, FormsModule,
     NgbModule, CommonModule
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

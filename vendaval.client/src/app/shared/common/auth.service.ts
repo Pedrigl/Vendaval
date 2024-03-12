@@ -2,6 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import {BehaviorSubject } from 'rxjs';
 import { User } from './interfaces/user';
 import { Login } from '../../login/login';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -88,6 +89,8 @@ export class AuthService{
     sessionStorage.clear();
     localStorage.clear();
     this.loggedIn.next(false);
+    location.reload();
+    
   }
 
   public logIn() {
