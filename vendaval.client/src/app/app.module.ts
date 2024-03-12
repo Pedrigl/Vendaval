@@ -21,7 +21,8 @@ import { OrderComponent } from './order/order.component';
 import {ProductsComponent } from './product/products.component';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import {AuthInterceptorService} from './shared/common/auth.interceptor.service'; 
+import {AuthInterceptorService} from './shared/common/auth.interceptor.service';
+import { ChatComponent } from './chat/chat.component'; 
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,7 +39,8 @@ import {AuthInterceptorService} from './shared/common/auth.interceptor.service';
     EditProductComponent,
     OrdersComponent,
     OrderComponent,
-    ProductsComponent
+    ProductsComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,

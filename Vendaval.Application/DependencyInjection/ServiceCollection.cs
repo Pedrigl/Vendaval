@@ -14,6 +14,8 @@ namespace Vendaval.Application.DependencyInjection
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddSignalR();
+            services.AddScoped<ChatHub>();
+            services.AddScoped<IUserStatusService, UserStatusService>();
             services.AddScoped<IUserViewModelSerivce, UserViewModelService>();
             services.AddScoped<IUserAddressViewModelService, UserAddressViewModelService>();
             services.AddScoped<IProductViewModelService, ProductViewModelService>();
