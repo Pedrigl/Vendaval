@@ -17,14 +17,14 @@ export class ChatService {
   private hubUrl = environment.apiUrl + "chathub";
   constructor(private http: AuthorizedHttpClient, private authService: AuthService) {
   }
-  
+  //FIX MESSAGES NOT BEING RECEIVED
   public async initializeHubConnection() {
     var token!: string;
     try {
       console.log('Initializing SignalR connection');
 
       await this.authService.getToken.subscribe(t=> {token = t ?? ""});
-      //FIX WEBSOCKET NOT WORKING
+
       if (token != null && token != "") {
         console.log('Token: ' + token);
         this.hubConnection = new HubConnectionBuilder()
