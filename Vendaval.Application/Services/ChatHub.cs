@@ -31,7 +31,6 @@ namespace Vendaval.Application.Services
 
         public async Task SendPrivateMessage(string receiverId, MessageViewModel message)
         {
-
             var senderId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
             var senderName = Context.User.Identity.Name;
 
@@ -58,15 +57,21 @@ namespace Vendaval.Application.Services
             var user = await _userRepository.GetByIdAsync(int.Parse(userId));
             var chatUser = _mapper.Map<ChatUserViewModel>(user);
 
+            chatUser.ConnectionId = Context.ConnectionId;
+
             if (chatUser.UserType == UserType.Costumer)
             {
-                _userStatusService.AddOnlineCostumer(chatUser);
+                if(!_userStatusService.GetOnlineCostumers().Any(c => c.Id == chatUser.Id))
+                    _userStatusService.AddOnlineCostumer(chatUser);
+
                 await SendOnlineCostumers();
             }
 
             if (chatUser.UserType == UserType.Seller)
             {
-                _userStatusService.AddOnlineSeller(chatUser);
+                if(!_userStatusService.GetOnlineSellers().Any(c => c.Id == chatUser.Id))
+                    _userStatusService.AddOnlineSeller(chatUser);
+
                 await SendOnlineSellers();
             }
 

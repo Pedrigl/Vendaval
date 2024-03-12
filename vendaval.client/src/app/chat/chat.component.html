@@ -1,13 +1,13 @@
 <div class="container">
     <h2>Online Sellers</h2>
     <ul class="list-group">
-        <li *ngFor="let seller of onlineSellers" class="list-group-item">{{ seller }}</li>
+        <li *ngFor="let seller of onlineSellers" class="list-group-item">{{ seller.name }}</li>
         <li *ngIf="onlineSellers.length === 0" class="list-group-item">No online sellers</li>
     </ul>
     <hr>
     <h2>Online Customers</h2>
     <ul class="list-group">
-        <li *ngFor="let customer of onlineCustomers" class="list-group-item">{{ customer }}</li>
+        <li *ngFor="let customer of onlineCustomers" class="list-group-item">{{ customer.name }}</li>
         <li *ngIf="onlineCustomers.length === 0" class="list-group-item">No online customers</li>
     </ul>
 </div>

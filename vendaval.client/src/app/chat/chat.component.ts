@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from './chat.service';
 import { map } from 'rxjs';
+import { ChatUser } from './chatuser';
 
 @Component({
   selector: 'app-chat',
@@ -8,8 +9,8 @@ import { map } from 'rxjs';
   styleUrl: './chat.component.css'
 })
 export class ChatComponent implements OnInit{
-  onlineSellers: string[] = [];
-  onlineCustomers: string[] = [];
+  onlineSellers: ChatUser[] = [];
+  onlineCustomers: ChatUser[] = [];
   messages: string[] = [];
   newMessage!: string;
 
