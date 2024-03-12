@@ -6,6 +6,7 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../shared/common/auth.service';
 import { AuthorizedHttpClient } from '../shared/common/authorized-httpclient';
+import { ChatUser } from './chatuser';
 
 @Injectable({
   providedIn: 'root'
@@ -15,13 +16,13 @@ export class ChatService {
   private messagesSubject = new BehaviorSubject<string[]>([]);
   messages$ = this.messagesSubject.asObservable();
 
-  private onlineCustomersSubject = new BehaviorSubject<string[]>([]);
+  private onlineCustomersSubject = new BehaviorSubject<ChatUser[]>([]);
   onlineCustomers$ = this.onlineCustomersSubject.asObservable();
 
   private hubUrl = environment.apiUrl + "chathub";
   constructor(private http: AuthorizedHttpClient, private authService: AuthService) {
   }
-  //FIX MESSAGES NOT BEING RECEIVED
+  
   public async initializeHubConnection() {
     var token!: string;
     try {
@@ -61,7 +62,7 @@ export class ChatService {
   }
 
   getOnlineCustomers(): void {
-    this.hubConnection.on("OnlineCostumers", (d) => {
+    this.hubConnection.on("OnlineCostumers", (d: ChatUser[]) => {
       this.onlineCustomersSubject.next(d);
     });
   }

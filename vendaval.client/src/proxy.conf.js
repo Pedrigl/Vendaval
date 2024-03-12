@@ -3,7 +3,7 @@ const PROXY_CONFIG = [
     context: [
       "/Home",
     ],
-    target: "https://localhost:5000",
+    target: "https://localhost:8000",
     secure: false,
     ws: true
   }

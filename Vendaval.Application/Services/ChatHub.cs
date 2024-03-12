@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Polly.Caching;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using Vendaval.Application.Services.Interfaces;
 using Vendaval.Application.ViewModels;
 using Vendaval.Domain.Enums;
+using Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces;
 
 namespace Vendaval.Application.Services
 {
@@ -18,25 +20,17 @@ namespace Vendaval.Application.Services
     public class ChatHub : Hub
     {
         private readonly IUserStatusService _userStatusService;
-
-        public ChatHub(IUserStatusService userStatusService)
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
+        public ChatHub(IUserStatusService userStatusService, IUserRepository userRepository, IMapper mapper)
         {
             _userStatusService = userStatusService;
+            _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public async Task SendPrivateMessage(string receiverId, MessageViewModel message)
         {
-            if(Context == null)
-            {
-                Console.WriteLine("Context is null");
-                return;
-            }
-
-            if(Context.User == null)
-            {
-                Console.WriteLine("Context.User is null");
-                return;
-            }
 
             var senderId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
             var senderName = Context.User.Identity.Name;
@@ -60,17 +54,19 @@ namespace Vendaval.Application.Services
         {
 
             var userId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
-            var role = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+            
+            var user = await _userRepository.GetByIdAsync(int.Parse(userId));
+            var chatUser = _mapper.Map<ChatUserViewModel>(user);
 
-            if (role == UserType.Costumer.ToString())
+            if (chatUser.UserType == UserType.Costumer)
             {
-                _userStatusService.AddOnlineCostumer(userId, Context.ConnectionId);
+                _userStatusService.AddOnlineCostumer(chatUser);
                 await SendOnlineCostumers();
             }
 
-            if (role == UserType.Seller.ToString())
+            if (chatUser.UserType == UserType.Seller)
             {
-                _userStatusService.AddOnlineSeller(userId, Context.ConnectionId);
+                _userStatusService.AddOnlineSeller(chatUser);
                 await SendOnlineSellers();
             }
 
@@ -80,17 +76,20 @@ namespace Vendaval.Application.Services
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var userId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
-            var role = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+            
+            var user = await _userRepository.GetByIdAsync(int.Parse(userId));
 
-            if (role == UserType.Costumer.ToString())
+            var chatUser = _mapper.Map<ChatUserViewModel>(user);
+
+            if (chatUser.UserType == UserType.Costumer)
             {
-                _userStatusService.RemoveOnlineCostumer(userId);
+                _userStatusService.RemoveOnlineCostumer(chatUser);
                 await SendOnlineCostumers();
             }
 
-            if (role == UserType.Seller.ToString())
+            if (chatUser.UserType == UserType.Seller)
             {
-                _userStatusService.RemoveOnlineSeller(userId);
+                _userStatusService.RemoveOnlineSeller(chatUser);
                 await SendOnlineSellers();
             }
 

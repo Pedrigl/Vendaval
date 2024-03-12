@@ -27,17 +27,15 @@ namespace Vendaval.Application.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IRedisRepository _redisRepository;
-        private readonly IUserStatusService _userStatusService;
         private readonly IMapper _mapper;
         private readonly string _jwtSecretKey;
         private readonly List<string> _validIssuers;
         private readonly List<string> _validAudiences;
 
-        public UserViewModelService(IUserRepository userRepository,IUserStatusService userStatusService, IRedisRepository redisRepository, IMapper mapper, IConfiguration configuration)
+        public UserViewModelService(IUserRepository userRepository, IRedisRepository redisRepository, IMapper mapper, IConfiguration configuration)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _redisRepository = redisRepository ?? throw new ArgumentNullException(nameof(redisRepository));
-            _userStatusService = userStatusService ?? throw new ArgumentNullException(nameof(userStatusService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _jwtSecretKey = configuration["Jwt:Key"] ?? throw new ArgumentNullException(nameof(configuration));
             _validIssuers = configuration.GetSection("Jwt:Issuers").Get<List<string>>() ?? throw new ArgumentNullException(nameof(configuration));
@@ -67,11 +65,6 @@ namespace Vendaval.Application.Services
             result.TokenExpiration = TimeSpan.FromDays(1);
 
             await _redisRepository.SetValueAsync("UserEmail" + user.Email.ToString(), JsonConvert.SerializeObject(result));
-            
-            if(user.UserType == UserType.Seller)
-                _userStatusService.AddOnlineSeller(user.Id.ToString(), user.Email);
-            else if(user.UserType == UserType.Costumer)
-                _userStatusService.AddOnlineCostumer(user.Id.ToString(), user.Email);
 
             return result;
         }

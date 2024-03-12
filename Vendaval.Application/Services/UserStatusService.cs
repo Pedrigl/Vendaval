@@ -1,57 +1,58 @@
 ﻿using Vendaval.Application.Services.Interfaces;
+using Vendaval.Application.ViewModels;
 
 public class UserStatusService : IUserStatusService
 {
-    private readonly Dictionary<string, string> _onlineCostumers = new Dictionary<string, string>();
-    private readonly Dictionary<string, string> _onlineSellers = new Dictionary<string, string>();
+    private readonly List<ChatUserViewModel> _onlineCostumers = new List<ChatUserViewModel>();
+    private readonly List<ChatUserViewModel> _onlineSellers = new List<ChatUserViewModel>();
     private readonly object _costumersLock = new object();
     private readonly object _sellersLock = new object();
 
-    public void AddOnlineCostumer(string userId, string connectionId)
+    public void AddOnlineCostumer(ChatUserViewModel chatUser)
     {
         lock (_costumersLock)
         {
-            _onlineCostumers.Add(userId, connectionId);
+            _onlineCostumers.Add(chatUser);
         }
     }
 
-    public void RemoveOnlineCostumer(string userId)
+    public void RemoveOnlineCostumer(ChatUserViewModel chatUser)
     {
         lock (_costumersLock)
         {
-            _onlineCostumers.Remove(userId);
+            _onlineCostumers.Remove(chatUser);
         }
     }
 
-    public void AddOnlineSeller(string userId, string connectionId)
+    public void AddOnlineSeller(ChatUserViewModel chatUser)
     {
         lock (_sellersLock)
         {
-            _onlineSellers.Add(userId, connectionId);
+            _onlineSellers.Add(chatUser);
         }
     }
 
-    public void RemoveOnlineSeller(string userId)
+    public void RemoveOnlineSeller(ChatUserViewModel chatUser)
     {
         lock (_sellersLock)
         {
-            _onlineSellers.Remove(userId);
+            _onlineSellers.Remove(chatUser);
         }
     }
 
-    public IEnumerable<string> GetOnlineSellers()
+    public IEnumerable<ChatUserViewModel> GetOnlineSellers()
     {
         lock (_sellersLock)
         {
-            return _onlineSellers.Values.ToList();
+            return _onlineSellers.ToList();
         }
     }
 
-    public IEnumerable<string> GetOnlineCostumers()
+    public IEnumerable<ChatUserViewModel> GetOnlineCostumers()
     {
         lock (_costumersLock)
         {
-            return _onlineCostumers.Values.ToList();
+            return _onlineCostumers.ToList();
         }
     }
 }
