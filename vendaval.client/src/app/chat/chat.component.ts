@@ -12,10 +12,10 @@ import { AuthService } from '../shared/common/auth.service';
   styleUrl: './chat.component.css'
 })
 export class ChatComponent implements OnInit{
-  user!: ChatUser;
+  user: BehaviorSubject<ChatUser | null> = new BehaviorSubject<ChatUser | null>( null);
   onlineSellers: ChatUser[] = [];
   onlineCustomers: BehaviorSubject<ChatUser[]> = new BehaviorSubject<ChatUser[]>([]);
-  selectedUser!: ChatUser;
+  selectedUser: BehaviorSubject<ChatUser | null> = new BehaviorSubject<ChatUser | null>(null);
   messages: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>([]);
   text: string = '';
   newMessage!: Message;
@@ -33,42 +33,50 @@ export class ChatComponent implements OnInit{
         console.log('SignalR connection started');
       });
 
-      this.chatService.onlineCustomers$.subscribe(customers => {
+      this.chatService.getOwnChatUser().subscribe(user => {
+        this.user.next(user);
+      });
+
+      this.chatService.getOnlineCustomers().subscribe(customers => {
         this.onlineCustomers.next(customers);
 
-        if(customers.length > 0)
+        if (customers.length > 0)
           setTimeout(() => {
             this.loadingService.isLoading.next(false);
           });
-        
       })
-      
+
+      this.chatService.receiveMessage().subscribe(message => {
+        this.messages.next([...this.messages.value, message]);
+      });
+
     } catch (e:any) {
       console.log('Error initializing chat component: ', e.message);
     }
   }
 
   sendMessage(): void {
-    console.log(this.selectedUser);
-    console.log(this.user);
-    if (this.selectedUser != null && this.text) {
-      this.newMessage = {
-        id: 1,
-        senderId: this.user.connectionId,
-        receiverId: this.selectedUser.connectionId,
-        media: [],
-        message: this.text,
-        createdAt: new Date(),
-        updatedAt: new Date()
+
+    this.selectedUser.subscribe(user => {
+      console.log(user)
+      console.log(this.user.value)
+      if (user != null && this.user.value != null && this.text != '') {
+
+        this.newMessage = {
+          id: 1,
+          senderId: this.user.value.connectionId,
+          receiverId: user.connectionId,
+          media: [],
+          message: this.text,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
+
+        this.chatService.sendMessage(this.newMessage);
+        this.text = '';
       }
+    });
 
-      this.chatService.sendMessage(this.newMessage);
-      this.text = '';
-
-      this.chatService.messages$.subscribe(messages => {
-        this.messages.next(messages);
-      })
     }
   }
 
-}

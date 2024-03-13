@@ -80,8 +80,7 @@ export class ChatService {
   getOwnChatUser(): Observable<ChatUser> {
     return new Observable<ChatUser>(observer => {
       this.hubConnection.on("OwnChatUser", (d: ChatUser) => {
-        if (d != null)
-          this.ownChatUserSubject.next(d);
+          observer.next(d);
       })
     });
   }

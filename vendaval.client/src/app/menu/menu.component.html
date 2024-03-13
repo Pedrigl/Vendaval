@@ -43,7 +43,7 @@
                     </a>
                     <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="user">
                         <ng-container *ngIf="isLoggedIn; else loggedOut">
-                            <a class="dropdown-item" href="#" role="button">Profile</a>
+                            <a class="dropdown-item" href="#" role="button">{{user.name}}</a>
                             <a class="dropdown-item" href="/orders" role="button">Orders</a>
                             <a class="dropdown-item" (click)="logout()" role="button">Log out</a>
                         </ng-container>
