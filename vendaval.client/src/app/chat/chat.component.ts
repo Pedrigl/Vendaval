@@ -43,9 +43,7 @@ export class ChatComponent implements OnInit{
           });
 
         this.chatService.messages$.subscribe(messages => {
-          console.log('Messages: ', messages);
           this.messages.next(messages);
-          
         })
         
       })
@@ -56,11 +54,13 @@ export class ChatComponent implements OnInit{
   }
 
   sendMessage(): void {
+    console.log(this.selectedUser);
+    console.log(this.user);
     if (this.selectedUser != null && this.text) {
       this.newMessage = {
         id: 1,
         senderId: this.user.connectionId,
-        receiverId: this.user.connectionId,
+        receiverId: this.selectedUser.connectionId,
         media: [],
         message: this.text,
         createdAt: new Date(),
