@@ -37,6 +37,7 @@ export class ChatComponent implements OnInit{
       });
 
       this.chatService.getOnlineCustomers().subscribe(customers => {
+        console.log("Online customers: ", customers);
         this.onlineCustomers.next(customers);
 
         if (customers.length > 0)

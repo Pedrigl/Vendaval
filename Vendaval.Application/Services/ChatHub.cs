@@ -34,7 +34,7 @@ namespace Vendaval.Application.Services
         {
             await Clients.Client(message.ReceiverId).SendAsync("ReceivePrivateMessage", message);
         }
-
+        
         public async Task SendOnlineSellers()
         {
             var onlineSellers = _userStatusService.GetOnlineSellers();
@@ -44,7 +44,7 @@ namespace Vendaval.Application.Services
         public async Task SendOnlineCostumers()
         {
             var onlineCostumers = _userStatusService.GetOnlineCostumers();
-            await Clients.Caller.SendAsync("OnlineCostumers", onlineCostumers);
+            await Clients.All.SendAsync("OnlineCostumers", onlineCostumers);
         }
 
         public override async Task OnConnectedAsync()
@@ -92,13 +92,13 @@ namespace Vendaval.Application.Services
 
             if (chatUser.UserType == UserType.Costumer)
             {
-                _userStatusService.RemoveOnlineCostumer(chatUser);
+                _userStatusService.RemoveOnlineCostumer(chatUser.Id);
                 await SendOnlineCostumers();
             }
 
             if (chatUser.UserType == UserType.Seller)
             {
-                _userStatusService.RemoveOnlineSeller(chatUser);
+                _userStatusService.RemoveOnlineSeller(chatUser.Id);
                 await SendOnlineSellers();
             }
 

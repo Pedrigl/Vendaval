@@ -1,4 +1,5 @@
-﻿using Vendaval.Application.Services.Interfaces;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using Vendaval.Application.Services.Interfaces;
 using Vendaval.Application.ViewModels;
 
 public class UserStatusService : IUserStatusService
@@ -16,11 +17,12 @@ public class UserStatusService : IUserStatusService
         }
     }
 
-    public void RemoveOnlineCostumer(ChatUserViewModel chatUser)
+    public void RemoveOnlineCostumer(int id)
     {
         lock (_costumersLock)
         {
-            _onlineCostumers.Remove(chatUser);
+            var chatUser = _onlineCostumers.FirstOrDefault(c=> c.Id == id);
+            var wasRemoved = _onlineCostumers.Remove(chatUser);
         }
     }
 
@@ -32,10 +34,11 @@ public class UserStatusService : IUserStatusService
         }
     }
 
-    public void RemoveOnlineSeller(ChatUserViewModel chatUser)
+    public void RemoveOnlineSeller(int id)
     {
         lock (_sellersLock)
         {
+            var chatUser = _onlineSellers.FirstOrDefault(c => c.Id == id);
             _onlineSellers.Remove(chatUser);
         }
     }

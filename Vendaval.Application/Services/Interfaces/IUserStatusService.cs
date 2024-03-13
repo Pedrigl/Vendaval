@@ -10,9 +10,9 @@ namespace Vendaval.Application.Services.Interfaces
     public interface IUserStatusService
     {
         void AddOnlineCostumer(ChatUserViewModel chatUser);
-        void RemoveOnlineCostumer(ChatUserViewModel chatUser);
+        void RemoveOnlineCostumer(int id);
         void AddOnlineSeller(ChatUserViewModel chatUser);
-        void RemoveOnlineSeller(ChatUserViewModel chatUser);
+        void RemoveOnlineSeller(int id);
         IEnumerable<ChatUserViewModel> GetOnlineSellers();
         IEnumerable<ChatUserViewModel> GetOnlineCostumers();
     }
