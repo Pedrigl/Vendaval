@@ -29,11 +29,10 @@ export class ChatComponent implements OnInit{
     });
     try {
       await this.chatService.initializeHubConnection();
-      this.chatService.startConnection().subscribe(() => {
-        console.log('SignalR connection started');
-      });
+      this.chatService.startConnection().subscribe();
 
       this.chatService.getOwnChatUser().subscribe(user => {
+        console.log("ConnectionId: ", user.connectionId);
         this.user.next(user);
       });
 
@@ -49,6 +48,10 @@ export class ChatComponent implements OnInit{
       this.chatService.receiveMessage().subscribe(message => {
         this.messages.next([...this.messages.value, message]);
       });
+
+      this.selectedUser.subscribe(user => {
+        console.log("Selected user ConnectionId: ", user?.connectionId)
+      })
 
     } catch (e:any) {
       console.log('Error initializing chat component: ', e.message);

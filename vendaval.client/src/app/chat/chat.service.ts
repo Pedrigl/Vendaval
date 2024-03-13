@@ -92,6 +92,7 @@ export class ChatService {
   receiveMessage(): Observable<Message> {
     return new Observable<Message>(observer => {
       this.hubConnection.on('ReceivePrivateMessage', (message: Message) => {
+        console.log('Received message: ', message);
         observer.next(message);
       });
     });
