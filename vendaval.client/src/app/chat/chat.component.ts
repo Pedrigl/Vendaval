@@ -29,11 +29,10 @@ export class ChatComponent implements OnInit{
     });
     try {
       await this.chatService.initializeHubConnection();
-      this.chatService.ownChatUser$.subscribe(user => {
-        if(user != null)
-          this.user = user;
+      this.chatService.startConnection().subscribe(() => {
+        console.log('SignalR connection started');
       });
-      this.chatService.getOnlineCustomers();
+
       this.chatService.onlineCustomers$.subscribe(customers => {
         this.onlineCustomers.next(customers);
 
@@ -41,10 +40,6 @@ export class ChatComponent implements OnInit{
           setTimeout(() => {
             this.loadingService.isLoading.next(false);
           });
-
-        this.chatService.messages$.subscribe(messages => {
-          this.messages.next(messages);
-        })
         
       })
       
@@ -69,6 +64,10 @@ export class ChatComponent implements OnInit{
 
       this.chatService.sendMessage(this.newMessage);
       this.text = '';
+
+      this.chatService.messages$.subscribe(messages => {
+        this.messages.next(messages);
+      })
     }
   }
 

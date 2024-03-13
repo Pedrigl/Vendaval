@@ -26,7 +26,7 @@ export class ChatService {
   constructor(private http: AuthorizedHttpClient, private authService: AuthService) {
   }
   
-  public async initializeHubConnection() {
+  async initializeHubConnection() {
     var token!: string;
     try {
       console.log('Initializing SignalR connection');
@@ -42,55 +42,60 @@ export class ChatService {
               transport: SignalR.HttpTransportType.WebSockets
             })
             .build();
-
-          await this.startConnection();
-
-          this.hubConnection.on("OwnChatUser", (d: ChatUser) => {
-            
-            if (d != null)
-              this.ownChatUserSubject.next(d);
-          });
-
-          this.hubConnection.on("ReceivePrivateMessage", (message: Message) => {
-            
-            const currentMessages = [...this.messagesSubject.value];
-            
-            currentMessages.push(message);
-            this.messagesSubject.next(currentMessages);
-            
-          })
         }
+      }
+    }
 
-        }
-    } catch (error) {
+    catch (error) {
       console.error('Error initializing SignalR connection: ', error);
     }
   }
 
-  private async startConnection(): Promise<void> {
-    try {
-      if (this.hubConnection) {
-        await this.hubConnection.start().then(() =>
-        console.log('SignalR connection started'));
-      } else {
-        console.error('SignalR connection is not initialized');
-      }
-      console.log('SignalR connection status: ' + this.hubConnection.state);
-    } catch (error) {
-      console.error('Error while starting SignalR connection: ', error);
-    }
+  startConnection(): Observable<void> {
+    return new Observable<void>((observer) => {
+      this.hubConnection.start().then(() => {
+        console.log('SignalR connection started');
+        observer.next();
+        observer.complete();
+      })});
   }
 
-  getOnlineCustomers(): void {
-    this.hubConnection.on("OnlineCostumers", (d: ChatUser[]) => {
-      this.onlineCustomersSubject.next(d);
+  stopConnection(): Observable<void> {
+    return new Observable<void>((observer) => {
+      this.hubConnection.invoke('Disconnected').then(() => {
+        observer.next();
+        observer.complete();
+      })
     });
   }
-  
+
+  getOnlineCustomers(): Observable<ChatUser[]> {
+    return new Observable<ChatUser[]>(observer => {
+      this.hubConnection.on('OnlineCostumers', (customers: ChatUser[]) => {
+        observer.next(customers);
+      });
+    });
+  }
+
+  getOwnChatUser(): Observable<ChatUser> {
+    return new Observable<ChatUser>(observer => {
+      this.hubConnection.on("OwnChatUser", (d: ChatUser) => {
+        if (d != null)
+          this.ownChatUserSubject.next(d);
+      })
+    });
+  }
   sendMessage(message: Message): void {
-    
     this.hubConnection.invoke('SendPrivateMessage', message)
       .catch(err => console.error('Error while sending message: ', err));
+  }
+
+  receiveMessage(): Observable<Message> {
+    return new Observable<Message>(observer => {
+      this.hubConnection.on('ReceivePrivateMessage', (message: Message) => {
+        observer.next(message);
+      });
+    });
   }
 
 
