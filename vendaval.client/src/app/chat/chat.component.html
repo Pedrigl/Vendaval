@@ -16,7 +16,7 @@
                     (click)="selectedUser = customer">
                     {{ customer.name }}
                 </li>
-                <li *ngIf="onlineCustomers.getValue().length === 0" class="list-group-item">No Costumer is conected</li>
+                <li *ngIf="onlineCustomers.value.length === 0" class="list-group-item">No Costumer is conected</li>
             </ul>
         </div>
         <!-- Main content -->
