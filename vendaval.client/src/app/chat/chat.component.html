@@ -25,7 +25,7 @@
                 <!-- messages -->
                 <div class="col-md-12 mt-auto mb-2">
                     <div class="overflow-auto mb-2" style="flex-grow: 1">
-                        <div *ngFor="let m of messages.value" class="col-md-3 border border-white rounded">
+                        <div *ngFor="let m of messages.asObservable()|async" class="col-md-3 border border-white rounded">
                             <strong class="">{{ selectedUser.name}}</strong>: {{ m.message}}
                         </div>
                     </div>
