@@ -1,9 +1,9 @@
 export interface Message {
-  Id: Number;
-  SenderId: String;
-  ReceiverId: String;
-  Message: string;
-  Media: string[];
-  CreatedAt: Date;
-  UpdatedAt: Date;
+  id: Number;
+  senderId: String;
+  receiverId: String;
+  message: string;
+  media: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }

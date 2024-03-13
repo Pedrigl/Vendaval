@@ -73,7 +73,13 @@ namespace Vendaval.Application.Services
                 await SendOnlineSellers();
             }
 
+            await SendOwnUser(chatUser);
             await base.OnConnectedAsync();
+        }
+
+        public async Task SendOwnUser(ChatUserViewModel chatUser)
+        {
+            await Clients.Caller.SendAsync("OwnChatUser", chatUser);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)

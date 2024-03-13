@@ -34,30 +34,34 @@ export class ChatService {
       await this.authService.getToken.subscribe(t=> {token = t ?? ""});
 
       if (token != null && token != "") {
-        
-        this.hubConnection = new HubConnectionBuilder()
-          .withUrl(this.hubUrl, {
-            accessTokenFactory: () => token,
-            transport: SignalR.HttpTransportType.WebSockets 
+
+        if (!this.hubConnection || this.hubConnection.state == SignalR.HubConnectionState.Disconnected) {
+          this.hubConnection = new HubConnectionBuilder()
+            .withUrl(this.hubUrl, {
+              accessTokenFactory: () => token,
+              transport: SignalR.HttpTransportType.WebSockets
+            })
+            .build();
+
+          await this.startConnection();
+
+          this.hubConnection.on("OwnChatUser", (d: ChatUser) => {
+            
+            if (d != null)
+              this.ownChatUserSubject.next(d);
+          });
+
+          this.hubConnection.on("ReceivePrivateMessage", (message: Message) => {
+            
+            const currentMessages = [...this.messagesSubject.value];
+            
+            currentMessages.push(message);
+            this.messagesSubject.next(currentMessages);
+            
           })
-          .build();
+        }
 
-        await this.startConnection();
-
-        this.hubConnection.on("OwnChatUser", (d: ChatUser) => {
-          if(d != null)
-            this.ownChatUserSubject.next(d);
-        });
-
-        this.hubConnection.on("ReceivePrivateMessage", (message: Message) => {
-          console.log(`receiving a message from ${message.SenderId} to ${message.ReceiverId}`)
-          const currentMessages = [...this.messagesSubject.value];
-          
-          currentMessages.push(message);
-          this.messagesSubject.next(currentMessages);
-        })
-      }
-      
+        }
     } catch (error) {
       console.error('Error initializing SignalR connection: ', error);
     }
@@ -84,7 +88,7 @@ export class ChatService {
   }
   
   sendMessage(message: Message): void {
-    console.log(`sending a message from ${message.SenderId} to ${message.ReceiverId}`)
+    
     this.hubConnection.invoke('SendPrivateMessage', message)
       .catch(err => console.error('Error while sending message: ', err));
   }

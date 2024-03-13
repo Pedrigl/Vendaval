@@ -10,13 +10,13 @@
             <hr>
             <h2>Online Customers</h2>
             <ul class="list-group">
-                <li style="cursor:pointer" *ngFor="let customer of onlineCustomers"
+                <li style="cursor:pointer" *ngFor="let customer of onlineCustomers.asObservable() | async"
                     [class.list-group-item-selected]="selectedUser === customer"
                     class="list-group-item"
                     (click)="selectedUser = customer">
                     {{ customer.name }}
                 </li>
-                <li *ngIf="onlineCustomers.length === 0" class="list-group-item">No Costumer is conected</li>
+                <li *ngIf="onlineCustomers.getValue().length === 0" class="list-group-item">No Costumer is conected</li>
             </ul>
         </div>
         <!-- Main content -->
@@ -25,11 +25,11 @@
                 <!-- messages -->
                 <div class="col-md-12 mt-auto mb-2">
                     <div class="overflow-auto mb-2" style="flex-grow: 1">
-                        <div *ngFor="let message of messages" class="p-2">
-                            <strong>{{ selectedUser.name }}</strong>: {{ message.Message }}
+                        <div *ngFor="let m of messages.value" class="col-md-3 border border-white rounded">
+                            <strong class="">{{ selectedUser.name}}</strong>: {{ m.message}}
                         </div>
                     </div>
-                    <div class="row mt-auto mb-2">
+                    <div class="row mt-auto pt-1 mb-2 border-top">
                         <!-- Media entry-->
                         <div class="col-md-1 mt-1">
                             <label style="cursor:pointer"><input type="file" hidden /><i class="fa fa-photo-video fa-lg"></i></label>

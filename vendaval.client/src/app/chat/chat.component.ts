@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from './chat.service';
-import { lastValueFrom, map } from 'rxjs';
+import { BehaviorSubject, Observable, lastValueFrom, map } from 'rxjs';
 import { ChatUser } from './chatuser';
 import { Message } from './message';
 import { LoadingService } from '../shared/common/loading.service';
@@ -14,9 +14,9 @@ import { AuthService } from '../shared/common/auth.service';
 export class ChatComponent implements OnInit{
   user!: ChatUser;
   onlineSellers: ChatUser[] = [];
-  onlineCustomers: ChatUser[] = [];
+  onlineCustomers: BehaviorSubject<ChatUser[]> = new BehaviorSubject<ChatUser[]>([]);
   selectedUser!: ChatUser;
-  messages: Message[] = [];
+  messages: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>([]);
   text: string = '';
   newMessage!: Message;
 
@@ -29,13 +29,13 @@ export class ChatComponent implements OnInit{
     });
     try {
       await this.chatService.initializeHubConnection();
-      await this.chatService.ownChatUser$.subscribe(user => {
+      this.chatService.ownChatUser$.subscribe(user => {
         if(user != null)
           this.user = user;
       });
       this.chatService.getOnlineCustomers();
       this.chatService.onlineCustomers$.subscribe(customers => {
-      this.onlineCustomers = customers;
+        this.onlineCustomers.next(customers);
 
         if(customers.length > 0)
           setTimeout(() => {
@@ -43,9 +43,11 @@ export class ChatComponent implements OnInit{
           });
 
         this.chatService.messages$.subscribe(messages => {
-          console.log("my connectionId: ", this.user.connectionId);
-          this.messages = messages;
-        });
+          console.log('Messages: ', messages);
+          this.messages.next(messages);
+          
+        })
+        
       })
       
     } catch (e:any) {
@@ -56,13 +58,13 @@ export class ChatComponent implements OnInit{
   sendMessage(): void {
     if (this.selectedUser != null && this.text) {
       this.newMessage = {
-        Id: 1,
-        SenderId: this.user.connectionId,
-        ReceiverId: this.selectedUser.connectionId,
-        Media: [],
-        Message: this.text,
-        CreatedAt: new Date(),
-        UpdatedAt: new Date()
+        id: 1,
+        senderId: this.user.connectionId,
+        receiverId: this.user.connectionId,
+        media: [],
+        message: this.text,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
 
       this.chatService.sendMessage(this.newMessage);
