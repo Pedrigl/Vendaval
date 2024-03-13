@@ -1,13 +1,51 @@
-<div class="container">
-    <h2>Online Sellers</h2>
-    <ul class="list-group">
-        <li *ngFor="let seller of onlineSellers" class="list-group-item">{{ seller.name }}</li>
-        <li *ngIf="onlineSellers.length === 0" class="list-group-item">No online sellers</li>
-    </ul>
-    <hr>
-    <h2>Online Customers</h2>
-    <ul class="list-group">
-        <li *ngFor="let customer of onlineCustomers" class="list-group-item">{{ customer.name }}</li>
-        <li *ngIf="onlineCustomers.length === 0" class="list-group-item">No online customers</li>
-    </ul>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Side bar -->
+        <div class="col-md-2">
+            <h2>Online Sellers</h2>
+            <ul class="list-group">
+                <li *ngFor="let seller of onlineSellers" class="list-group-item">{{ seller.name }}</li>
+                <li *ngIf="onlineSellers.length === 0" class="list-group-item">No Seller is conected</li>
+            </ul>
+            <hr>
+            <h2>Online Customers</h2>
+            <ul class="list-group">
+                <li style="cursor:pointer" *ngFor="let customer of onlineCustomers"
+                    [class.list-group-item-selected]="selectedUser === customer"
+                    class="list-group-item"
+                    (click)="selectedUser = customer">
+                    {{ customer.name }}
+                </li>
+                <li *ngIf="onlineCustomers.length === 0" class="list-group-item">No Costumer is conected</li>
+            </ul>
+        </div>
+        <!-- Main content -->
+        <div class="col-md-10">
+            <div class="container d-flex flex-column border bg-light rounded" style="height:720px">
+                <!-- messages -->
+                <div class="col-md-12 mt-auto mb-2">
+                    <div class="overflow-auto mb-2" style="flex-grow: 1">
+                        <div *ngFor="let message of messages" class="p-2">
+                            <strong>{{ selectedUser.name }}</strong>: {{ message.Message }}
+                        </div>
+                    </div>
+                    <div class="row mt-auto mb-2">
+                        <!-- Media entry-->
+                        <div class="col-md-1 mt-1">
+                            <label style="cursor:pointer"><input type="file" hidden /><i class="fa fa-photo-video fa-lg"></i></label>
+                            <label style="cursor:pointer" class="ms-4"><i class="fa fa-microphone-alt fa-lg"></i></label>
+                        </div>
+                        <!-- Message entry-->
+                        <div class="col-lg">
+                            <input type="text" class="form-control" placeholder="Type your message" [(ngModel)]="text" (keyup.enter)="sendMessage()">
+                        </div>
+                        <!-- Send button-->
+                        <div class="col-sm-1 me-2 border border-secondary rounded justify-content-center">
+                            <label class="mt-1" style="cursor:pointer"><i class="fa fa-paper-plane fa-lg"></i></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

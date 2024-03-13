@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using Polly.Caching;
 using System;
 using System.Collections.Generic;
@@ -29,12 +30,9 @@ namespace Vendaval.Application.Services
             _mapper = mapper;
         }
 
-        public async Task SendPrivateMessage(string receiverId, MessageViewModel message)
+        public async Task SendPrivateMessage(MessageViewModel message)
         {
-            var senderId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
-            var senderName = Context.User.Identity.Name;
-
-            await Clients.Client(receiverId).SendAsync("ReceivePrivateMessage", senderId, senderName, message);
+            await Clients.Client(message.ReceiverId.ToString()).SendAsync("ReceivePrivateMessage", message);
         }
 
         public async Task SendOnlineSellers()

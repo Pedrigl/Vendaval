@@ -7,18 +7,21 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../shared/common/auth.service';
 import { AuthorizedHttpClient } from '../shared/common/authorized-httpclient';
 import { ChatUser } from './chatuser';
+import { Message } from './message';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService { 
   private hubConnection!: HubConnection;
-  private messagesSubject = new BehaviorSubject<string[]>([]);
+  private messagesSubject = new BehaviorSubject<Message[]>([]);
   messages$ = this.messagesSubject.asObservable();
 
   private onlineCustomersSubject = new BehaviorSubject<ChatUser[]>([]);
   onlineCustomers$ = this.onlineCustomersSubject.asObservable();
 
+  private ownChatUserSubject = new BehaviorSubject<ChatUser | null>(null);
+  ownChatUser$ = this.ownChatUserSubject.asObservable();
   private hubUrl = environment.apiUrl + "chathub";
   constructor(private http: AuthorizedHttpClient, private authService: AuthService) {
   }
@@ -31,7 +34,7 @@ export class ChatService {
       await this.authService.getToken.subscribe(t=> {token = t ?? ""});
 
       if (token != null && token != "") {
-        console.log('Token: ' + token);
+        
         this.hubConnection = new HubConnectionBuilder()
           .withUrl(this.hubUrl, {
             accessTokenFactory: () => token,
@@ -40,6 +43,19 @@ export class ChatService {
           .build();
 
         await this.startConnection();
+
+        this.hubConnection.on("OwnChatUser", (d: ChatUser) => {
+          if(d != null)
+            this.ownChatUserSubject.next(d);
+        });
+
+        this.hubConnection.on("ReceivePrivateMessage", (message: Message) => {
+          console.log(`receiving a message from ${message.SenderId} to ${message.ReceiverId}`)
+          const currentMessages = [...this.messagesSubject.value];
+          
+          currentMessages.push(message);
+          this.messagesSubject.next(currentMessages);
+        })
       }
       
     } catch (error) {
@@ -67,14 +83,12 @@ export class ChatService {
     });
   }
   
-  sendMessage(message: string): void {
-    this.hubConnection.invoke('SendMessage', message)
+  sendMessage(message: Message): void {
+    console.log(`sending a message from ${message.SenderId} to ${message.ReceiverId}`)
+    this.hubConnection.invoke('SendPrivateMessage', message)
       .catch(err => console.error('Error while sending message: ', err));
   }
 
 
-
-  getMessages(): string[] {
-    return this.messagesSubject.value;
-  }
+  
 }
