@@ -22,6 +22,12 @@ namespace Vendaval.Application.Web
             CreateMap<Order, OrderViewModel>();
             CreateMap<OrderViewModel, Order>();
             CreateMap<User, ChatUserViewModel>();
+            CreateMap<ChatUserViewModel, ChatUser>();
+            CreateMap<ChatUser, ChatUserViewModel>();
+            CreateMap<Conversation, ConversationViewModel>();
+            CreateMap<ConversationViewModel, Conversation>();
+            CreateMap<Message, MessageViewModel>();
+            CreateMap<MessageViewModel, Message>();
         }
     }
 }
