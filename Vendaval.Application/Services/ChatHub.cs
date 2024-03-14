@@ -32,6 +32,7 @@ namespace Vendaval.Application.Services
 
         public async Task SendPrivateMessage(MessageViewModel message)
         {
+            await Clients.Caller.SendAsync("ReceivePrivateMessage", message);
             await Clients.Client(message.ReceiverId).SendAsync("ReceivePrivateMessage", message);
         }
         
