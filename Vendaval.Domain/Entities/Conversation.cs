@@ -8,7 +8,7 @@ namespace Vendaval.Domain.Entities
 {
     public class Conversation : BaseModel
     {
-        public List<ChatUser> Participants { get; set; }
+        public required List<ChatUser> Participants { get; set; }
         public List<Message>? Messages { get; set; }
     }
 }

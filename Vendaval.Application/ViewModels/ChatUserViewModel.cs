@@ -11,9 +11,8 @@ namespace Vendaval.Application.ViewModels
     {
         public required string ConnectionId { get; set; }
         public UserType UserType { get; set; }
-
         public required string Email { get; set; }
-
         public required string Name { get; set; }
+        public bool IsOnline { get; set; }
     }
 }
