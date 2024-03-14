@@ -5,6 +5,8 @@ import { ChatUser } from './chatuser';
 import { Message } from './message';
 import { LoadingService } from '../shared/common/loading.service';
 import { AuthService } from '../shared/common/auth.service';
+import { KeyValue } from '@angular/common';
+import { Conversation } from './conversation';
 
 @Component({
   selector: 'app-chat',
@@ -17,6 +19,7 @@ export class ChatComponent implements OnInit{
   onlineCustomers: BehaviorSubject<ChatUser[]> = new BehaviorSubject<ChatUser[]>([]);
   selectedUser: BehaviorSubject<ChatUser | null> = new BehaviorSubject<ChatUser | null>(null);
   messages: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>([]);
+  conversations: BehaviorSubject<[Conversation] | null>  = new BehaviorSubject<[Conversation] | null>(null);
   text: string = '';
   newMessage!: Message;
 
@@ -45,8 +48,38 @@ export class ChatComponent implements OnInit{
       })
 
       this.chatService.receiveMessage().subscribe(message => {
-        this.messages.next([...this.messages.value, message]);
+        var chatUser = this.onlineCustomers.value.find(x => x.connectionId == message.senderId);
+
+        if (chatUser != null) {
+          if (!this.conversations.value) {
+            this.conversations.next([{ sender: chatUser, messages: [] }]);
+          }
+
+          var chatUserConversation = this.conversations.value?.find(c => c.sender == chatUser)
+          console.log(chatUserConversation);
+
+          if (chatUserConversation == null) {
+            var conversation: Conversation = {
+              sender: chatUser,
+              messages: [message]
+            }
+            chatUserConversation = conversation;
+          }
+          else {
+            chatUserConversation.messages.push(message);
+          }
+
+          var conversations = this.conversations.value;
+          conversations?.push(chatUserConversation);
+
+          this.conversations.next(conversations);
+
+          if (this.selectedUser.value && (this.selectedUser.value.connectionId === message.senderId ||this.selectedUser.value.connectionId == message.receiverId)) {
+            this.messages.next([...this.messages.value, message]);
+          }
+        }
       });
+
 
 
     } catch (e:any) {
@@ -54,6 +87,18 @@ export class ChatComponent implements OnInit{
     }
   }
 
+  getUserName(senderId: string): string {
+    let user = this.onlineCustomers.value.find(x => x.connectionId === senderId) || this.onlineSellers.value.find(x => x.connectionId === senderId);
+    return user ? user.name : '';
+  }
+
+  selectUser(user: ChatUser) {
+    this.selectedUser.next(user);
+    var chatUserConversation = this.conversations.value?.find(c => c.sender == user)
+    if (chatUserConversation != null) {
+      this.messages.next(chatUserConversation.messages);
+    }
+  }
   sendMessage(): void {
 
     this.selectedUser.subscribe(user => {
