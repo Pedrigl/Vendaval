@@ -21,6 +21,7 @@ namespace Vendaval.Infrastructure.DependencyInjection
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductAvaliationRepository, ProductAvaliationRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IChatUserRepository, ChatUserRepository>();
             return services;
         }
     }
