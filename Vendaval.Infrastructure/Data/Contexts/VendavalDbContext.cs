@@ -21,6 +21,7 @@ namespace Vendaval.Infrastructure.Data.Contexts
         public DbSet<ProductAvaliation> ProductAvaliations { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<ChatUser> ChatUsers { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,6 +31,7 @@ namespace Vendaval.Infrastructure.Data.Contexts
             modelBuilder.ApplyConfiguration(new ProductAvaliationConfiguration());
             modelBuilder.ApplyConfiguration(new OrderConfiguration());
             modelBuilder.ApplyConfiguration(new ChatUserConfiguration());
+            modelBuilder.ApplyConfiguration(new ConversationConfiguration());
         }
     }
 }
