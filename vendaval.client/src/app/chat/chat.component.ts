@@ -13,7 +13,7 @@ import { AuthService } from '../shared/common/auth.service';
 })
 export class ChatComponent implements OnInit{
   user: BehaviorSubject<ChatUser | null> = new BehaviorSubject<ChatUser | null>( null);
-  onlineSellers: ChatUser[] = [];
+  onlineSellers: BehaviorSubject<ChatUser[]> = new BehaviorSubject<ChatUser[]>([]);
   onlineCustomers: BehaviorSubject<ChatUser[]> = new BehaviorSubject<ChatUser[]>([]);
   selectedUser: BehaviorSubject<ChatUser | null> = new BehaviorSubject<ChatUser | null>(null);
   messages: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>([]);
@@ -32,12 +32,10 @@ export class ChatComponent implements OnInit{
       this.chatService.startConnection().subscribe();
 
       this.chatService.getOwnChatUser().subscribe(user => {
-        console.log("ConnectionId: ", user.connectionId);
         this.user.next(user);
       });
 
       this.chatService.getOnlineCustomers().subscribe(customers => {
-        console.log("Online customers: ", customers);
         this.onlineCustomers.next(customers);
 
         if (customers.length > 0)
@@ -50,9 +48,6 @@ export class ChatComponent implements OnInit{
         this.messages.next([...this.messages.value, message]);
       });
 
-      this.selectedUser.subscribe(user => {
-        console.log("Selected user ConnectionId: ", user?.connectionId)
-      })
 
     } catch (e:any) {
       console.log('Error initializing chat component: ', e.message);
@@ -62,8 +57,7 @@ export class ChatComponent implements OnInit{
   sendMessage(): void {
 
     this.selectedUser.subscribe(user => {
-      console.log(user)
-      console.log(this.user.value)
+      
       if (user != null && this.user.value != null && this.text != '') {
 
         this.newMessage = {
