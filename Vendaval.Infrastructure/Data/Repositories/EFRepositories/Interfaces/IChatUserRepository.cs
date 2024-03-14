@@ -15,5 +15,6 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces
         Task<ChatUser> AddAsync(ChatUser entity);
         void Update(int entityId, ChatUser entity);
         void Delete(ChatUser entity);
+        Task<bool> Save();
     }
 }

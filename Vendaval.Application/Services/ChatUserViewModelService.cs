@@ -45,6 +45,7 @@ namespace Vendaval.Application.Services
             var mappedUser = _mapper.Map<ChatUserViewModel, ChatUser>(chatUser);
             mappedUser.IsOnline = true;
             _chatUserRepository.Update(mappedUser.Id, mappedUser);
+            _chatUserRepository.Save();
         }
 
         public MethodResult<IEnumerable<ChatUserViewModel>> GetOnlineChatUsers()
