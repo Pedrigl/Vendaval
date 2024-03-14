@@ -4,8 +4,8 @@
         <div class="col-md-2">
             <h2>Online Sellers</h2>
             <ul class="list-group">
-                <li *ngFor="let seller of onlineSellers" class="list-group-item">{{ seller.name }}</li>
-                <li *ngIf="onlineSellers.length === 0" class="list-group-item">No Seller is conected</li>
+                <li *ngFor="let seller of onlineSellers.asObservable()|async" class="list-group-item">{{ seller.name }}</li>
+                <li *ngIf="onlineSellers.value.length === 0" class="list-group-item">No Seller is conected</li>
             </ul>
             <hr>
             <h2>Online Customers</h2>
@@ -26,7 +26,7 @@
                 <div class="col-md-12 mt-auto mb-2">
                     <div class="overflow-auto mb-2" style="flex-grow: 1">
                         <div *ngFor="let m of messages.asObservable()|async" class="col-md-3 border border-white rounded">
-                            <strong class="">{{ selectedUser.value?.name }}</strong>: {{ m.message}}
+                            <strong class="">{{ m.senderId }}</strong>: {{ m.message}}
                         </div>
                     </div>
                     <div class="row mt-auto pt-1 mb-2 border-top">
