@@ -23,6 +23,15 @@ namespace Vendaval.Application.Services
             _mapper = mapper;
         }
 
+        public async Task CreateConversation(List<ChatUserViewModel> conversationParticipants)
+        {
+            var conversation = new Conversation
+            {
+                Participants = _mapper.Map<List<ChatUserViewModel>, List<ChatUser>>(conversationParticipants)
+            };
+
+            await _conversationRepository.AddAsync(conversation);
+        }
         public async Task AddMessageToConversationAsync(int conversationId, MessageViewModel message)
         {
             var mappedMessage = _mapper.Map<MessageViewModel, Message>(message);
