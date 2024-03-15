@@ -24,6 +24,12 @@ namespace Vendaval.Application.Services
             _mapper = mapper;
         }
 
+        public async Task<ChatUserViewModel> GetChatUserById(int id)
+        {
+            var chatUser = await _chatUserRepository.GetByIdAsync(id);
+            var chatUserViewModel = _mapper.Map<ChatUser, ChatUserViewModel>(chatUser);
+            return chatUserViewModel;
+        }
         public async Task CreateChatUser(ChatUserViewModel chatUser)
         {
 
