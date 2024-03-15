@@ -21,13 +21,13 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories
 
         public async Task<Conversation> GetConversationByParticipantsAsync(int user1Id, int user2Id)
         {
-            return await _context.Conversations
+            return await _context.Conversations.AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Participants.Any(p => p.Id == user1Id) && c.Participants.Any(p => p.Id == user2Id));
         }
 
         public async Task<List<Conversation>> GetConversationsByUserIdAsync(int userId)
         {
-            return await _context.Conversations
+            return await _context.Conversations.AsNoTracking()
                 .Where(c => c.Participants.Any(p => p.Id == userId))
                 .ToListAsync();
         }

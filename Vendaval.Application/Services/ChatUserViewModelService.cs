@@ -45,11 +45,12 @@ namespace Vendaval.Application.Services
             return _mapper.Map<ChatUser, ChatUserViewModel>(mappedUser);
         }
 
-        public void DisconnectChatUser(ChatUserViewModel chatUser)
+        public async Task DisconnectChatUser(ChatUserViewModel chatUser)
         {
             var mappedUser = _mapper.Map<ChatUserViewModel, ChatUser>(chatUser);
             mappedUser.IsOnline = false;
             _chatUserRepository.Update(mappedUser.Id,mappedUser);
+            await _chatUserRepository.Save();
         }
 
         public void ConnectChatUser(ChatUserViewModel chatUser)
