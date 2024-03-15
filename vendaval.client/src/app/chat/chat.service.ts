@@ -78,16 +78,24 @@ export class ChatService {
     });
   }
 
+  getOnlineSellers(): Observable<ChatUser[]> {
+    return new Observable<ChatUser[]>(observer => {
+      this.hubConnection.on('OnlineSellers', (sellers: ChatUser[]) => {
+        observer.next(sellers);
+      });
+    });
+  }
+
   getOwnChatUser(): Observable<ChatUser> {
     return new Observable<ChatUser>(observer => {
-      this.hubConnection.on("OwnChatUser", (d: ChatUser) => {
-          observer.next(d);
+      this.hubConnection.on("OwnChatUser", (chatUser: ChatUser) => {
+          observer.next(chatUser);
       })
     });
   }
 
-  sendMessage(message: Message): void {
-    this.hubConnection.invoke('SendPrivateMessage', message)
+  sendMessage(message: Message, convParticipants: ChatUser[]): void {
+    this.hubConnection.invoke('SendPrivateMessage', message, convParticipants)
       .catch(err => console.error('Error while sending message: ', err));
   }
 
@@ -105,6 +113,11 @@ export class ChatService {
         observer.next(conversations);
       })
     });
+  }
+
+  createConversation(participants: ChatUser[]): void {
+    this.hubConnection.invoke('CreateConversation', participants)
+      .catch(err => console.error('Error while creating conversation: ', err));
   }
 
   
