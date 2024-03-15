@@ -13,7 +13,7 @@ namespace Vendaval.Application.Services.Interfaces
         Task<MethodResult<ChatUserViewModel>> GetChatUserById(int id);
         Task<ChatUserViewModel> CreateChatUser(ChatUserViewModel chatUser);
         Task DisconnectChatUser(ChatUserViewModel chatUser);
-        void ConnectChatUser(ChatUserViewModel chatUser);
+        Task ConnectChatUser(ChatUserViewModel chatUser);
         MethodResult<IEnumerable<ChatUserViewModel>> GetOnlineUsers();
         IEnumerable<ChatUserViewModel> GetOnlineSellers();
         IEnumerable<ChatUserViewModel> GetOnlineCustomers();

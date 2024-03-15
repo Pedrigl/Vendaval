@@ -25,17 +25,19 @@ namespace Vendaval.Application.Services
         private readonly IConversationViewModelService _conversationViewModelService;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public ChatHub(IChatUserViewModelService chatUserViewModelService, IConversationViewModelService conversationViewModelService, IUserRepository userRepository, IMapper mapper)
+        private readonly ILogger<ChatHub> _logger;
+        public ChatHub(IChatUserViewModelService chatUserViewModelService, IConversationViewModelService conversationViewModelService, IUserRepository userRepository, IMapper mapper, ILogger<ChatHub> logger)
         {
             _chatUserViewModelService = chatUserViewModelService;
             _conversationViewModelService = conversationViewModelService;
             _userRepository = userRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task SendUserConversations(ChatUserViewModel chatUser)
         {
-            var conversations = _conversationViewModelService.GetUserConversations(chatUser.Id);
+            var conversations = await _conversationViewModelService.GetUserConversations(chatUser.Id);
 
             await Clients.Client(chatUser.ConnectionId).SendAsync("ReceiveUserConversations", conversations);
         }
@@ -88,28 +90,38 @@ namespace Vendaval.Application.Services
             if (!chatUser.Success || chatUser.data == null)
             {
                 var user = await _userRepository.GetByIdAsync(int.Parse(userId));
-                var chatUserCreated = await _chatUserViewModelService.CreateChatUser(_mapper.Map<ChatUserViewModel>(user));
+                var userMapped = _mapper.Map<ChatUserViewModel>(user);
+                userMapped.ConnectionId = Context.ConnectionId;
+                var chatUserCreated = await _chatUserViewModelService.CreateChatUser(userMapped);
                 return chatUserCreated;
             }
             return chatUser.data;
         }
         public override async Task OnConnectedAsync()
         {
-            var chatUser = await GetCurrentUser();
+            try
+            {
+                var chatUser = await GetCurrentUser();
 
-            chatUser.ConnectionId = Context.ConnectionId;
+                chatUser.ConnectionId = Context.ConnectionId;
 
-            _chatUserViewModelService.ConnectChatUser(chatUser);
+                await _chatUserViewModelService.ConnectChatUser(chatUser);
 
-            if(chatUser.UserType == UserType.Costumer)
-                await SendOnlineCostumers();
+                if (chatUser.UserType == UserType.Costumer)
+                    await SendOnlineCostumers();
 
-            if(chatUser.UserType == UserType.Seller)
-                await SendOnlineSellers();
+                if (chatUser.UserType == UserType.Seller)
+                    await SendOnlineSellers();
 
 
-            await SendOwnUser(chatUser);
-            await base.OnConnectedAsync();
+                await SendOwnUser(chatUser);
+                await base.OnConnectedAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error on ChatHub OnConnectedAsync");
+                throw;
+            }
         }
 
         public async Task SendOwnUser(ChatUserViewModel chatUser)
@@ -123,7 +135,7 @@ namespace Vendaval.Application.Services
 
             var chatUser = _mapper.Map<ChatUserViewModel>(user);
 
-            _chatUserViewModelService.DisconnectChatUser(chatUser);
+            await _chatUserViewModelService.DisconnectChatUser(chatUser);
 
             if (chatUser.UserType == UserType.Costumer)
                 await SendOnlineCostumers();

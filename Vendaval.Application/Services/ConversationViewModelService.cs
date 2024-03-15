@@ -47,9 +47,9 @@ namespace Vendaval.Application.Services
             return _mapper.Map<Conversation, ConversationViewModel>(conversation);
         }
 
-        public IEnumerable<ConversationViewModel> GetUserConversations(int userId)
+        public async Task<IEnumerable<ConversationViewModel>> GetUserConversations(int userId)
         {
-            var conversations = _conversationRepository.GetConversationsByUserIdAsync(userId).Result;
+            var conversations = await _conversationRepository.GetConversationsByUserIdAsync(userId);
             return _mapper.Map<IEnumerable<Conversation>, IEnumerable<ConversationViewModel>>(conversations);
         }
     }

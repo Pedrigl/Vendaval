@@ -111,7 +111,7 @@ namespace Vendaval.Application.Services
             if (avaliationsOnCache.Success)
                 return avaliationsOnCache;
 
-            var productAvaliations = _productAvaliationRepository.GetWhere( a => a.ProductId == productId);
+            var productAvaliations = _productAvaliationRepository.GetWhere(a => a.ProductId == productId).ToList();
 
             if (productAvaliations == null || productAvaliations.Count() == 0)
                 return new MethodResult<List<ProductAvaliationViewModel>> { Success = false, Message = "No avaliations found" };

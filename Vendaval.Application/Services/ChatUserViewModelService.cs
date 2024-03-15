@@ -53,12 +53,12 @@ namespace Vendaval.Application.Services
             await _chatUserRepository.Save();
         }
 
-        public void ConnectChatUser(ChatUserViewModel chatUser)
+        public async Task ConnectChatUser(ChatUserViewModel chatUser)
         {
             var mappedUser = _mapper.Map<ChatUserViewModel, ChatUser>(chatUser);
             mappedUser.IsOnline = true;
             _chatUserRepository.Update(mappedUser.Id, mappedUser);
-            _chatUserRepository.Save();
+            await _chatUserRepository.Save();
         }
 
         public MethodResult<IEnumerable<ChatUserViewModel>> GetOnlineUsers()

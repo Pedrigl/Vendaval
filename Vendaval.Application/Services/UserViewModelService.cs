@@ -269,7 +269,7 @@ namespace Vendaval.Application.Services
 
         private bool CheckIfUserExists(User user)
         {
-            return _userRepository.GetWhere(u => u.Email == user.Email).Any();
+            return _userRepository.GetWhere(u => u.Email == user.Email).ToList().Any();
         }
 
         private LoginResult CheckIfRegistrationIsSuccesfull(User user)

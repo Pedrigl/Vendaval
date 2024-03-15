@@ -64,7 +64,7 @@ namespace Vendaval.Application.Services
                 return new MethodResult<List<OrderViewModel>> { Success = true, data = orderOnCacheViewModel };
             }
 
-            var order = _orderRepository.GetWhere(x => x.CustomerId == userId);
+            var order = _orderRepository.GetWhere(x => x.CustomerId == userId).ToList();
 
             if (order == null)
                 return new MethodResult<List<OrderViewModel>> { Success = false, Message = "No orders where found for this user"};
@@ -99,7 +99,7 @@ namespace Vendaval.Application.Services
 
             for (int i = 0; i < orderViewModel.Products.Count; i++)
             {
-                var products = _productRepository.GetWhere(p => p.Id == orderViewModel.Products[i].Id);
+                var products = _productRepository.GetWhere(p => p.Id == orderViewModel.Products[i].Id).ToList();
 
                 if (products.Any(p => p == null))
                     return new MethodResult<OrderViewModel> { Success = false, Message = "Some Products in this order where not found" };
@@ -128,7 +128,7 @@ namespace Vendaval.Application.Services
 
             for (int i = 0; i < orderViewModel.Products.Count; i++)
             {
-                var products = _productRepository.GetWhere(p => p.Id == orderViewModel.Products[i].Id);
+                var products = _productRepository.GetWhere(p => p.Id == orderViewModel.Products[i].Id).ToList();
 
                 if (products.Any(p => p == null))
                     return new MethodResult<OrderViewModel> { Success = false, Message = "Some Products in this order where not found" };

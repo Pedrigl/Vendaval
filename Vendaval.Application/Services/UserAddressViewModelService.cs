@@ -52,7 +52,7 @@ namespace Vendaval.Application.Services
             if (userAddressFromCache.Success)
                 return new MethodResult<List<UserAddressViewModel>> { Success = true, data = new List<UserAddressViewModel> { userAddressFromCache.data } };
 
-            var userAddress = _userAddressRepository.GetWhere(a=> a.UserId == userId);
+            var userAddress = _userAddressRepository.GetWhere(a => a.UserId == userId).ToList();
             var mappedUserAddress = _mapper.Map<List<UserAddressViewModel>>(userAddress);
 
             if (mappedUserAddress.Count == 0)
