@@ -11,7 +11,7 @@ namespace Vendaval.Application.Services.Interfaces
     public interface IChatUserViewModelService
     {
         Task<MethodResult<ChatUserViewModel>> GetChatUserById(int id);
-        Task CreateChatUser(ChatUserViewModel chatUser);
+        Task<ChatUserViewModel> CreateChatUser(ChatUserViewModel chatUser);
         void DisconnectChatUser(ChatUserViewModel chatUser);
         void ConnectChatUser(ChatUserViewModel chatUser);
         MethodResult<IEnumerable<ChatUserViewModel>> GetOnlineUsers();

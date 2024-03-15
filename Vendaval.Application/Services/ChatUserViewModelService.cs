@@ -36,11 +36,13 @@ namespace Vendaval.Application.Services
             var chatUserViewModel = _mapper.Map<ChatUser, ChatUserViewModel>(chatUser);
             return new MethodResult<ChatUserViewModel> { Success = true, data = chatUserViewModel };
         }
-        public async Task CreateChatUser(ChatUserViewModel chatUser)
+        public async Task<ChatUserViewModel> CreateChatUser(ChatUserViewModel chatUser)
         {
             var mappedUser = _mapper.Map<ChatUserViewModel,ChatUser>(chatUser);
 
             await _chatUserRepository.AddAsync(mappedUser);
+
+            return _mapper.Map<ChatUser, ChatUserViewModel>(mappedUser);
         }
 
         public void DisconnectChatUser(ChatUserViewModel chatUser)
