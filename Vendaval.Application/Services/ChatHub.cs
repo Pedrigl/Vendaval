@@ -49,7 +49,7 @@ namespace Vendaval.Application.Services
         public async Task SendOnlineSellers()
         {
             var onlineSellers = _chatUserViewModelService.GetOnlineSellers();
-            await Clients.Caller.SendAsync("OnlineSellers", onlineSellers);
+            await Clients.All.SendAsync("OnlineSellers", onlineSellers);
         }
 
         public async Task SendOnlineCostumers()
@@ -65,17 +65,12 @@ namespace Vendaval.Application.Services
         }
         public override async Task OnConnectedAsync()
         {
-
-            var userId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
-            
-            var user = await _userRepository.GetByIdAsync(int.Parse(userId));
+            var user = await GetCurrentUser();
             var chatUser = _mapper.Map<ChatUserViewModel>(user);
 
             chatUser.ConnectionId = Context.ConnectionId;
 
-
-            if(!_chatUserViewModelService.GetOnlineUsers().Any(c => c.Id == chatUser.Id))
-                _chatUserViewModelService.ConnectChatUser(chatUser);
+            _chatUserViewModelService.ConnectChatUser(chatUser);
 
             if(chatUser.UserType == UserType.Costumer)
                 await SendOnlineCostumers();
@@ -94,10 +89,8 @@ namespace Vendaval.Application.Services
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
-        {
-            var userId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
-            
-            var user = await _userRepository.GetByIdAsync(int.Parse(userId));
+        {   
+            var user = await GetCurrentUser();
 
             var chatUser = _mapper.Map<ChatUserViewModel>(user);
 
