@@ -80,15 +80,22 @@ namespace Vendaval.Application.Services
             await Clients.All.SendAsync("OnlineCostumers", onlineCostumers);
         }
 
-        private async Task<User> GetCurrentUser()
+        private async Task<ChatUserViewModel> GetCurrentUser()
         {
             var userId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
-            return await _userRepository.GetByIdAsync(int.Parse(userId));
+            var chatUser = await _chatUserViewModelService.GetChatUserById(int.Parse(userId));
+
+            if (!chatUser.Success || chatUser.data == null)
+            {
+                var user = await _userRepository.GetByIdAsync(int.Parse(userId));
+                var chatUserCreated = await _chatUserViewModelService.CreateChatUser(_mapper.Map<ChatUserViewModel>(user));
+                return chatUserCreated;
+            }
+            return chatUser.data;
         }
         public override async Task OnConnectedAsync()
         {
-            var user = await GetCurrentUser();
-            var chatUser = _mapper.Map<ChatUserViewModel>(user);
+            var chatUser = await GetCurrentUser();
 
             chatUser.ConnectionId = Context.ConnectionId;
 
