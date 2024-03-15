@@ -31,11 +31,10 @@ export class CreateProductComponent {
   hasError = false;
   error!: string | null;
 
-  constructor(private router: Router, private loadingService: LoadingService, private productService: ProductService) {
+  constructor(private router: Router,private productService: ProductService) {
   }
 
   async createProduct() {
-    this.loadingService.isLoading.next(true);
     try {
       this.product.category = Number(this.product.category);
       
@@ -46,19 +45,15 @@ export class CreateProductComponent {
       if (res.success) {
         this.hasError = false;
         this.error = '';
-
-        this.loadingService.isLoading.next(false);
         this.router.navigate(['/admin/products']);  
       }
 
       else {
-        this.loadingService.isLoading.next(false);
         this.hasError = true;
         this.error = res.message;
       }
     }
     catch (error: any) {
-      this.loadingService.isLoading.next(false);
       this.hasError = true;
       console.log(error);
       this.error = error;

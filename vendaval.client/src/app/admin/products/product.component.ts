@@ -21,11 +21,10 @@ export class ProductComponent implements OnInit {
   hasError = false;
   error!: string | null;
 
-  constructor(private router: Router, private loadingService: LoadingService, private productService: ProductService) { }
+  constructor(private router: Router, private productService: ProductService) { }
 
   async ngOnInit() {
     try {
-      setTimeout(() => this.loadingService.isLoading.next(true));
       this.products = await lastValueFrom(this.productService.getAllProducts());
       this.filteredProducts = { ...this.products, data: [...this.products.data] };
 
@@ -36,10 +35,6 @@ export class ProductComponent implements OnInit {
       this.error = error;
     }
 
-    finally {
-      setTimeout(() => this.loadingService.isLoading.next(false));
-    }
-
   }
 
   editProduct(id: number) {
@@ -47,7 +42,6 @@ export class ProductComponent implements OnInit {
   }
 
   async deleteProduct(id: number) {
-    setTimeout(() => this.loadingService.isLoading.next(true));
     try {
       var req = await lastValueFrom(this.productService.deleteProduct(id));
 
@@ -59,9 +53,8 @@ export class ProductComponent implements OnInit {
         this.error = '';
         this.filteredProducts.data = this.products.data.filter(p => p.id !== id);
       }
-      setTimeout(() => this.loadingService.isLoading.next(false));
+      
     } catch (error: any) {
-      setTimeout(() => this.loadingService.isLoading.next(false));
       this.hasError = true;
       this.error = error;
     }

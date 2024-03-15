@@ -17,7 +17,7 @@ import { LoadingService } from '../shared/common/loading.service';
 })
 export class LoginComponent implements OnInit{
 
-  constructor(private router: Router, private route: ActivatedRoute,private loadingService: LoadingService, private loginService: LoginService, private authService: AuthService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private loginService: LoginService, private authService: AuthService) { }
 
   keepUserLoggedIn: boolean = false;
 
@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit{
   }
 
   public async loginAsync() {
-    this.loadingService.isLoading.next(true);
+    
     this.hasLoginError = false;
     this.loginError = '';
     var loginRes: LoginResponse;
@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit{
 
     catch (error: any) {
       this.hasLoginError = true;
-      this.loadingService.isLoading.next(false);
+      
       if (error instanceof HttpErrorResponse) {
         var errorParse : LoginResponse = error.error;
         this.loginError = errorParse.message;
@@ -87,7 +87,7 @@ export class LoginComponent implements OnInit{
     this.authService.setLogin(this.login, this.keepUserLoggedIn);
     this.authService.setToken(loginRes.token, this.keepUserLoggedIn);
     this.authService.setTokenExpiration(currentDate, this.keepUserLoggedIn);
-    this.loadingService.isLoading.next(false);
+    
     this.authService.logIn();
     this.redirectBasedOnUserType(loginRes.user.userType);
   };
@@ -109,7 +109,7 @@ export class LoginComponent implements OnInit{
   }
 
   public async registerAsync() {
-    this.loadingService.isLoading.next(true);
+    
     var loginRes: LoginResponse;
 
     try {
@@ -118,7 +118,7 @@ export class LoginComponent implements OnInit{
     }
 
     catch (error: any) {
-      this.loadingService.isLoading.next(false);
+      
       this.hasRegisterError = true;
 
       if (error instanceof HttpErrorResponse) {
@@ -137,7 +137,7 @@ export class LoginComponent implements OnInit{
       this.registerError = loginRes.message;
       return;
     }
-    this.loadingService.isLoading.next(false);
+    
 
   };
 
@@ -148,7 +148,6 @@ export class LoginComponent implements OnInit{
     const tokenExpiration = this.authService.getTokenExpiration;
 
     if (login == null || user == null || token == null || tokenExpiration == null) {
-      this.loadingService.isLoading.next(false);
       return;
     }
     

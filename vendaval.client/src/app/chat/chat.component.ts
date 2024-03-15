@@ -18,16 +18,15 @@ export class ChatComponent implements OnInit {
   onlineSellers: BehaviorSubject<ChatUser[]> = new BehaviorSubject<ChatUser[]>([]);
   onlineCustomers: BehaviorSubject<ChatUser[]> = new BehaviorSubject<ChatUser[]>([]);
   conversations: BehaviorSubject<[Conversation] | null> = new BehaviorSubject<[Conversation] | null>(null);
+  selectedConversation: BehaviorSubject<Conversation | null> = new BehaviorSubject<Conversation | null>(null);
   text: string = '';
   newMessage!: Message;
 
-  constructor(private chatService: ChatService, private authService: AuthService, private loadingService: LoadingService) {
+  constructor(private chatService: ChatService, private authService: AuthService) {
 
   }
   async ngOnInit() {
-    setTimeout(() => {
-      this.loadingService.isLoading.next(true);
-    });
+    
     try {
       await this.chatService.initializeHubConnection();
       this.chatService.startConnection().subscribe();
@@ -38,16 +37,14 @@ export class ChatComponent implements OnInit {
 
       this.chatService.getOnlineCustomers().subscribe(customers => {
         this.onlineCustomers.next(customers);
+      })
 
-        if (customers.length > 0)
-          setTimeout(() => {
-            this.loadingService.isLoading.next(false);
-          });
+      this.chatService.getOnlineSellers().subscribe(sellers => {
+        this.onlineSellers.next(sellers);
       })
 
       this.chatService.receiveMessage().subscribe(message => {
         var chatUser = this.onlineCustomers.value.find(x => x.connectionId == message.senderId);
-
       });
 
 
@@ -55,6 +52,10 @@ export class ChatComponent implements OnInit {
     } catch (e: any) {
       console.log('Error initializing chat component: ', e.message);
     }
+  }
+
+  sendMessage() {
+
   }
 }
   

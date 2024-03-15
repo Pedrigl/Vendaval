@@ -28,12 +28,12 @@ export class CreateUserComponent {
   hasError = false;
   error :string = '';
 
-  constructor(private router: Router, private loadingService: LoadingService,private loginService: LoginService) {
+  constructor(private router: Router,private loginService: LoginService) {
 
   }
 
   async createUser() {
-    this.loadingService.isLoading.next(true);
+    
     try {
 
       this.user.userType = Number(this.user.userType);
@@ -49,11 +49,9 @@ export class CreateUserComponent {
         this.hasError = true;
         this.error = res.message;
       }
-      this.loadingService.isLoading.next(false);
     }
 
     catch (e: any) {
-      this.loadingService.isLoading.next(false);
       this.hasError = true;
       this.error = e.error.message;
     }

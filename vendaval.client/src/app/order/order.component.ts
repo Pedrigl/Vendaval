@@ -13,17 +13,15 @@ import { lastValueFrom } from 'rxjs';
 })
 export class OrderComponent implements OnInit{
   orders: Order[];
-  constructor(private router: Router, private loadingService: LoadingService, private orderService: OrderService, private userService: AuthService) {
+  constructor(private router: Router, private orderService: OrderService, private userService: AuthService) {
       this.orders = [];
   }
 
   async ngOnInit() {
-    this.loadingService.isLoading.next(true);
 
     var user = await lastValueFrom(this.userService.getUser);
 
     if (!user) {
-      this.loadingService.isLoading.next(false);
       this.router.navigate(['/login']);
       return
     }

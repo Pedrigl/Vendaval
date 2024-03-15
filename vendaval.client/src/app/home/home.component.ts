@@ -9,5 +9,5 @@ import { ProductService } from '../product/product.service';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  constructor(private router: Router, private loadingService: LoadingService, private productService: ProductService) {}
+  constructor(private router: Router, private productService: ProductService) {}
 }

@@ -20,12 +20,10 @@ export class UsersComponent {
     error = '';
     searchTerm: string = '';
 
-  constructor(private router: Router, private loadingService: LoadingService, private loginService: LoginService) {
-      loadingService.isLoading.next(true);
+  constructor(private router: Router, private loginService: LoginService) {
       loginService.getUsers().subscribe(response => {
         this.users = response;
         this.filteredUsers = { ...response, data: [...response.data] };
-        loadingService.isLoading.next(false);
       });
      }
 
@@ -34,7 +32,6 @@ export class UsersComponent {
      }
 
   async deleteUser(id: number) {
-      this.loadingService.isLoading.next(true);
       try {
         var req = await lastValueFrom(this.loginService.deleteUser(id));
 
@@ -42,13 +39,13 @@ export class UsersComponent {
           this.hasError = true;
           this.error = req.message;
         }
-        this.loadingService.isLoading.next(false);
+        
         this.hasError = false;
         this.users.data = this.users.data.filter(user => user.id !== id);
         this.filteredUsers.data = this.filteredUsers.data.filter(user => user.id !== id);
       }
       catch (error: any) {
-        this.loadingService.isLoading.next(false);
+        
         this.hasError = true;
         this.error = error.error.message;
       }

@@ -2,22 +2,7 @@
     <div class="row">
         <!-- Side bar -->
         <div class="col-md-2">
-            <h2>Online Sellers</h2>
-            <ul class="list-group">
-                <li *ngFor="let seller of onlineSellers.asObservable()|async" class="list-group-item">{{ seller.name }}</li>
-                <li *ngIf="onlineSellers.value.length === 0" class="list-group-item">No Seller is conected</li>
-            </ul>
-            <hr>
-            <h2>Online Customers</h2>
-            <ul class="list-group">
-                <li style="cursor:pointer" *ngFor="let customer of onlineCustomers.asObservable() | async"
-                    [class.list-group-item-selected]="selectedUser.value === customer"
-                    class="list-group-item"
-                    (click)="selectUser(customer)">
-                    {{ customer.name }}
-                </li>
-                <li *ngIf="onlineCustomers.value.length === 0" class="list-group-item">No Costumer is conected</li>
-            </ul>
+            
         </div>
         <!-- Main content -->
         <div class="col-md-10">
@@ -25,8 +10,8 @@
                 <!-- messages -->
                 <div class="col-md-12 mt-auto mb-2">
                     <div class="overflow-auto mb-2" style="flex-grow: 1">
-                        <div *ngFor="let m of messages.asObservable()|async" class="col-md-3 border border-white rounded">
-                            <strong class="">{{ getUserName(m.senderId) }}</strong>: {{ m.message}}
+                        <div  class="col-md-3 border border-white rounded">
+                            
                         </div>
                     </div>
                     <div class="row mt-auto pt-1 mb-2 border-top">

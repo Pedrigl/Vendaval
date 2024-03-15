@@ -22,12 +22,11 @@ export class ProductsComponent {
   maxPriceFilter: number = 0;
 
 
-  constructor(private router: Router, private loadingService: LoadingService, private productService: ProductService) {
-    this.loadingService.isLoading.next(true);
+  constructor(private router: Router, private productService: ProductService) {
+    
     productService.getAllProducts().subscribe(response => {
       this.products = response.data;
       this.filteredProducts = [...this.products];
-      this.loadingService.isLoading.next(false);
     });
   }
 

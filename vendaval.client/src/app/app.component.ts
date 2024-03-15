@@ -10,8 +10,8 @@ import { LoadingService } from './shared/common/loading.service';
 //TODO: ADD A GLOBAL ERROR HANDLER
 export class AppComponent {
   isLoading: boolean = false;
-  constructor(private loadingService: LoadingService, private renderer: Renderer2) {
-    this.loadingService.isLoading.subscribe((value) => {
+  constructor(private renderer: Renderer2) {
+    LoadingService.isLoading.subscribe((value) => {
       this.isLoading = value;
 
       if (this.isLoading) {

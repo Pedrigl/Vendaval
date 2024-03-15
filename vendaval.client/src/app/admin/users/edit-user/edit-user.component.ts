@@ -17,22 +17,18 @@ export class EditUserComponent{
     hasError = false;
     error = '';
 
-    constructor(private route: ActivatedRoute, private router: Router, private loadingService: LoadingService,private loginService: LoginService){
-        loadingService.isLoading.next(true);
+    constructor(private route: ActivatedRoute, private router: Router,private loginService: LoginService){
         this.loginService.getUser(this.route.snapshot.queryParams['id']).subscribe(response => {
           this.user = response.data;
-          loadingService.isLoading.next(false);
         })
     }
   async saveUser() {
-      this.loadingService.isLoading.next(true);
       this.hasError = false;
       try {
           this.user.userType = Number(this.user.userType);
           var req = await lastValueFrom(this.loginService.putUser(this.user));
           this.user = req.user;
 
-        this.loadingService.isLoading.next(false);
           if (!req.success) {
             this.hasError = true;
             this.error = req.message;
@@ -44,7 +40,6 @@ export class EditUserComponent{
         }
 
       catch (error: any) {
-        this.loadingService.isLoading.next(false);
         this.hasError = true;
 
         this.error = error;
