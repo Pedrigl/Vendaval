@@ -23,12 +23,12 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories
 
         public async Task<List<T>> GetAllAsync()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _context.Set<T>().AsNoTracking().ToListAsync();
         }
 
         public IEnumerable<T> GetWhere(Func<T, bool> predicate)
         {
-            return _context.Set<T>().Where(predicate);
+            return _context.Set<T>().AsNoTracking().Where(predicate);
         }
 
         public async Task<T> AddAsync(T entity)
