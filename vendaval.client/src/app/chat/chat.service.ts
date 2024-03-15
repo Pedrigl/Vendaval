@@ -15,14 +15,6 @@ import { Conversation } from './conversation';
 })
 export class ChatService { 
   private hubConnection!: HubConnection;
-  private messagesSubject = new BehaviorSubject<Message[]>([]);
-  messages$ = this.messagesSubject.asObservable();
-
-  private onlineCustomersSubject = new BehaviorSubject<ChatUser[]>([]);
-  onlineCustomers$ = this.onlineCustomersSubject.asObservable();
-
-  private ownChatUserSubject = new BehaviorSubject<ChatUser | null>(null);
-  ownChatUser$ = this.ownChatUserSubject.asObservable();
   private hubUrl = environment.apiUrl + "chathub";
   constructor(private http: AuthorizedHttpClient, private authService: AuthService) {
   }
