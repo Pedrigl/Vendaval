@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -21,8 +21,8 @@ import { OrderComponent } from './order/order.component';
 import {ProductsComponent } from './product/products.component';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import {AuthInterceptorService} from './shared/common/auth.interceptor.service';
 import { ChatComponent } from './chat/chat.component'; 
+import { httpInterceptor } from './shared/common/httpInterceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,8 +47,7 @@ import { ChatComponent } from './chat/chat.component';
     AppRoutingModule, FormsModule,
     NgbModule, CommonModule
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true }
-  ],
+  providers: [provideHttpClient(withInterceptors([httpInterceptor]))],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

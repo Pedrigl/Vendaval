@@ -5,6 +5,6 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
   providedIn: 'root'
 })
 export class LoadingService {
-  public isLoading = new BehaviorSubject<boolean>(false);
+  public static isLoading = new BehaviorSubject<boolean>(false);
   constructor() { }
 }
