@@ -11,7 +11,7 @@ namespace Vendaval.Application.Services.Interfaces
     public interface IConversationViewModelService
     {
         IEnumerable<ConversationViewModel> GetUserConversations(int userId);
-        Task AddMessageToConversationAsync(int id, MessageViewModel message);
+        Task AddMessageToConversationAsync(int conversationId, MessageViewModel message);
         Task<ConversationViewModel> GetConversationByParticipantsAsync(int user1Id, int user2Id);
     }
 }

@@ -23,10 +23,10 @@ namespace Vendaval.Application.Services
             _mapper = mapper;
         }
 
-        public async Task AddMessageToConversationAsync(int id, MessageViewModel message)
+        public async Task AddMessageToConversationAsync(int conversationId, MessageViewModel message)
         {
             var mappedMessage = _mapper.Map<MessageViewModel, Message>(message);
-            await _conversationRepository.AddMessageToConversation(id, mappedMessage);
+            await _conversationRepository.AddMessageToConversation(conversationId, mappedMessage);
             await _conversationRepository.Save();
         }
 
