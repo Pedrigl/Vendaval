@@ -32,12 +32,9 @@ namespace Vendaval.Application.Services
         }
         public async Task CreateChatUser(ChatUserViewModel chatUser)
         {
-
-            var chatUserExists = (await _chatUserRepository.GetByIdAsync(chatUser.Id)) != null;
             var mappedUser = _mapper.Map<ChatUserViewModel,ChatUser>(chatUser);
 
-            if (!chatUserExists)
-                await _chatUserRepository.AddAsync(mappedUser);
+            await _chatUserRepository.AddAsync(mappedUser);
         }
 
         public void DisconnectChatUser(ChatUserViewModel chatUser)
