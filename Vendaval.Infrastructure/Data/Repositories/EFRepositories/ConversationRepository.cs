@@ -32,9 +32,9 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories
                 .ToListAsync();
         }
 
-        public async Task AddMessageToConversation(int id, Message message)
+        public async Task AddMessageToConversation(int conversationId, Message message)
         {
-            var conversation = await _context.Conversations.FindAsync(id);
+            var conversation = await _context.Conversations.FindAsync(conversationId);
             conversation.Messages.Add(message);
         }
 

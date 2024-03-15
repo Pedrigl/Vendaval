@@ -11,7 +11,7 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces
     {
         Task<Conversation> GetConversationByParticipantsAsync(int user1Id, int user2Id);
         Task<List<Conversation>> GetConversationsByUserIdAsync(int userId);
-        Task AddMessageToConversation(int id, Message message);
+        Task AddMessageToConversation(int conversationId, Message message);
         Task<Conversation> GetByIdAsync(int id);
         Task<List<Conversation>> GetAllAsync();
         IEnumerable<Conversation> GetWhere(Func<Conversation, bool> predicate);
