@@ -24,11 +24,17 @@ namespace Vendaval.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<ChatUserViewModel> GetChatUserById(int id)
+        public async Task<MethodResult<ChatUserViewModel>> GetChatUserById(int id)
         {
             var chatUser = await _chatUserRepository.GetByIdAsync(id);
+
+            if (chatUser == null)
+            {
+                return new MethodResult<ChatUserViewModel> { Success = false, Message = "ChatUser was not found" };
+            }
+
             var chatUserViewModel = _mapper.Map<ChatUser, ChatUserViewModel>(chatUser);
-            return chatUserViewModel;
+            return new MethodResult<ChatUserViewModel> { Success = true, data = chatUserViewModel };
         }
         public async Task CreateChatUser(ChatUserViewModel chatUser)
         {
@@ -52,10 +58,16 @@ namespace Vendaval.Application.Services
             _chatUserRepository.Save();
         }
 
-        public IEnumerable<ChatUserViewModel> GetOnlineUsers()
+        public MethodResult<IEnumerable<ChatUserViewModel>> GetOnlineUsers()
         {
             var chatUsers = _chatUserRepository.GetWhere(u => u.IsOnline == true);
-            return _mapper.Map<IEnumerable<ChatUser>, IEnumerable<ChatUserViewModel>>(chatUsers);
+
+            if (chatUsers == null)
+            {
+                return new MethodResult<IEnumerable<ChatUserViewModel>> { Success = false, Message = "No online users found" };
+            }
+            var onlineUsersMapped = _mapper.Map<IEnumerable<ChatUser>, IEnumerable<ChatUserViewModel>>(chatUsers);
+            return new MethodResult<IEnumerable<ChatUserViewModel>> { Success = true, data = onlineUsersMapped };
         }
 
         public IEnumerable<ChatUserViewModel> GetOnlineCustomers()
