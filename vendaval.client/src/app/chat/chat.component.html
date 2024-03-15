@@ -1,8 +1,26 @@
 <div class="container-fluid">
     <div class="row">
         <!-- Side bar -->
-        <div class="col-md-2">
-            
+        <div class="col-md-2 border bg-light rounded">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 d-flex align-items-center">
+                        <h1 class="display-6 text-start flex-grow-1">Chats</h1>
+                        <label class="ms-auto rounded-3" style="cursor:pointer"><i class="m-2 my-3 fa fa-message fa-lg"></i></label>
+                    </div>
+                    <ul *ngIf="conversations.value.length != 0" class="list-group">
+                        <li *ngFor="let conv of conversations|async; index as i">
+                            <div class="list-group-item list-group-item-action" (click)="selectConversation(conv)">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{getOppositeUser(conv.participants)}}</h5>
+                                    <small>{{conv.messages[conv.messages.length - 1].content}}</small>
+                                </div>
+                                <p class="mb-1">{{conv.updatedAt}}</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <!-- Main content -->
         <div class="col-md-10">
