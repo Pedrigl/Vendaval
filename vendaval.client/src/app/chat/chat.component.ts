@@ -24,9 +24,7 @@ export class ChatComponent implements OnInit{
   newMessage!: Message;
 
   constructor(private chatService: ChatService, private authService: AuthService, private loadingService: LoadingService) {
-    //TODO: make this code more readable, less complex and more maintainable
-    //TODO: place a notification bubble on the chat icon when a new message is received
-    //TODO: fix bug where if you select a user after it has sent a message, it will display messages not sent for the selected conversation but all the messages that user sent
+    //TODO: THIS COMPONENT AND IT'S SERVICE SHOULD BE REFACTORED TO USE THE NEW HUB METHODS
   }
   async ngOnInit() {
     setTimeout(() => {
