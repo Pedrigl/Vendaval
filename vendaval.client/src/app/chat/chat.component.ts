@@ -15,15 +15,17 @@ import { Conversation } from './conversation';
 })
 export class ChatComponent implements OnInit {
   chatUser: BehaviorSubject<ChatUser | null> = new BehaviorSubject<ChatUser | null>(null);
-  onlineSellers: BehaviorSubject<ChatUser[]> = new BehaviorSubject<ChatUser[]>([]);
-  onlineCustomers: BehaviorSubject<ChatUser[]> = new BehaviorSubject<ChatUser[]>([]);
-  conversations: BehaviorSubject<[Conversation] | null> = new BehaviorSubject<[Conversation] | null>(null);
+  onlineSellers: BehaviorSubject<ChatUser[]>;
+  onlineCustomers: BehaviorSubject<ChatUser[]>;
+  conversations: BehaviorSubject<Conversation[]>;
   selectedConversation: BehaviorSubject<Conversation | null> = new BehaviorSubject<Conversation | null>(null);
   text: string = '';
   newMessage!: Message;
 
   constructor(private chatService: ChatService, private authService: AuthService) {
-
+    this.onlineSellers = new BehaviorSubject<ChatUser[]>([]);
+    this.onlineCustomers = new BehaviorSubject<ChatUser[]>([]);
+    this.conversations = new BehaviorSubject<Conversation[]>([]);
   }
   async ngOnInit() {
     
@@ -54,8 +56,18 @@ export class ChatComponent implements OnInit {
     }
   }
 
+  getOppositeUser(conversationUsers : ChatUser[]): ChatUser | undefined {
+    return conversationUsers.find(u => u.connectionId != this.chatUser.value?.connectionId);
+  }
+
   sendMessage() {
 
   }
+
+  selectConversation(conversation: Conversation) {
+    this.selectedConversation.next(conversation);
+  }
+
+
 }
   
