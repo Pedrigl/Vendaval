@@ -6,4 +6,5 @@ export interface ChatUser extends BaseModel {
   name: string;
   email: string;
   userType: UserType;
+  isOnline: boolean;
 }

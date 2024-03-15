@@ -8,6 +8,7 @@ import { AuthService } from '../shared/common/auth.service';
 import { AuthorizedHttpClient } from '../shared/common/authorized-httpclient';
 import { ChatUser } from './chatuser';
 import { Message } from './message';
+import { Conversation } from './conversation';
 
 @Injectable({
   providedIn: 'root'
@@ -84,6 +85,7 @@ export class ChatService {
       })
     });
   }
+
   sendMessage(message: Message): void {
     this.hubConnection.invoke('SendPrivateMessage', message)
       .catch(err => console.error('Error while sending message: ', err));
@@ -97,6 +99,13 @@ export class ChatService {
     });
   }
 
+  receiveUserConversations(): Observable<Conversation[]> {
+    return new Observable<Conversation[]>(observer => {
+      this.hubConnection.on('ReceiveUserConversations', (conversations: Conversation[]) => {
+        observer.next(conversations);
+      })
+    });
+  }
 
   
 }

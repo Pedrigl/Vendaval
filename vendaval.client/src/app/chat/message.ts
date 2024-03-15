@@ -1,9 +1,10 @@
-export interface Message {
-  id: Number;
+import { BaseModel } from "../shared/common/interfaces/BaseModel";
+import { MessageMedia } from "./messagemedia";
+
+export interface Message extends BaseModel{
+  conversationId: number;
   senderId: string;
   receiverId: string;
-  message: string;
-  media: string[];
-  createdAt: Date;
-  updatedAt: Date;
+  content: string;
+  media: MessageMedia[];
 }
