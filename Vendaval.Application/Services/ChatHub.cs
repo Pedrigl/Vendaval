@@ -33,12 +33,26 @@ namespace Vendaval.Application.Services
             _mapper = mapper;
         }
 
-        public async Task SendUserConversations()
+        public async Task SendUserConversations(ChatUserViewModel chatUser)
         {
-            var user = await GetCurrentUser();
-            var conversations = _conversationViewModelService.GetUserConversations(user.Id);
+            var conversations = _conversationViewModelService.GetUserConversations(chatUser.Id);
 
-            await Clients.Caller.SendAsync("ReceiveUserConversations", conversations);
+            await Clients.Client(chatUser.ConnectionId).SendAsync("ReceiveUserConversations", conversations);
+        }
+
+        public async Task CreateConversation(List<ChatUserViewModel> conversationParticipants)
+        {
+            var conversation = await _conversationViewModelService.GetConversationByParticipantsAsync(conversationParticipants[0].Id, conversationParticipants[1].Id);
+
+            if (conversation == null)
+            {
+                conversation = await _conversationViewModelService.CreateConversationAsync(conversationParticipants);
+            }
+
+            foreach (var participant in conversationParticipants)
+            {
+                await SendUserConversations(participant);
+            }
         }
 
         public async Task SendPrivateMessage(MessageViewModel message, List<ChatUserViewModel> conversationParticipants)
