@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Vendaval.Application.Services.Interfaces;
 using Vendaval.Application.ViewModels;
+using Vendaval.Domain.Entities;
 using Vendaval.Domain.Enums;
 using Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces;
 
@@ -20,34 +21,48 @@ namespace Vendaval.Application.Services
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ChatHub : Hub
     {
-        private readonly IUserStatusService _userStatusService;
+        private readonly IChatUserViewModelService _chatUserViewModelService;
+        private readonly IConversationViewModelService _conversationViewModelService;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public ChatHub(IUserStatusService userStatusService, IUserRepository userRepository, IMapper mapper)
+        public ChatHub(IChatUserViewModelService chatUserViewModelService, IConversationViewModelService conversationViewModelService, IUserRepository userRepository, IMapper mapper)
         {
-            _userStatusService = userStatusService;
+            _chatUserViewModelService = chatUserViewModelService;
+            _conversationViewModelService = conversationViewModelService;
             _userRepository = userRepository;
             _mapper = mapper;
         }
 
-        public async Task SendPrivateMessage(MessageViewModel message)
+        public async Task SendPrivateMessage(MessageViewModel message, List<ChatUserViewModel> conversationParticipants)
         {
-            await Clients.Caller.SendAsync("ReceivePrivateMessage", message);
-            await Clients.Client(message.ReceiverId).SendAsync("ReceivePrivateMessage", message);
+            var conversation = await _conversationViewModelService.GetConversationByParticipantsAsync(conversationParticipants[0].Id, conversationParticipants[1].Id);
+
+            await _conversationViewModelService.AddMessageToConversationAsync(conversation.Id, message);
+
+            foreach (var participant in conversationParticipants)
+            {
+                await Clients.Client(participant.ConnectionId).SendAsync("ReceivePrivateMessage", message);
+            }
+            
         }
         
         public async Task SendOnlineSellers()
         {
-            var onlineSellers = _userStatusService.GetOnlineSellers();
+            var onlineSellers = _chatUserViewModelService.GetOnlineSellers();
             await Clients.Caller.SendAsync("OnlineSellers", onlineSellers);
         }
 
         public async Task SendOnlineCostumers()
         {
-            var onlineCostumers = _userStatusService.GetOnlineCostumers();
+            var onlineCostumers = _chatUserViewModelService.GetOnlineCustomers();
             await Clients.All.SendAsync("OnlineCostumers", onlineCostumers);
         }
 
+        private async Task<User> GetCurrentUser()
+        {
+            var userId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
+            return await _userRepository.GetByIdAsync(int.Parse(userId));
+        }
         public override async Task OnConnectedAsync()
         {
 
@@ -58,21 +73,16 @@ namespace Vendaval.Application.Services
 
             chatUser.ConnectionId = Context.ConnectionId;
 
-            if (chatUser.UserType == UserType.Costumer)
-            {
-                if(!_userStatusService.GetOnlineCostumers().Any(c => c.Id == chatUser.Id))
-                    _userStatusService.AddOnlineCostumer(chatUser);
 
+            if(!_chatUserViewModelService.GetOnlineUsers().Any(c => c.Id == chatUser.Id))
+                _chatUserViewModelService.ConnectChatUser(chatUser);
+
+            if(chatUser.UserType == UserType.Costumer)
                 await SendOnlineCostumers();
-            }
 
-            if (chatUser.UserType == UserType.Seller)
-            {
-                if(!_userStatusService.GetOnlineSellers().Any(c => c.Id == chatUser.Id))
-                    _userStatusService.AddOnlineSeller(chatUser);
-
+            if(chatUser.UserType == UserType.Seller)
                 await SendOnlineSellers();
-            }
+
 
             await SendOwnUser(chatUser);
             await base.OnConnectedAsync();
@@ -91,17 +101,13 @@ namespace Vendaval.Application.Services
 
             var chatUser = _mapper.Map<ChatUserViewModel>(user);
 
+            _chatUserViewModelService.DisconnectChatUser(chatUser);
+
             if (chatUser.UserType == UserType.Costumer)
-            {
-                _userStatusService.RemoveOnlineCostumer(chatUser.Id);
                 await SendOnlineCostumers();
-            }
 
             if (chatUser.UserType == UserType.Seller)
-            {
-                _userStatusService.RemoveOnlineSeller(chatUser.Id);
                 await SendOnlineSellers();
-            }
 
             await base.OnDisconnectedAsync(exception);
         }
