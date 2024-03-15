@@ -13,5 +13,6 @@ namespace Vendaval.Application.Services.Interfaces
         IEnumerable<ConversationViewModel> GetUserConversations(int userId);
         Task AddMessageToConversationAsync(int conversationId, MessageViewModel message);
         Task<ConversationViewModel> GetConversationByParticipantsAsync(int user1Id, int user2Id);
+        Task<ConversationViewModel> CreateConversationAsync(List<ChatUserViewModel> conversationParticipants);
     }
 }
