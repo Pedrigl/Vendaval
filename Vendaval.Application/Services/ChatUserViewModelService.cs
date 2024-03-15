@@ -63,7 +63,7 @@ namespace Vendaval.Application.Services
 
         public MethodResult<IEnumerable<ChatUserViewModel>> GetOnlineUsers()
         {
-            var chatUsers = _chatUserRepository.GetWhere(u => u.IsOnline == true);
+            var chatUsers = _chatUserRepository.GetWhere(u => u.IsOnline == true).ToList();
 
             if (chatUsers == null)
             {
@@ -75,14 +75,14 @@ namespace Vendaval.Application.Services
 
         public IEnumerable<ChatUserViewModel> GetOnlineCustomers()
         {
-            var onlineUsers = _chatUserRepository.GetWhere(u => u.IsOnline == true || u.UserType == UserType.Costumer);
+            var onlineUsers = _chatUserRepository.GetWhere(u => u.IsOnline == true || u.UserType == UserType.Costumer).ToList();
 
             return _mapper.Map<IEnumerable<ChatUser>, IEnumerable<ChatUserViewModel>>(onlineUsers);
         }
 
         public IEnumerable<ChatUserViewModel> GetOnlineSellers()
         {
-            var onlineUsers = _chatUserRepository.GetWhere(u => u.IsOnline == true || u.UserType == UserType.Seller);
+            var onlineUsers = _chatUserRepository.GetWhere(u => u.IsOnline == true || u.UserType == UserType.Seller).ToList();
 
             return _mapper.Map<IEnumerable<ChatUser>, IEnumerable<ChatUserViewModel>>(onlineUsers);
         }
