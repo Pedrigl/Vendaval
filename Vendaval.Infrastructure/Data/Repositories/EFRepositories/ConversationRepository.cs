@@ -36,7 +36,6 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories
         {
             var conversation = await _context.Conversations.FindAsync(id);
             conversation.Messages.Add(message);
-            await _context.SaveChangesAsync();
         }
 
 

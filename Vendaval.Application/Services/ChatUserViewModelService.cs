@@ -8,6 +8,7 @@ using Vendaval.Application.Services.Interfaces;
 using Vendaval.Application.ValueObjects;
 using Vendaval.Application.ViewModels;
 using Vendaval.Domain.Entities;
+using Vendaval.Domain.Enums;
 using Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces;
 
 namespace Vendaval.Application.Services
@@ -48,14 +49,24 @@ namespace Vendaval.Application.Services
             _chatUserRepository.Save();
         }
 
-        public MethodResult<IEnumerable<ChatUserViewModel>> GetOnlineChatUsers()
+        public IEnumerable<ChatUserViewModel> GetOnlineUsers()
         {
-            var onlineUsers = _chatUserRepository.GetWhere(u => u.IsOnline == true);
+            var chatUsers = _chatUserRepository.GetWhere(u => u.IsOnline == true);
+            return _mapper.Map<IEnumerable<ChatUser>, IEnumerable<ChatUserViewModel>>(chatUsers);
+        }
 
-            if (onlineUsers == null)
-                return new MethodResult<IEnumerable<ChatUserViewModel>> { Success = false, Message = "No users where found"};
+        public IEnumerable<ChatUserViewModel> GetOnlineCustomers()
+        {
+            var onlineUsers = _chatUserRepository.GetWhere(u => u.IsOnline == true || u.UserType == UserType.Costumer);
 
-            return new MethodResult<IEnumerable<ChatUserViewModel>> { Success = true, data = _mapper.Map<IEnumerable<ChatUser>, IEnumerable<ChatUserViewModel>>(onlineUsers) };
+            return _mapper.Map<IEnumerable<ChatUser>, IEnumerable<ChatUserViewModel>>(onlineUsers);
+        }
+
+        public IEnumerable<ChatUserViewModel> GetOnlineSellers()
+        {
+            var onlineUsers = _chatUserRepository.GetWhere(u => u.IsOnline == true || u.UserType == UserType.Seller);
+
+            return _mapper.Map<IEnumerable<ChatUser>, IEnumerable<ChatUserViewModel>>(onlineUsers);
         }
     }
 }
