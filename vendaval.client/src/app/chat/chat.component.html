@@ -25,11 +25,24 @@
         <!-- Main content -->
         <div class="col-md-10">
             <div class="container d-flex flex-column border bg-light rounded" style="height:720px">
+                <ng-template #content let-modal>
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modal-basic-title">Modal title</h4>
+                        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Your list goes here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Close</button>
+                    </div>
+                </ng-template>
                 <!-- messages -->
                 <div class="col-md-12 mt-auto mb-2">
                     <div class="overflow-auto mb-2" style="flex-grow: 1">
-                        <div  class="col-md-3 border border-white rounded">
-                            
+                        <div class="col-md-3 border border-white rounded">
                         </div>
                     </div>
                     <div class="row mt-auto pt-1 mb-2 border-top">
