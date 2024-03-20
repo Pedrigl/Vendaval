@@ -34,109 +34,7 @@ namespace Vendaval.Infrastructure.Data.Migrations
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("OrderProduct");
-                });
-
-            modelBuilder.Entity("Vendaval.Domain.Entities.ChatUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ConnectionId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int?>("ConversationId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsOnline")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<int>("UserType")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
-
-                    b.ToTable("ChatUsers");
-                });
-
-            modelBuilder.Entity("Vendaval.Domain.Entities.Conversation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Conversations");
-                });
-
-            modelBuilder.Entity("Vendaval.Domain.Entities.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("ConversationId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ReceiverId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
-
-                    b.ToTable("Message");
+                    b.ToTable("OrderProduct", (string)null);
                 });
 
             modelBuilder.Entity("Vendaval.Domain.Entities.Order", b =>
@@ -189,7 +87,7 @@ namespace Vendaval.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Vendaval.Domain.Entities.Product", b =>
@@ -239,7 +137,7 @@ namespace Vendaval.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Vendaval.Domain.Entities.ProductAvaliation", b =>
@@ -283,7 +181,7 @@ namespace Vendaval.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductAvaliations");
+                    b.ToTable("ProductAvaliations", (string)null);
                 });
 
             modelBuilder.Entity("Vendaval.Domain.Entities.User", b =>
@@ -332,7 +230,7 @@ namespace Vendaval.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Vendaval.Domain.Entities.UserAddress", b =>
@@ -398,31 +296,7 @@ namespace Vendaval.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserAddresses");
-                });
-
-            modelBuilder.Entity("Vendaval.Domain.ValueObjects.MessageMedia", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("MessageId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MessageId");
-
-                    b.ToTable("MessageMedia");
+                    b.ToTable("UserAddresses", (string)null);
                 });
 
             modelBuilder.Entity("OrderProduct", b =>
@@ -440,25 +314,9 @@ namespace Vendaval.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Vendaval.Domain.Entities.ChatUser", b =>
-                {
-                    b.HasOne("Vendaval.Domain.Entities.Conversation", null)
-                        .WithMany("Participants")
-                        .HasForeignKey("ConversationId");
-                });
-
-            modelBuilder.Entity("Vendaval.Domain.Entities.Message", b =>
-                {
-                    b.HasOne("Vendaval.Domain.Entities.Conversation", null)
-                        .WithMany("Messages")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Vendaval.Domain.Entities.Order", b =>
                 {
-                    b.OwnsOne("Vendaval.Domain.ValueObjects.Address", "DeliveryAddress", b1 =>
+                    b.OwnsOne("Vendaval.Domain.Entities.Order.DeliveryAddress#Vendaval.Domain.ValueObjects.Address", "DeliveryAddress", b1 =>
                         {
                             b1.Property<int>("OrderId")
                                 .HasColumnType("integer");
@@ -492,7 +350,7 @@ namespace Vendaval.Infrastructure.Data.Migrations
 
                             b1.HasKey("OrderId");
 
-                            b1.ToTable("Orders");
+                            b1.ToTable("Orders", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId");
@@ -503,7 +361,7 @@ namespace Vendaval.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Vendaval.Domain.Entities.ProductAvaliation", b =>
                 {
-                    b.OwnsMany("Vendaval.Domain.ValueObjects.AvaliationMedia", "Media", b1 =>
+                    b.OwnsMany("Vendaval.Domain.Entities.ProductAvaliation.Media#Vendaval.Domain.ValueObjects.AvaliationMedia", "Media", b1 =>
                         {
                             b1.Property<int>("ProductAvaliationId")
                                 .HasColumnType("integer");
@@ -523,33 +381,12 @@ namespace Vendaval.Infrastructure.Data.Migrations
 
                             b1.HasKey("ProductAvaliationId", "Id");
 
-                            b1.ToTable("AvaliationMedia");
+                            b1.ToTable("AvaliationMedia", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ProductAvaliationId");
                         });
 
-                    b.Navigation("Media");
-                });
-
-            modelBuilder.Entity("Vendaval.Domain.ValueObjects.MessageMedia", b =>
-                {
-                    b.HasOne("Vendaval.Domain.Entities.Message", null)
-                        .WithMany("Media")
-                        .HasForeignKey("MessageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Vendaval.Domain.Entities.Conversation", b =>
-                {
-                    b.Navigation("Messages");
-
-                    b.Navigation("Participants");
-                });
-
-            modelBuilder.Entity("Vendaval.Domain.Entities.Message", b =>
-                {
                     b.Navigation("Media");
                 });
 #pragma warning restore 612, 618
