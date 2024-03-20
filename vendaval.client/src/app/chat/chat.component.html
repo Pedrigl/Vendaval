@@ -6,14 +6,17 @@
                 <div class="row">
                     <div class="col-12 d-flex align-items-center">
                         <h1 class="display-6 text-start flex-grow-1">Chats</h1>
-                        <label class="ms-auto rounded-3" style="cursor:pointer"><i class="m-2 my-3 fa fa-message fa-lg"></i></label>
+                        <label data-bs-toggle="modal" data-bs-target="#onlineUsersModal" class="ms-auto rounded-3" style="cursor:pointer"><i class="m-2 my-3 fa fa-message fa-lg"></i></label>
                     </div>
                     <ul *ngIf="conversations.value.length != 0" class="list-group">
                         <li *ngFor="let conv of conversations|async; index as i">
-                            <div class="list-group-item list-group-item-action" (click)="selectConversation(conv)">
+                            <div class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">{{getOppositeUser(conv.participants)}}</h5>
-                                    <small>{{conv.messages[conv.messages.length - 1].content}}</small>
+                                    <div (click)="selectConversation(conv)" style="cursor:pointer">
+                                        <h5 class="mb-1">{{getOppositeUser(conv.participants)}}</h5>
+                                        <small *ngIf="conv.messages.length > 0">{{conv.messages[conv.messages.length - 1].content }}</small>
+                                    </div>
+                                    <i class="fa fa-close" style="cursor:pointer" (click)="deleteConversation(conv)"></i>
                                 </div>
                                 <p class="mb-1">{{conv.updatedAt}}</p>
                             </div>
@@ -25,20 +28,24 @@
         <!-- Main content -->
         <div class="col-md-10">
             <div class="container d-flex flex-column border bg-light rounded" style="height:720px">
-                <ng-template #content let-modal>
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="modal-basic-title">Modal title</h4>
-                        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                <!--Online users pop up-->
+                <div class="modal fade" id="onlineUsersModal" tabindex="-1" aria-labelledby="usersModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Online Users</h1>
+                            </div>
+                            <div class="modal-body">
+                                <ul class="list-group">
+                                    <li style="cursor:pointer" *ngFor="let user of onlineCustomers|async" (click)="startConversation(user)" class="list-group-item">{{user.name}}</li>
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="modal-body">
-                        <!-- Your list goes here -->
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Close</button>
-                    </div>
-                </ng-template>
+                </div>
                 <!-- messages -->
                 <div class="col-md-12 mt-auto mb-2">
                     <div class="overflow-auto mb-2" style="flex-grow: 1">

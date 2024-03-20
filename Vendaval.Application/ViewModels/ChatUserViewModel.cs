@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vendaval.Domain.Entities;
 using Vendaval.Domain.Enums;
 
 namespace Vendaval.Application.ViewModels
@@ -14,5 +15,6 @@ namespace Vendaval.Application.ViewModels
         public required string Email { get; set; }
         public required string Name { get; set; }
         public bool IsOnline { get; set; }
+        public List<Conversation> Conversations { get; set; }
     }
 }

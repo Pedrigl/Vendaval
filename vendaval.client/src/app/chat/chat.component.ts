@@ -30,14 +30,17 @@ export class ChatComponent implements OnInit {
   async ngOnInit() {
     
     try {
+      LoadingService.isLoading.next(true);
       await this.chatService.initializeHubConnection();
       this.chatService.startConnection().subscribe();
 
       this.chatService.getOwnChatUser().subscribe(user => {
+        console.log('Own chat user: ', user);
         this.chatUser.next(user);
       });
 
       this.chatService.getOnlineCustomers().subscribe(customers => {
+        LoadingService.isLoading.next(false);
         this.onlineCustomers.next(customers);
       })
 
@@ -45,6 +48,10 @@ export class ChatComponent implements OnInit {
         this.onlineSellers.next(sellers);
       })
 
+      this.chatService.receiveUserConversations().subscribe(conversations => {
+        console.log('Received conversations: ', conversations);
+        this.conversations.next(conversations);
+      })
       this.chatService.receiveMessage().subscribe(message => {
         var chatUser = this.onlineCustomers.value.find(x => x.connectionId == message.senderId);
       });
@@ -61,13 +68,27 @@ export class ChatComponent implements OnInit {
   }
 
   sendMessage() {
+    var users = this.selectedConversation.value?.participants;
+    if(users == null) {
+      return;
+    }
+    this.chatService.sendMessage(this.newMessage, users);
+  }
 
+  startConversation(user: ChatUser) {
+    var ownUser = this.chatUser.value;
+    if(ownUser == null) {
+      return;
+    }
+    this.chatService.createConversation([ownUser,user]);
   }
 
   selectConversation(conversation: Conversation) {
     this.selectedConversation.next(conversation);
   }
 
-
+  deleteConversation(conversation: Conversation) {
+    this.chatService.deleteConversation(conversation);
+  }
 }
   

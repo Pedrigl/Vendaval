@@ -26,6 +26,13 @@ namespace Vendaval.Application.Services
             _mapper = mapper;
         }
 
+        public async Task<ConversationViewModel> GetConversationAsync(int conversationId)
+        {
+            var conversation = await _conversationRepository.GetByIdAsync(conversationId);
+
+            return _mapper.Map<Conversation, ConversationViewModel>(conversation);
+        }
+
         public async Task<ConversationViewModel> CreateConversationAsync(List<ChatUserViewModel> conversationParticipants)
         {
             var participantIds = conversationParticipants.Select(cp => cp.Id).ToList();
@@ -39,6 +46,13 @@ namespace Vendaval.Application.Services
 
             return _mapper.Map<Conversation, ConversationViewModel>(createdConversation);
         }
+
+        public async Task DeleteConversationAsync(Conversation conversation)
+        {
+            _conversationRepository.Delete(conversation);
+            await _conversationRepository.Save();
+        }
+
         public async Task AddMessageToConversationAsync(int conversationId, MessageViewModel message)
         {
             var mappedMessage = _mapper.Map<MessageViewModel, Message>(message);

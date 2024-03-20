@@ -20,6 +20,7 @@ export class ChatService {
   }
   
   async initializeHubConnection() {
+    
     var token!: string;
     try {
       console.log('Initializing SignalR connection');
@@ -102,6 +103,7 @@ export class ChatService {
   receiveUserConversations(): Observable<Conversation[]> {
     return new Observable<Conversation[]>(observer => {
       this.hubConnection.on('ReceiveUserConversations', (conversations: Conversation[]) => {
+        console.log(conversations);
         observer.next(conversations);
       })
     });
@@ -110,6 +112,11 @@ export class ChatService {
   createConversation(participants: ChatUser[]): void {
     this.hubConnection.invoke('CreateConversation', participants)
       .catch(err => console.error('Error while creating conversation: ', err));
+  }
+
+  deleteConversation(conversation: Conversation): void {
+    this.hubConnection.invoke('DeleteConversation', conversation)
+      .catch(err => console.error('Error while deleting conversation: ', err));
   }
 
   

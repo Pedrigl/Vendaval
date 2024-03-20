@@ -57,6 +57,20 @@ namespace Vendaval.Application.Services
             }
         }
 
+        public async Task DeleteConversation(ConversationViewModel conversation)
+        {
+            //FIX SERVER NOT DELETING CONVERSATION
+            if(conversation != null)
+            {
+                await _conversationViewModelService.DeleteConversationAsync(_mapper.Map<ConversationViewModel, Conversation>(conversation));
+            }
+
+            foreach (var participant in conversation.Participants)
+            {
+                await SendUserConversations(participant);
+            }
+        }
+
         public async Task SendPrivateMessage(MessageViewModel message, List<ChatUserViewModel> conversationParticipants)
         {
             var conversation = await _conversationViewModelService.GetConversationByParticipantsAsync(conversationParticipants[0].Id, conversationParticipants[1].Id);
