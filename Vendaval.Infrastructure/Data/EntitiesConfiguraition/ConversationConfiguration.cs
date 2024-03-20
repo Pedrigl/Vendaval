@@ -22,8 +22,6 @@ namespace Vendaval.Infrastructure.Data.EntitiesConfiguraition
             builder.Property(x => x.UpdatedAt).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
 
             builder.HasMany(x => x.Messages).WithOne().HasForeignKey(m => m.ConversationId);
-            
-            builder.HasMany(x => x.Participants).WithOne();
         }
     }
 }

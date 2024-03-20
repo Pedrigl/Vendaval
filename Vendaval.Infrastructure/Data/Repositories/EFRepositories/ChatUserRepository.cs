@@ -17,5 +17,10 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories
         {
             _context = context;
         }
+
+        public new IEnumerable<ChatUser> GetWhere(Func<ChatUser, bool> predicate)
+        {
+            return _context.ChatUsers.Where(predicate);
+        }
     }
 }

@@ -8,6 +8,7 @@ using Vendaval.Application.Services.Interfaces;
 using Vendaval.Application.ValueObjects;
 using Vendaval.Application.ViewModels;
 using Vendaval.Domain.Entities;
+using Vendaval.Infrastructure.Data.Repositories.EFRepositories;
 using Vendaval.Infrastructure.Data.Repositories.EFRepositories.Interfaces;
 
 namespace Vendaval.Application.Services
@@ -15,19 +16,23 @@ namespace Vendaval.Application.Services
     public class ConversationViewModelService : IConversationViewModelService
     {
         private readonly IConversationRepository _conversationRepository;
+        private readonly IChatUserRepository _chatUserRepository;
         private readonly IMapper _mapper;
 
-        public ConversationViewModelService(IConversationRepository conversationRepository, IMapper mapper)
+        public ConversationViewModelService(IConversationRepository conversationRepository, IChatUserRepository chatUserRepository, IMapper mapper)
         {
             _conversationRepository = conversationRepository;
+            _chatUserRepository = chatUserRepository;
             _mapper = mapper;
         }
 
         public async Task<ConversationViewModel> CreateConversationAsync(List<ChatUserViewModel> conversationParticipants)
         {
+            var participantIds = conversationParticipants.Select(cp => cp.Id).ToList();
+            var existingParticipants = _chatUserRepository.GetWhere(user => participantIds.Contains(user.Id)).ToList();
             var conversation = new Conversation
             {
-                Participants = _mapper.Map<List<ChatUserViewModel>, List<ChatUser>>(conversationParticipants)
+                Participants = existingParticipants
             };
 
             var createdConversation =await _conversationRepository.AddAsync(conversation);

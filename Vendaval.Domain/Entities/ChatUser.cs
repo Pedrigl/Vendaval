@@ -14,5 +14,6 @@ namespace Vendaval.Domain.Entities
         public string Email { get; set; }
         public string Name { get; set; }
         public bool IsOnline { get; set; }
+        public List<Conversation> Conversations { get; set; }
     }
 }
