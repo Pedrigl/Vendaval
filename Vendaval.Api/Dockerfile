@@ -31,5 +31,6 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 COPY ["Vendaval.Api/Vendaval.pfx", "./Vendaval.pfx"]
-
+COPY ["Vendaval.Api/localhost.crt", "/usr/local/share/ca-certificates/localhost.crt"]
+RUN update-ca-certificates
 ENTRYPOINT ["dotnet", "Vendaval.Api.dll"]
