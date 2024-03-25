@@ -51,7 +51,25 @@ export class ChatComponent implements OnInit {
       this.chatService.getOnlineCustomers().subscribe(customers => {
         LoadingService.isLoading.next(false);
         this.onlineCustomers.next(customers);
+
+        // If there is a selected conversation, find the corresponding user in the updated customers list
+        if (this.selectedConversation.value) {
+          const oppositeUser = this.getOppositeUser(this.selectedConversation.value.participants);
+          if (oppositeUser) {
+            const updatedUser = customers.find(c => c.id === oppositeUser.id);
+            if (updatedUser) {
+              // Update the user in the selected conversation
+              const index = this.selectedConversation.value.participants.indexOf(oppositeUser);
+              if (index !== -1) {
+                this.selectedConversation.value.participants[index] = updatedUser;
+                // Emit the updated conversation
+                this.selectedConversation.next(this.selectedConversation.value);
+              }
+            }
+          }
+        }
       })
+
 
       this.chatService.getOnlineSellers().subscribe(sellers => {
         this.onlineSellers.next(sellers);
