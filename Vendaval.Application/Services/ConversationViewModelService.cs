@@ -47,7 +47,8 @@ namespace Vendaval.Application.Services
 
             var conversation = new Conversation
             {
-                Participants = existingParticipants
+                Participants = existingParticipants,
+                Messages = new List<Message>()
             };
 
             var createdConversation =await _conversationRepository.AddAsync(conversation);

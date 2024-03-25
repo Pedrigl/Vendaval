@@ -26,6 +26,16 @@ export class ChatComponent implements OnInit {
     this.onlineSellers = new BehaviorSubject<ChatUser[]>([]);
     this.onlineCustomers = new BehaviorSubject<ChatUser[]>([]);
     this.conversations = new BehaviorSubject<Conversation[]>([]);
+    this.newMessage = {
+      id: 0,
+      media: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      content: '',
+      senderId: this.chatUser.value?.connectionId || '',
+      receiverId: '',
+      conversationId: 0
+    }
   }
   async ngOnInit() {
     
@@ -35,7 +45,6 @@ export class ChatComponent implements OnInit {
       this.chatService.startConnection().subscribe();
 
       this.chatService.getOwnChatUser().subscribe(user => {
-        console.log('Own chat user: ', user);
         this.chatUser.next(user);
       });
 
@@ -49,11 +58,10 @@ export class ChatComponent implements OnInit {
       })
 
       this.chatService.receiveUserConversations().subscribe(conversations => {
-        console.log('Received conversations: ', conversations);
         this.conversations.next(conversations);
       })
       this.chatService.receiveMessage().subscribe(message => {
-        var chatUser = this.onlineCustomers.value.find(x => x.connectionId == message.senderId);
+        this.conversations.value.filter(c => c.id == message.conversationId)[0].messages.push(message);
       });
 
 
@@ -72,7 +80,10 @@ export class ChatComponent implements OnInit {
     if(users == null) {
       return;
     }
+    this.newMessage.content = this.text;
+    console.log('Sending message: ', this.newMessage);
     this.chatService.sendMessage(this.newMessage, users);
+    this.text = '';
   }
 
   startConversation(user: ChatUser) {
@@ -84,6 +95,16 @@ export class ChatComponent implements OnInit {
   }
 
   selectConversation(conversation: Conversation) {
+    this.newMessage = {
+      id: 0,
+      media: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      content: this.text,
+      senderId: this.chatUser.value?.connectionId || '',
+      receiverId: this.getOppositeUser(conversation.participants)?.connectionId || '',
+      conversationId: conversation.id
+    }
     this.selectedConversation.next(conversation);
   }
 

@@ -36,7 +36,8 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories
 
         public async Task AddMessageToConversation(int conversationId, Message message)
         {
-            var conversation = await _context.Conversations.FindAsync(conversationId);
+            var conversation = await _context.Conversations
+                                            .Include(c => c.Messages).FirstOrDefaultAsync(c => c.Id == conversationId);
             conversation.Messages.Add(message);
         }
 
