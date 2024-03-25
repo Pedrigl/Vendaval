@@ -129,6 +129,7 @@ namespace Vendaval.Application.Services
 
 
                 await SendOwnUser(chatUser);
+                await SendUserConversations(chatUser);
                 await base.OnConnectedAsync();
             }
             catch (Exception ex)
