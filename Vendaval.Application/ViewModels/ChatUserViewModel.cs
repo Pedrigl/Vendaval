@@ -15,6 +15,5 @@ namespace Vendaval.Application.ViewModels
         public required string Email { get; set; }
         public required string Name { get; set; }
         public bool IsOnline { get; set; }
-        public List<Conversation> Conversations { get; set; }
     }
 }
