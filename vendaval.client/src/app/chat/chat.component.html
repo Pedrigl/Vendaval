@@ -13,7 +13,7 @@
                             <div class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
                                     <div (click)="selectConversation(conv)" style="cursor:pointer">
-                                        <h5 class="mb-1">{{getOppositeUser(conv.participants)}}</h5>
+                                        <h5 class="mb-1">{{getOppositeUser(conv.participants)?.name}}</h5>
                                         <small *ngIf="conv.messages.length > 0">{{conv.messages[conv.messages.length - 1].content }}</small>
                                     </div>
                                     <i class="fa fa-close" style="cursor:pointer" (click)="deleteConversation(conv)"></i>
