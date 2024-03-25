@@ -36,7 +36,15 @@ namespace Vendaval.Application.Services
         public async Task<ConversationViewModel> CreateConversationAsync(List<ChatUserViewModel> conversationParticipants)
         {
             var participantIds = conversationParticipants.Select(cp => cp.Id).ToList();
-            var existingParticipants = _chatUserRepository.GetWhere(user => participantIds.Contains(user.Id)).ToList();
+            var existingParticipants = new List<ChatUser>();
+
+            foreach (var participantId in participantIds)
+            {
+                var participant = await _chatUserRepository.GetByIdAsync(participantId);
+                if (participant != null)
+                    existingParticipants.Add(participant);
+            }
+
             var conversation = new Conversation
             {
                 Participants = existingParticipants

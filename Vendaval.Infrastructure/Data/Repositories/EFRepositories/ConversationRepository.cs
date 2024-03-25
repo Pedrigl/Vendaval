@@ -29,6 +29,8 @@ namespace Vendaval.Infrastructure.Data.Repositories.EFRepositories
         {
             return await _context.Conversations.AsNoTracking()
                 .Where(c => c.Participants.Any(p => p.Id == userId))
+                .Include(c => c.Participants)
+                .Include(c => c.Messages)
                 .ToListAsync();
         }
 
