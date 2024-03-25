@@ -59,7 +59,7 @@ namespace Vendaval.Application.Services
 
         public async Task DeleteConversation(ConversationViewModel conversation)
         {
-            //FIX SERVER NOT DELETING CONVERSATION
+            
             if(conversation != null)
             {
                 await _conversationViewModelService.DeleteConversationAsync(_mapper.Map<ConversationViewModel, Conversation>(conversation));
