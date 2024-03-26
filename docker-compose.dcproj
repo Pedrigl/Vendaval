@@ -6,7 +6,7 @@
     <DockerPublishLocally>False</DockerPublishLocally>
     <ProjectGuid>6029532e-994f-4d4d-9073-da8bc3819467</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
+    <DockerServiceUrl>https://localhost:8000/swagger</DockerServiceUrl>
     <DockerServiceName>vendaval.api</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
