@@ -21,6 +21,10 @@ namespace Vendaval.Infrastructure.Data.EntitiesConfiguraition
 
             builder.Property(x => x.UpdatedAt).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
 
+            builder.Property(x => x.SenderId).IsRequired();
+
+            builder.Property(x => x.ReceiverId).IsRequired();
+
             builder.Property(x => x.Content).IsRequired();
 
             builder.Property(x => x.SenderConnectionId).IsRequired();

@@ -10,6 +10,8 @@ namespace Vendaval.Domain.Entities
     public class Message : BaseModel
     {
         public int ConversationId { get; set; }
+        public int SenderId { get; set; }
+        public int ReceiverId { get; set; }
         public required string SenderConnectionId { get; set; }
         public required string ReceiverConnectionId { get; set; }
         public required string Content { get; set; }
