@@ -15,7 +15,7 @@ import { CreateProductComponent } from './admin/products/create-product/create-p
 import { EditProductComponent } from './admin/products/edit-product/edit-product.component';
 import { OrdersComponent } from './admin/orders/orders.component';
 import { UserType } from './shared/common/enums/user-type';
-import { ChatComponent } from './chat/chat.component';
+import { ChatSellerComponent } from './chat/chat-seller/chat-seller.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   {path: 'products', component: ProductsComponent},
-  {path: 'chat', component: ChatComponent, canActivate: [AuthGuardService], data: {roles: [UserType.Admin, UserType.Costumer, UserType.Seller]}},
+  {path: 'chat/seller', component: ChatSellerComponent, canActivate: [AuthGuardService], data: {roles: [UserType.Admin, UserType.Seller]}},
   { path: 'orders', component: OrdersComponent, canActivate: [AuthGuardService], data: {roles: [UserType.Admin, UserType.Costumer, UserType.Seller]}},
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuardService], data: { roles: [UserType.Admin]} },
   {path: 'admin/users', component: UsersComponent, canActivate: [AuthGuardService], data: { roles: [UserType.Admin]}},

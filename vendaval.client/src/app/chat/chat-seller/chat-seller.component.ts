@@ -1,21 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { ChatService } from './chat.service';
+import { ChatService } from '../chat.service';
 import { BehaviorSubject, Observable, lastValueFrom, map } from 'rxjs';
-import { ChatUser } from './chatuser';
-import { Message } from './message';
-import { LoadingService } from '../shared/common/loading.service';
-import { AuthService } from '../shared/common/auth.service';
+import { ChatUser } from '../chatuser';
+import { Message } from '../message';
+import { LoadingService } from '../../shared/common/loading.service';
+import { AuthService } from '../../shared/common/auth.service';
 import { KeyValue } from '@angular/common';
-import { Conversation } from './conversation';
+import { Conversation } from '../conversation';
 
 @Component({
-  selector: 'app-chat',
-  templateUrl: './chat.component.html',
-  styleUrl: './chat.component.css'
+  selector: 'app-chat-seller',
+  templateUrl: './chat-seller.component.html',
+  styleUrl: './chat-seller.component.css'
 })
-export class ChatComponent implements OnInit {
+export class ChatSellerComponent implements OnInit {
   chatUser: BehaviorSubject<ChatUser | null> = new BehaviorSubject<ChatUser | null>(null);
-  onlineSellers: BehaviorSubject<ChatUser[]>;
   onlineCustomers: BehaviorSubject<ChatUser[]>;
   conversations: BehaviorSubject<Conversation[]>;
   selectedConversation: BehaviorSubject<Conversation | null> = new BehaviorSubject<Conversation | null>(null);
@@ -23,7 +22,6 @@ export class ChatComponent implements OnInit {
   newMessage!: Message;
 
   constructor(private chatService: ChatService, private authService: AuthService) {
-    this.onlineSellers = new BehaviorSubject<ChatUser[]>([]);
     this.onlineCustomers = new BehaviorSubject<ChatUser[]>([]);
     this.conversations = new BehaviorSubject<Conversation[]>([]);
     this.newMessage = {
@@ -55,11 +53,6 @@ export class ChatComponent implements OnInit {
         this.onlineCustomers.next(customers);
 
         this.updateSelectedConversationConnectionId(customers);
-      })
-
-
-      this.chatService.getOnlineSellers().subscribe(sellers => {
-        this.onlineSellers.next(sellers);
       })
 
       this.chatService.receiveUserConversations().subscribe(conversations => {
