@@ -23,6 +23,7 @@ import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ChatSellerComponent } from './chat/chat-seller/chat-seller.component'; 
 import { httpInterceptor } from './shared/common/httpInterceptor';
+import { ChatCostumerComponent } from './chat/chat-costumer/chat-costumer.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,7 +41,8 @@ import { httpInterceptor } from './shared/common/httpInterceptor';
     OrdersComponent,
     OrderComponent,
     ProductsComponent,
-    ChatSellerComponent
+    ChatSellerComponent,
+    ChatCostumerComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,

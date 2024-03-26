@@ -8,6 +8,7 @@
     <PublishAssetsDirectory>$(MSBuildProjectDirectory)\dist\vendaval.client\</PublishAssetsDirectory>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="src\app\chat\chat-costumer\" />
     <Folder Include="src\environments\" />
   </ItemGroup>
   <ItemGroup>
