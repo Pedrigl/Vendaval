@@ -30,9 +30,18 @@ export class ChatCostumerComponent implements OnInit{
         this.chatUser.next(user);
       });
 
+      this.chatService.getOnlineSellers().subscribe(sellers => {
+        this.onlineSellers.next(sellers);
+      });
+
+      this.chatService.receiveUserConversations().subscribe(conversations => {
+        this.conversation.next(conversations[0]);
+      });
     }
     catch (e: any) {
       console.log('Error initializing chat component: ', e.message);
     }
   }
+
+  
 }
