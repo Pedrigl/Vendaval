@@ -32,5 +32,12 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 COPY ["Vendaval.Api/Vendaval.pfx", "./Vendaval.pfx"]
 COPY ["Vendaval.Api/localhost.crt", "/usr/local/share/ca-certificates/localhost.crt"]
+
+# Temporarily switch to root
+USER root
 RUN update-ca-certificates
+
+# Switch back to app
+USER app
+
 ENTRYPOINT ["dotnet", "Vendaval.Api.dll"]
