@@ -1,1 +1,25 @@
-<p>chat-costumer works!</p>
+
+<div class="container d-flex flex-column border bg-light rounded" style="height:500px">
+    <!-- messages -->
+    <div class="col-md-12 mt-auto mb-2">
+        <div *ngFor="let message of conversation.value?.messages" class="col-md-3 bg-white border border-white rounded mb-3">
+            <div class="d-flex justify-content-start">{{getMessageSenderName(message)}}</div>
+            <div class="d-flex justify-content-start">{{message.content}}</div>
+        </div>
+        <div class="row mt-auto pt-1 mb-2 border-top">
+            <!-- Media entry-->
+            <div class="col-md-1 mt-1">
+                <label style="cursor:pointer"><input type="file" hidden /><i class="fa fa-photo-video fa-lg"></i></label>
+                <label style="cursor:pointer" class="ms-4"><i class="fa fa-microphone-alt fa-lg"></i></label>
+            </div>
+            <!-- Message entry-->
+            <div class="col-lg">
+                <input type="text" class="form-control" placeholder="Type your message" [(ngModel)]="text" (keyup.enter)="sendMessage()">
+            </div>
+            <!-- Send button-->
+            <div class="col-sm-1 me-2 border border-secondary rounded justify-content-center">
+                <label class="mt-1" style="cursor:pointer"><i class="fa fa-paper-plane fa-lg"></i></label>
+            </div>
+        </div>
+    </div>
+</div>

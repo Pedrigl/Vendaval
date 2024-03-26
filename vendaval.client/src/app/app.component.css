@@ -53,6 +53,10 @@ footer {
   text-align: center;
 }
 
+.chat-icon{
+  cursor: pointer;
+}
+
 .chat {
   position: fixed;
   bottom: 90px;

@@ -1,6 +1,8 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { LoadingService } from './shared/common/loading.service';
+import { AuthService } from './shared/common/auth.service';
+import { UserType } from './shared/common/enums/user-type';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +12,12 @@ import { LoadingService } from './shared/common/loading.service';
 //TODO: ADD A GLOBAL ERROR HANDLER
 export class AppComponent {
   isLoading: boolean = false;
-  constructor(private renderer: Renderer2) {
+  isChatVisible: boolean = true;
+  constructor(private renderer: Renderer2, private authService: AuthService) {
+    this.authService.getUser.subscribe((user) => {
+      user?.userType != UserType.Seller ? this.isChatVisible = true : this.isChatVisible = false;
+    })
+
     LoadingService.isLoading.subscribe((value) => {
       this.isLoading = value;
 

@@ -10,13 +10,14 @@
             </div>
         </div>
     </div>
-    <div class="chat">
+    <div *ngIf="isChatVisible" class="chat">
+        <app-chat-costumer></app-chat-costumer>
         <div class="chat-text slideUpFade">
             Tem dúvidas? Fale com a gente!
             <div class="chat-text-border"></div>
             <div class="chat-text-background"></div>
         </div>
-        <label data-bs-toggle="modal" data-bs-target="#onlineUsersModal" class="chat-icon">
+        <label data-bs-toggle="modal" data-bs-target="#chatCostumerModal" class="chat-icon">
             <i class="fa-solid fa-comment fa-5x"></i>
         </label>
     </div>
