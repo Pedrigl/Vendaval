@@ -96,20 +96,20 @@ export class ChatComponent implements OnInit {
 
   sendMessage() {
     var users = this.selectedConversation.value?.participants;
-    if(users == null) {
+    if(users == null)
       return;
-    }
+    
     this.newMessage.content = this.text;
-    console.log('Sending message: ', this.newMessage);
+    
     this.chatService.sendMessage(this.newMessage, users);
     this.text = '';
   }
 
   startConversation(user: ChatUser) {
     var ownUser = this.chatUser.value;
-    if(ownUser == null) {
+    if(ownUser == null)
       return;
-    }
+    
     this.chatService.createConversation([ownUser,user]);
   }
 
