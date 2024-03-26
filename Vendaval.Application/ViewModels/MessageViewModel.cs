@@ -10,8 +10,8 @@ namespace Vendaval.Application.ViewModels
     public class MessageViewModel : BaseModelViewModel
     {
         public int ConversationId { get; set; }
-        public required string SenderId { get; set; }
-        public required string ReceiverId { get; set; }
+        public required string SenderConnectionId { get; set; }
+        public required string ReceiverConnectionId { get; set; }
         public required string Content { get; set; }
         public List<MessageMedia>? Media { get; set; }
     }
