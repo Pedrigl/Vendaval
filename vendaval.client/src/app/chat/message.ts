@@ -3,8 +3,10 @@ import { MessageMedia } from "./messagemedia";
 
 export interface Message extends BaseModel{
   conversationId: number;
-  senderId: string;
-  receiverId: string;
+  senderId: number;
+  receiverId: number;
+  senderConnectionId: string;
+  receiverConnectionId: string;
   content: string;
   media: MessageMedia[];
 }

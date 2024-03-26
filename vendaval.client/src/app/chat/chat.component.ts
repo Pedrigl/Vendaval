@@ -32,8 +32,10 @@ export class ChatComponent implements OnInit {
       createdAt: new Date(),
       updatedAt: new Date(),
       content: '',
-      senderId: this.chatUser.value?.connectionId || '',
-      receiverId: '',
+      receiverId: 0,
+      senderId: 0,
+      senderConnectionId: this.chatUser.value?.connectionId || '',
+      receiverConnectionId: '',
       conversationId: 0
     }
   }
@@ -90,6 +92,9 @@ export class ChatComponent implements OnInit {
       }
   }
 
+  getMessageSenderName(message: Message): string {
+    return this.selectedConversation.value?.participants.find(u => u.id == message.senderId)?.name || '';
+  }
   getOppositeUser(conversationUsers : ChatUser[]): ChatUser | undefined {
     return conversationUsers.find(u => u.connectionId != this.chatUser.value?.connectionId);
   }
@@ -114,20 +119,20 @@ export class ChatComponent implements OnInit {
   }
 
   selectConversation(conversation: Conversation) {
-    this.newMessage = {
-      id: 0,
-      media: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      content: this.text,
-      senderId: this.chatUser.value?.connectionId || '',
-      receiverId: this.getOppositeUser(conversation.participants)?.connectionId || '',
-      conversationId: conversation.id
-    }
+    this.newMessage.conversationId = conversation.id;
+    this.newMessage.senderId = this.chatUser.value?.id || 0;
+    this.newMessage.senderConnectionId = this.chatUser.value?.connectionId || '';
+    this.newMessage.receiverId = this.getOppositeUser(conversation.participants)?.id || 0;
+    this.newMessage.receiverConnectionId = this.getOppositeUser(conversation.participants)?.connectionId || '';
+    this.newMessage.content = this.text;
+
     this.selectedConversation.next(conversation);
   }
 
   deleteConversation(conversation: Conversation) {
+    if (this.selectedConversation.value?.id == conversation.id)
+      this.selectedConversation.next(null);
+
     this.chatService.deleteConversation(conversation);
   }
 }

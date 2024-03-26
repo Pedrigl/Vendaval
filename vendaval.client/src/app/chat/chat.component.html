@@ -51,7 +51,7 @@
                     <div *ngIf="selectedConversation && selectedConversation.value" class="overflow-auto mb-2" style="flex-grow: 1; overflow-y: auto; max-height: 650px;">
                         <div *ngFor="let message of selectedConversation.value?.messages" class="col-md-3 bg-white border border-white rounded mb-3">
                             <!--TODO: MAKE THE NAME BEFORE THE MESSAGE BE THE USER WHO SENT IT-->
-                            <div class="d-flex justify-content-start">{{message.senderId}}</div>
+                            <div class="d-flex justify-content-start">{{getMessageSenderName(message)}}</div>
                             <div class="d-flex justify-content-start">{{message.content}}</div>
                         </div>
                     </div>
