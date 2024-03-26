@@ -53,4 +53,59 @@ footer {
   text-align: center;
 }
 
+.chat {
+  position: fixed;
+  bottom: 90px;
+  right: 30px;
+}
 
+.chat-text {
+  position: absolute;
+  right: 140%;
+  bottom: 5px;
+  background-color: #f9f9f9;
+  padding: 2px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 200px;
+}
+
+.chat-text-border {
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid #ccc;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+
+.chat-text-background {
+  position: absolute;
+  right: -9px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid #f9f9f9;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+}
+
+@keyframes slideUpFade {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+}
+
+.chat-text {
+  animation: slideUpFade 7s;
+}
